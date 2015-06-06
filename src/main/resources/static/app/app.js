@@ -1,20 +1,27 @@
 
-var chidra = angular.module('chidra',['ngRoute','AmiCustCtrl']);
+var chidra = angular.module('chidra',['ngRoute','AmiCustModule']);
 
 chidra.config(['$routeProvider',
-                    function($routeProvider) {
-	
+                    function($routeProvider) {	
                       $routeProvider.
                         when('/', {
-                          templateUrl: './app/components/amicust/amicust.html'
-                          
+                        	templateUrl: '/app/components/amicust/newrequest.html',
+                            controller: 'NewRequestCtrl'
                         }).
-                        when('/amicust', {
-                        	templateUrl: './app/components/amicust/amicust.html',
-                            controller: 'AmiCustCtrl'
+                        when('/searchRequest', {
+                        	templateUrl: '/app/components/amicust/searchrequests.html',
+                        	controller: 'SearchRequestCtrl'
+                        }).
+                        when('/profile', {
+                        	templateUrl: '/app/components/amicust/profile.html',
+                        	controller: 'ProfileCtrl'
+                        }).
+                        when('/help', {
+                        	templateUrl: '/app/components/amicust/help.html',
+                        	controller: 'HelpCtrl'
                         }).
                         when('/error', {
-                          templateUrl: './app/components/error/error.html',
+                          templateUrl: '/app/components/error/error.html',
                         }).
                         otherwise({
                           redirectTo: '/error'

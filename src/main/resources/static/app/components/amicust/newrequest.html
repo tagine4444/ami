@@ -1,18 +1,7 @@
 
 <div class="row">
-<br/>
-	<nav class="nav nav-pills">
-		<section ng-init = "tab = 1" >
-			<ul class="nav nav-pills">
-			  <li role="presentation"  ng-class="{'active' : tab==1}"><a href="#/amicust" ng-click="tab = 1">Submit Request</a></li>
-			  <li role="presentation"  ng-class="{'active' : tab==2}"><a href="#/amicust" ng-click="tab = 2">Review Interpretation</a></li>
-			  <li role="presentation" ng-class="{'active' : tab==3}"><a href="#/amicust"  ng-click="tab = 3">Profile</a></li>
-			  <li role="presentation" ng-class="{'active' : tab==4}"><a href="#/amicust"  ng-click="tab = 4">Help</a></li>
-			  <li role="presentation" ng-class="{'active' : tab==5}"><a href="#/amicust"  ng-click="tab = 5">Logout</a></li>
-			</ul>
-		</section>
-	</nav>
-	
+
+	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
 
 	<div class="panel panel-default">
@@ -33,9 +22,10 @@
 						  <div class="input-group">
 								<select class="form-control">
 						          <option>Select Lab</option>
-						          <option>PCL</option>
-						          <option>IDEXX</option>
-						          <option>Antech</option>
+<!-- 						          <option>PCL</option> -->
+<!-- 						          <option>IDEXX</option> -->
+<!-- 						          <option>Antech</option> -->
+								<option ng-repeat="lab in labs"> {{lab}}</option>
 							    </select>
 						 </div> 
 				  </div>
@@ -146,16 +136,15 @@
 			     <div class="col-sm-4">
 				      <select class="form-control">
 						  <option>Species</option>
-						  <option>Canine</option>
-						  <option>Feline</option>
+						  
+						  <option ng-repeat="aSpecies in species"> {{aSpecies}}</option>
 						</select>
 			    </div>
 			    
 			    <div class="col-sm-4">
 				      <select class="form-control">
 						  <option>Breed</option>
-						  <option>German Sheppard</option>
-						  <option>Pitbul</option>
+						   <option ng-repeat="breed in breeds"> {{breed}}</option>
 						</select>
 			    </div>
 			</div>

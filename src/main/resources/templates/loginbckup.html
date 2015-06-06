@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
 <!--     	<meta name="_csrf" content="${_csrf.token}"/>  -->
 <!--     	<meta name="_csrf_header" content="${_csrf.headerName}"/>  -->
         <title>Animal Medical Imaging</title>
         
-<!-- 		<link rel="stylesheet"  href="../static/app/assets/lib/bootstrap/css/bootstrap.min.css"></link> -->
-<!-- 		<link rel="stylesheet" href="../static/app/assets/lib/bootstrap/css/bootstrap-theme.min.css"></link> -->
+<!-- 		<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"></link> -->
+<!-- 		<link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css"></link> -->
 		
 		
 		
 		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<!-- 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/> -->
 		
 		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+<!-- 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/> -->
 		
 		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<!-- 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script> -->
     </head>
     <body>
     	<div class="container">
@@ -34,8 +35,8 @@
 			   		<br/>
 			   		<div class="row">
 					   	<div class="col-md-9">
-						   <p>11 Animal Medical Imaging is a veterinary radiology practice established 
-						   in the Seattle area since. Please <a href="#">Learn about us and our online services</a></p>
+						   <p> Animal Medical Imaging is a veterinary radiology practice established 
+						   in the Seattle area since 333. Please <a href="#">Learn about us and our online services</a></p>
 					    </div>
 				   </div>
 				</div>
@@ -43,14 +44,14 @@
 		  
 		  
 		  
-<!-- 		  <div class="col-md-12"> -->
-<!-- 		        <div> -->
-<!-- 		            Invalid username and password -->
-<!-- 		        </div> -->
-<!-- 		        <div > -->
-<!-- 		            You have been logged out. -->
-<!-- 		        </div> -->
-<!-- 	       </div> -->
+		  <div class="col-md-12">
+		        <div th:if="${param.error}">
+		            Invalid username and password
+		        </div>
+		        <div th:if="${param.logout}">
+		            You have been logged out.
+		        </div>
+	       </div>
 		
 	        <div class="col-md-6">
 	        
@@ -61,8 +62,8 @@
 					 </div>
 					 
 					 <div class="panel-body">
-<!-- 				        <form action="@{/login}" method="post" class="form-inline" > -->
-				        <form action="/ami/logincheck" method="post" class="form-inline" >
+				        <form th:action="@{/login}" method="post" class="form-inline" >
+<!-- 				        <form action="/ami/amicusthome" method="post" class="form-inline" > -->
 				        	 <div class="form-group">
 							    <label class="sr-only" for="usernameId">User Name</label>
 							    <input type="text" name="username" class="form-control" id="usernameId" placeholder="Enter User Name"/>
