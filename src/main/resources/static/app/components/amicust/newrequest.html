@@ -3,30 +3,41 @@
 
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
-
+   	<div class="row">
+   		<div class="col-sm-8">
+   		</div>
+	   	<div class="col-sm-4">
+	   		<button type="submit" class="btn btn-default">Cancel</button>
+	   		<button type="submit" class="btn btn-warning">Save As Draft</button>
+	   		<button type="submit" class="btn btn-danger" ng-click="saveNewRequest()">Submit</button>
+	   	</div>
+   	</div>
+   	<br/>
+   	
 	<div class="panel panel-default">
 	  <div class="panel-heading">Hospital & Client Info</div>
 	  <div class="panel-body">
 	    <!--  Veterinarian and Lab Row -->
 	    <div class="row">
+	    
+	    	
 		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="vetId	" placeholder="Veterinarian">
+		      <input type="text" class="form-control" id="vetId	" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian">
 		    </div>
 		   
 		   <div class="col-sm-6">	    
 				<div class="form-inline">
 				  <div class="form-group">
 						  <div class="input-group">
-						  	<input type="text" class="form-control" id="labListId" placeholder="Lab Account">
+						  	<input type="text" class="form-control" id="labListId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account">
 						  </div>
 						  <div class="input-group">
-								<select class="form-control">
-						          <option>Select Lab</option>
-<!-- 						          <option>PCL</option> -->
-<!-- 						          <option>IDEXX</option> -->
-<!-- 						          <option>Antech</option> -->
-								<option ng-repeat="lab in labs"> {{lab}}</option>
+								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs">
+<!-- 						            <option>Select Lab</option> -->
+									<option ng-repeat="lab in labsList"> {{lab}}</option>
+									
 							    </select>
+
 						 </div> 
 				  </div>
 				</div>
@@ -36,24 +47,24 @@
 		<!--  Clients  Row -->
 		<div class="row">
 		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="vetId	" placeholder="Client's First Name">
+		      <input type="text" class="form-control" id="vetId" ng-model= "newRequest.hospitalAndClientInfo.clientFirstName" placeholder="Client's First Name">
 		    </div>
 		    
 		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="labActId	" placeholder="Client's Last Name">
+		      <input type="text" class="form-control" id="labActId" ng-model= "newRequest.hospitalAndClientInfo.clientLastName" placeholder="Client's Last Name">
 		    </div>
 		    
 		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="labActId	" placeholder="Client's Id">
+		      <input type="text" class="form-control" id="labActId" ng-model= "newRequest.hospitalAndClientInfo.clientId" placeholder="Client's Id">
 		    </div>
 		    
 		    <div class="col-sm-4">
 			    <span >Is the client an employee? </span> &nbsp;
 			    <label class="radio-inline">
-				  <input type="radio" name="employeeOptions" id="empoyeeRadio1" value="option1">Yes
+				  <input  type="radio"  id="empoyeeRadio1" ng-click='isEmployee(true)' ng-model="newRequest.hospitalAndClientInfo.isEmployee" ng-checked="newRequest.hospitalAndClientInfo.isEmployee" >Yes
 				</label>
 				<label class="radio-inline">
-				  <input type="radio" name="employeeOptions" id="empoyeeRadio2" value="option2" checked="checked">No
+				  <input type="radio"  id="empoyeeRadio2"  ng-click='isEmployee(false)' ng-checked="!newRequest.hospitalAndClientInfo.isEmployee" >No
 				</label>
 			</div>
 		</div>
@@ -67,16 +78,13 @@
 		    <div class="row">
 		    
 		    	 <div class="col-sm-3">
-			      <input type="text" class="form-control" id="vetId	" placeholder="Animal's Name">
+			      <input type="text" class="form-control" id="vetId	" ng-model="newRequest.patientInfo.animalName" placeholder="Animal's Name">
 			    </div>
 			    
 			     <div class="col-sm-1">
-				       <select class="form-control">
-						  <option>Sex</option>
-						  <option>F/s</option>
-						  <option>M/c</option>
-						  <option>F</option>
-						  <option>M</option>
+				       <select class="form-control" ng-model="newRequest.patientInfo.animalSex">
+<!-- 						  <option>Sex</option> -->
+						  <option ng-repeat="animalSex in animalSexList"> {{animalSex}}</option>
 						</select>
 				</div>
 				
@@ -85,7 +93,7 @@
 					<div class="form-inline">
 					  <div class="form-group">
 						  <div class="input-group">
-						  	<input type="text" class="form-control" id="weightId	" placeholder="weight">
+						  	<input type="text" class="form-control" id="weightId" ng-model="newRequest.patientInfo.animalWeight"  placeholder="weight">
 						  </div>
 						  
 						  <div class="input-group">
@@ -105,25 +113,23 @@
 								<label  for="ageLabId">Age:</label>
 								    
 							    <div class="input-group">
-							      <select id="ageLabId" class="form-control" ng-model="years">
-									  <option>Years</option>
-									  <option>1</option>
-									  <option>2</option>
-									  <option>3</option>
-									  <option>4</option>
+							      <select id="ageLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeYears">
+<!-- 									  <option>Years</option> -->
+									  <option ng-repeat="animalYears in animalAgeYearsList"> {{animalYears}}</option>
+<!-- 									  <option>1</option> -->
+<!-- 									  <option>2</option> -->
+<!-- 									  <option>3</option> -->
+<!-- 									  <option>4</option> -->
 									</select>
 							    </div>
 								    
 							    <div class="input-group">
-							       <select  id="monghLabId" class="form-control" ng-model="months">
-									  <option>Months</option>
-									  <option>1</option>
-									  <option>2</option>
-									  <option>3</option>
-									  <option>4</option>
+							       <select  id="monghLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeMonths">
+<!-- 									  <option>Months</option> -->
+									  <option ng-repeat="animalYears in animalAgeMonthsList"> {{animalYears}}</option>
 									</select>
 							    </div>
-								{{ years }} years and {{ months	}} months
+								{{ newRequest.patientInfo.animalAgeYears }} year(s) and {{ newRequest.patientInfo.animalAgeMonths	}} month(s)
 						</div>
 					</div>
 				</div>
@@ -134,17 +140,14 @@
 			<div class="row">
 			    
 			     <div class="col-sm-4">
-				      <select class="form-control">
-						  <option>Species</option>
-						  
-						  <option ng-repeat="aSpecies in species"> {{aSpecies}}</option>
+				      <select class="form-control" ng-model="newRequest.patientInfo.species">
+						  <option  ng-repeat="aSpecies in speciesList"> {{aSpecies}}</option>
 						</select>
 			    </div>
 			    
 			    <div class="col-sm-4">
-				      <select class="form-control">
-						  <option>Breed</option>
-						   <option ng-repeat="breed in breeds"> {{breed}}</option>
+				      <select class="form-control" ng-model="newRequest.patientInfo.breeds">
+						   <option ng-repeat="breed in breedsList"> {{breed}}</option>
 						</select>
 			    </div>
 			</div>
@@ -153,7 +156,7 @@
 	</div> <!--  End of Patient Info panel -->
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading">Services</div>
+	  <div class="panel-heading">Requested Services</div>
 	  <div class="panel-body">
 	  		
 	  		<div class="row">
@@ -286,9 +289,6 @@
 					<label class="checkbox-inline">
 					  <input type="checkbox" id="inlineCheckbox2" value="option2">By Email
 					</label>
-					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">By Upload
-					</label>
 				</div>
 				
 				<div class="col-sm-12">
@@ -297,6 +297,16 @@
 					    <textarea class="form-control" rows="3" placeholder="Please provide any details that will help us identify all the documents that go with this request"></textarea>
 				    </div>
 		    	</div>
+		    	
+		    	<div class="col-sm-12">
+			    	<label class="btn btn-primary" for="my-file-selector">
+					    <input id="my-file-selector" type="file" style="display:none;">
+					    Upload Picture
+					</label>
+					&nbsp;
+       				 <span class='label label-info' id="upload-file-info">C:/path/to/my/document/xray1.jpeg</span>
+		    	</div>
+		    	
 			</div>	
 	    </div>
 	</div>
