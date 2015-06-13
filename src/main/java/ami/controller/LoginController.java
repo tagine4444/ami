@@ -69,12 +69,12 @@ public class LoginController {
 		
 		System.out.println(newAmiRequest);
 		
-		Person p = new Person("Joe", 34);
-		mongo.insert(p);
+		//Person p = new Person("Joe", 34);
+		mongo.insert(newAmiRequest, "request");
 		
-		p = mongo.findById(p.getId(), Person.class);
-		log.debug("Found "+p);
-		System.out.println("found "+p);
+		//p = mongo.findById(p.getId(), Person.class);
+		//log.debug("Found "+p);
+		//System.out.println("found "+p);
 		
 		return "{}";
 	}

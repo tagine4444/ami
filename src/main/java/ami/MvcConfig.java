@@ -24,7 +24,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     
     public @Bean MongoDbFactory mongoDbFactory() throws Exception {
        // UserCredentials userCredentials = new UserCredentials("joe", "secret");
-        return new SimpleMongoDbFactory(new MongoClient(), "itunes");
+        return new SimpleMongoDbFactory(new MongoClient(), "ami");
       }
 
       public @Bean MongoTemplate mongoTemplate() throws Exception {

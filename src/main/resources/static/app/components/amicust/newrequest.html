@@ -129,7 +129,8 @@
 									  <option ng-repeat="animalYears in animalAgeMonthsList"> {{animalYears}}</option>
 									</select>
 							    </div>
-								{{ newRequest.patientInfo.animalAgeYears }} year(s) and {{ newRequest.patientInfo.animalAgeMonths	}} month(s)
+							    
+								{{ newRequest.patientInfo.animalAgeYears }} year<span ng-show="newRequest.patientInfo.animalAgeYears >1" >s</span> and {{ newRequest.patientInfo.animalAgeMonths}} month<span ng-show="newRequest.patientInfo.animalAgeMonths >1" >s</span>
 						</div>
 					</div>
 				</div>
@@ -160,62 +161,67 @@
 	  <div class="panel-body">
 	  		
 	  		<div class="row">
-	  		<div class="col-sm-5">
-			    <label class="radio-inline">
-				  <input type="radio" name="employeeOptions" id="empoyeeRadio1" value="option1" checked="checked">Interpretation Only
-				</label>
-				<label class="radio-inline">
-				  <input type="radio" name="employeeOptions" id="empoyeeRadio2" value="option2" >Imaging (includes interpretation)
-				</label>
+				
+		  		<div class="col-sm-5">
+				    <label class="radio-inline">
+					  <input type="radio" id="imagingRadio1" ng-click='isInterpretationOnly(true)'  ng-model="newRequest.requestedServices.isInterpretationOnly"  ng-checked="newRequest.requestedServices.isInterpretationOnly" >Interpretation Only
+					</label>
+					<label class="radio-inline">
+						<input type="radio" id="imagingRadio2" ng-click='isInterpretationOnly(false)'  ng-checked="!newRequest.requestedServices.isInterpretationOnly" >Imaging (includes interpretation)
+					</label>
+				</div>
+				
+				<div class="col-sm-4">
+			      <select class="form-control" ng-disabled="newRequest.requestedServices.isInterpretationOnly" ng-model="serviceCategory" >
+			      		<option ng-selected="newRequest.requestedServices.isInterpretationOnly" ></option>
+				      	<option ng-repeat='(key, value) in servicesList'>
+					         {{key}}
+					    </option>
+					</select>
+			    </div>
+			    
+			    <div class="col-sm-2">
+				    <button  type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" ng-disabled="newRequest.requestedServices.isInterpretationOnly">
+						  Request a service
+					</button>
+		  		</div>	
+		  		 
+		  		<div class="col-sm-1">
+					<label class="checkbox-inline">
+					  <input type="checkbox" id="inlineCheckbox1" value="option1"> <span class="label label-danger">STAT</span>
+					</label>
+				</div>
+				
+				<div class="col-sm-6">
+					<span ng-show="newRequest.requestedServices.selectedServices.length==0">No Services Added</span>
+					
+					<table class="table" ng-show="newRequest.requestedServices.selectedServices.length>0" >
+				  	<thead>
+				  		<tr>
+				  			<th>Selected Services</th>
+				  			<th></th>
+				  		</tr>
+				  	</thead>
+				  	<tbody ng-repeat="aSvc in newRequest.requestedServices.selectedServices">
+			        		<tr> 
+					  			<td>{{aSvc}}</td>
+					  			<td>
+<!-- 					  				<button  type="button" class="btn btn-primary btn-sm" ng-click="deleteFilteredItem(aSvc.$hashKey, newRequest.requestedServices.selectedServices)" > -->
+<!-- 										  Remove -->
+<!-- 									</button> -->
+					  			 	<a href ng-click="deleteFilteredItem(aSvc.$hashKey, newRequest.requestedServices.selectedServices)">Remove </a>
+					  			</td>
+				  			</tr>
+				  	</tbody>		
+				  </table>
+					
+					
+					
+				</div>
 			</div>
-			
-			<div class="col-sm-7">
-				<label class="checkbox-inline">
-				  <input type="checkbox" id="inlineCheckbox1" value="option1"> <span class="label label-danger">STAT</span>
-				</label>
-			</div>
-			
-			
-			
-			<div class="col-sm-12">
-			<br/>
-				  <p>Please Select the services you want Animal Medical Imaging to perform</p>
-		    </div>
-		    
-		    <div class="col-sm-3">
-		      <select class="form-control">
-				  <option>Contrast Radiography</option>
-				  <option>Myelogram</option>
-				  <option>Arthrogram</option>
-				</select>
-		    </div>
-		    <div class="col-sm-3">
-		      <select class="form-control">
-				  <option>Computed Tomography</option>
-				  <option>Brain With Contrast</option>
-				  <option>Brain With Contrast and/or CSF tap</option>
-				</select>
-		    </div>
-		    <div class="col-sm-3">
-		      <select class="form-control">
-				  <option>Radiography/Fluoroscopy</option>
-				  <option>Thorax</option>
-				  <option>Abdomen</option>
-				  <option>Pelvis</option>
-				</select>
-		    </div>
-		    <div class="col-sm-3">
-		      <select class="form-control">
-				  <option>Ultrasound</option>
-				  <option>Abdomen</option>
-				  <option>Heart</option>
-				  <option>Uterus</option>
-				</select>
-		    </div>
-		    
-		    </div>
+		 </div>
 	  </div>
-	</div>
+<!-- 	</div> -->
 	
 	<div class="panel panel-default">
 	  <div class="panel-heading">Veterinarian Observation</div>
@@ -223,37 +229,37 @@
 		  <div class="row">
 			   <div class="col-sm-12">
 				   <label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox1" value="option1">Anesthetized?
+					  <input type="checkbox" id="inlineCheckbox1" ng-model="newRequest.vetObservation.anesthetized">Anesthetized?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox2" value="option2">Sedated?
+					  <input type="checkbox" id="inlineCheckbox2" ng-model="newRequest.vetObservation.sedated">Sedated?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Fasted?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.fasted">Fasted?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Enema?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.enema">Enema?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Painful?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.painful">Painful?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Fractious?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.fractious">Fractious?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Shocky?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.shocky">Shocky?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Dyspneic?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.dyspneic">Dyspneic?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Fractious?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.fractious">Fractious?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Died?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.died">Died?
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox3" value="option3">Euthanized?
+					  <input type="checkbox" id="inlineCheckbox3" ng-model="newRequest.vetObservation.euthanized">Euthanized?
 					</label>
 				</div>
 				
@@ -264,11 +270,11 @@
 			    <div class="col-sm-12">
 					  	<div class="form-group">	
 						    <label for="exampleInputEmail1">Exam</label>
-						    <textarea class="form-control" rows="3"></textarea>
+						    <textarea class="form-control" rows="3" ng-model="newRequest.vetObservation.exam"></textarea>
 					    </div>
 					  	<div class="form-group">
 						    <label for="exampleInputEmail1">Tentative Diagnosis</label>
-						    <textarea class="form-control" rows="3"></textarea>
+						    <textarea class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis"></textarea>
 					    </div>
 		    	</div>
 		    </div>
@@ -294,7 +300,7 @@
 				<div class="col-sm-12">
 				  	<div class="form-group">	
 					    <label for="exampleInputEmail1">Notes</label>
-					    <textarea class="form-control" rows="3" placeholder="Please provide any details that will help us identify all the documents that go with this request"></textarea>
+					    <textarea class="form-control" rows="3" placeholder="Please provide any details that will help us identify the documents that go with this request <li>email subject</li>"></textarea>
 				    </div>
 		    	</div>
 		    	
@@ -306,9 +312,55 @@
 					&nbsp;
        				 <span class='label label-info' id="upload-file-info">C:/path/to/my/document/xray1.jpeg</span>
 		    	</div>
-		    	
 			</div>	
 	    </div>
-	</div>
-	
+	</div>	    
+	    
+	    <!-- Modal -->
+		<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">A.M.I Services</h4>
+		      </div>
+		      <div class="modal-body">
+		      
+		      	<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">{{serviceCategory}}</div>
+				
+				  <!-- Table -->
+				  <table class="table">
+				  	<thead>
+				  		<tr>
+				  			<th>Key</th>
+				  			<th>Value</th>
+				  			<th></th>
+				  		</tr>
+				  	</thead>
+				  	<tbody ng-repeat="(key, value) in servicesList">
+			        		<tr ng-repeat="aValue in value track by $index"> 
+					  			<td>{{key}}</td>
+					  			<td>{{aValue}}</td>
+					  			<td>
+					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(key,aValue)">Add</button>
+					  			</td>
+				  			</tr>
+				  	</tbody>		
+				  </table>
+				</div>
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	    
 </div>
+	
+
+
+
