@@ -1,0 +1,106 @@
+<div class="row">
+	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	<br/>
+	<h1>Submitted Requests</h1><br/><br/><br/>
+	
+<!-- <div class="container"> -->
+<!--   <h1>flow image example1</h1> -->
+<!--   <hr class="soften"/> -->
+	
+<!-- 	<div flow-init="{target: '/ami/upload'}" -->
+<!--      flow-files-submitted="$flow.upload()" -->   
+<!--      flow-file-success="$file.msg = $message"> -->
+
+<!--   <input type="file" flow-btn/> -->
+<!--   <table> -->
+<!--     <tr ng-repeat="file in $flow.files"> -->
+<!--         <td>{{$index+1}}</td> -->
+<!--         <td>{{file.name}}</td> -->
+<!--         <td>{{file.msg}}</td> -->
+<!--     </tr> -->
+<!--   </table> -->
+<!-- </div> -->
+<!-- </div>	 -->
+	
+
+<div flow-init="{target: '/ami/upload'}"
+      flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+      flow-files-submitted="$flow.upload()"
+      flow-name="obj.flow"
+      />
+      
+      I have uploaded files: #{{obj.flow.files.length}}
+      
+<div class="container">
+  <h1>flow image example</h1>
+  <hr class="soften"/>
+  
+
+
+  	<div>
+	    <div>
+	      <input type="file" flow-btn ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}" />
+	      <button  type="button" class="btn btn-primary btn-sm" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Change</button>
+	    </div>
+	  
+	    
+	     <table>
+	    <tr ng-repeat="file in $flow.files">
+	        <td>{{$index+1}}</td>
+	        <td>{{file.name}}</td>
+	        <td>{{file.msg}}</td>
+	        <td>  <button  type="button" class="btn btn-danger"  >Remove</button></td>
+	        
+	        
+	        </td>
+	    </tr>
+	  </table>
+	  
+<!-- 	  <button  type="button" class="btn btn-primary btn-sm"  ng-click="doUpload($flow.files)">Upload</button> -->
+	 
+	 <form ng-submit="create()" class="form-horizontal" enctype="multipart/form-data">
+	  <button  type="button" class="btn btn-primary btn-sm"  ng-click="doUpload($flow)">Upload</button>
+  	</form>
+  	  <span class="btn btn-primary" flow-btn flow-files-submitted="$flow.upload()">Upload 22</span>
+  	</div>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+<!-- 	<form ng-upload="uploadComplete(content)" action="/upload-full-form"> -->
+<!--        <p> -->
+<!--            <label>Fullname:</label> -->
+<!--            <input type="text" name="fullname" ng-model="fullname" /> -->
+<!--        </p> -->
+<!--        <p> -->
+<!--            <label>Gender:</label> -->
+<!--            <input type="text" name="gender" ng-model="gender" /> -->
+<!--        </p> -->
+<!--        <p> -->
+<!--            <label>Favorite Color:</label> -->
+<!--            <input type="text" name="color" ng-model="color"/> -->
+<!--        </p> -->
+<!--        <p> -->
+<!--            <label>Your picture (file will not be saved on the server):</label> -->
+<!--            <input type="file" name="file" /> -->
+<!--        </p> -->
+<!--        <p> -->
+<!--            <input type="submit" class="btn" value="Submit" ng-disabled="$isLoading"  /> -->
+<!--        </p> -->
+<!--    </form> -->
+<!--    <div class="alert alert-info">Server Response: {{response | json}}</div> -->
+<!--    <div> -->
+<!--        Fullname: <b>{{response.fullname}}</b><br /> -->
+<!--        Gender: <b>{{response.gender}}</b><br /> -->
+<!--        Favourite Color: <span ng-style="response.style">{{response.color}}</span><br /> -->
+<!--        Picture: {{response.pictureUrl}} -->
+<!--    </div> -->
+   
+</div>

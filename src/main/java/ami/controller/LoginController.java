@@ -1,5 +1,20 @@
 package ami.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +24,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class LoginController {
@@ -18,6 +35,8 @@ public class LoginController {
 	
 	@Autowired
 	private MongoTemplate mongo;
+	
+	public static final String UPLOAD_DIR = "uploads";
 	
 //	@RequestMapping("/greeting")
 //    public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
@@ -79,5 +98,7 @@ public class LoginController {
 		return "{}";
 	}
 	
+	
+		
 	
 }

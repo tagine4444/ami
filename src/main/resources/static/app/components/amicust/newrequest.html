@@ -206,9 +206,6 @@
 			        		<tr> 
 					  			<td>{{aSvc}}</td>
 					  			<td>
-<!-- 					  				<button  type="button" class="btn btn-primary btn-sm" ng-click="deleteFilteredItem(aSvc.$hashKey, newRequest.requestedServices.selectedServices)" > -->
-<!-- 										  Remove -->
-<!-- 									</button> -->
 					  			 	<a href ng-click="deleteFilteredItem(aSvc.$hashKey, newRequest.requestedServices.selectedServices)">Remove </a>
 					  			</td>
 				  			</tr>
@@ -286,31 +283,73 @@
 	    <div class="panel-body">
 		  	<div class="row">
 		  		<div class="col-sm-12">
-			  		<p>I am providing Images / documents with this request</p>
+			  		<p>Please check <strong>all</strong> that applies: I am providing Images / documents with this request.</p>
 			   	</div>
+			   	
+			   	
 		   		<div class="col-sm-12">
+		   		   <label class="checkbox-inline">
+					  <input type="checkbox" id="inlineCheckbox1" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">By Upload
+					</label>
 				   <label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox1" value="option1">By Carrier
+					  <input type="checkbox" id="inlineCheckbox1" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">By Carrier
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox2" value="option2">By Email
+					  <input type="checkbox" id="inlineCheckbox2" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByEmail">By Email
 					</label>
 				</div>
 				
 				<div class="col-sm-12">
+				      
+				    <div class="form-group">	
+				  		<div  ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByEmail">
+				  		</br>
+				  		<ul>
+					  		<li>If you have <strong>not sent the email yet</strong>, please provide the number of this request in the subject of the email. </li>
+						  	<li>If you have <strong>already sent the email</strong>, please copy and paste the subject of your email and the date the email was sent in the note below. It will help us find your email.</li>
+					  	</ul>
+					  </div>
+				    </div>
+				    
+				    <div class="form-group">	
+				  		<input type="text" class="form-control" id="carrieNameId" 
+				  		ng-model="newRequest.patientInfo.animalWeight"  ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier" 
+				  		placeholder="Which Carrier did you use?  And what was the date you sent it?" >
+				    </div>
+		    	</div>
+		    	
+		    	
+		    	 				
+				<div class="col-sm-12">
 				  	<div class="form-group">	
 					    <label for="exampleInputEmail1">Notes</label>
-					    <textarea class="form-control" rows="3" placeholder="Please provide any details that will help us identify the documents that go with this request <li>email subject</li>"></textarea>
+					    <textarea class="form-control" ng-model="newRequest.imagesAndDocuments.notes" rows="3" placeholder="Please provide any information you would like to commmunicate..."></textarea>
 				    </div>
 		    	</div>
 		    	
 		    	<div class="col-sm-12">
-			    	<label class="btn btn-primary" for="my-file-selector">
-					    <input id="my-file-selector" type="file" style="display:none;">
-					    Upload Picture
-					</label>
-					&nbsp;
-       				 <span class='label label-info' id="upload-file-info">C:/path/to/my/document/xray1.jpeg</span>
+		    		
+					<div flow-init="{target:'/ami/doupload', testChunks:false, permanentErrors: [404, 500, 501], maxChunkRetries: 1,chunkRetryInterval: 5000,simultaneousUploads: 4, singleFile: false}" flow-name="uploader.flow"
+					 flow-file-added="uploader.fileAdded($flow, $file, $message)"
+					 flow-files-submitted ="uploader.fileSubmitted($flow, $file, $message)">     
+				      
+				        <button class="btn btn-primary" flow-btn ng-disabled="! newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">Add files
+				        	<span class="btn-primary glyphicon glyphicon-plus" aria-hidden="true"></span>
+				        </button>
+				        
+				        <button class="btn btn-primary" ng-click="upload()" ng-disabled="! newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">Upload
+				        	<span class="btn-primary glyphicon glyphicon-upload" aria-hidden="true"></span>
+				        </button>
+				        
+				        <table>
+					        <tr ng-repeat="file in uploader.flow.files" >
+					         	
+					         	<td> <a ng-click="file.cancel()">Cancel upload for {{file.name}}</a></td>
+					        </tr>
+					        
+					    </table>    
+						</div>
+		    	
 		    	</div>
 			</div>	
 	    </div>

@@ -1,12 +1,14 @@
 (function(){
 	
-		var app = angular.module('AmiCustModule',[]);
+		var app = angular.module('AmiCustModule',['flow']);
 		
 		
 		
 		
 		// ============ NewRequest ===============
 		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location) {
+			
+			
 			
 			
 			
@@ -79,11 +81,18 @@
 			vetObservation.exam ='';
 			vetObservation.tentativeDiagnosis = '';
 			
+			var imagesAndDocuments = {};
+			imagesAndDocuments.hasDocumentDeliveredByUpload  = false;
+			imagesAndDocuments.hasDocumentDeliveredByCarrier = false;
+			imagesAndDocuments.hasDocumentDeliveredByEmail   = false;
+			imagesAndDocuments.notes = '';
+			
 			var newRequest = {
 					'hospitalAndClientInfo'	: hospitalAndClientInfo,
 					'patientInfo'			: patientInfo,
 					'requestedServices'     : requestedServices,
-					'vetObservation'		: vetObservation
+					'vetObservation'		: vetObservation,
+					'imagesAndDocuments'    : imagesAndDocuments
 			};
 			
 			$scope.isEmployee =function(isEmployee){
@@ -127,8 +136,6 @@
 			//$scope.hospitalAndClientInfo = hospitalAndClientInfo;
 			$scope.newRequest = newRequest;
 			
-			
-			
 			$scope.saveNewRequest = function(){
 				
 			   var res = $http.post('amicusthome/amirequest',$scope.newRequest);
@@ -139,14 +146,108 @@
 					alert( "failure message: " + JSON.stringify({data: data}));
 				});	
 			}
+			
+			
+			$scope.uploader = {
+					fileAdded: function ($flow, $file, $message) {
+						console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
+					    $file.msg = $message;// Just display message for a convenience
+					  },
+				
+					fileSubmitted: function ($flow, $file, $message) {
+						console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
+					    //$file.msg = $message;// Just display message for a convenience
+					}
+						
+				};
+				
+				
+			    $scope.upload = function () {
+			      $scope.uploader.flow.upload(); 
+			  
+			    }
 
 		});
 		
 		
 		
 		// ============ SearchRequest ===============
-		app.controller('SearchRequestCtrl', function ($scope, $window,$location) {
+		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location) {
 			$scope.page = 'searchRequests';
+			
+			
+			$scope.uploader = {
+				fileAdded: function ($flow, $file, $message) {
+					console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
+				    $file.msg = $message;// Just display message for a convenience
+				  },
+			
+				fileSubmitted: function ($flow, $file, $message) {
+					console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
+				    //$file.msg = $message;// Just display message for a convenience
+				}
+					
+			};
+			
+			
+			
+		    $scope.upload = function () {
+		      $scope.uploader.flow.upload(); 
+		  
+		    }
+			
+			
+//			$scope.doUpload = function(flows){
+//				
+//				alert('go it ' );
+////				for (i=0; i< files.length; i++){
+////					
+////					console.log(files[i].name);
+////				}
+//				
+//				
+////				var res = $http.post('amicusthome/amirequest',$scope.newRequest);
+////				res.success(function(data, status, headers, config) {
+////					$scope.message = data;
+////				});
+////				res.error(function(data, status, headers, config) {
+////					alert( "failure message: " + JSON.stringify({data: data}));
+////				});	
+//				
+//				alert('about to..');
+//				var file = flows.files[0];
+//				 var fd = new FormData();
+//			        fd.append("file", file);
+//			        
+//			        alert('ok nowwww..');
+//			        $http.post("/ami/doupload1", fd, {
+//			            withCredentials: false,
+//			            headers: {'Content-Type': 'multipart/form-data' },
+//			            
+//			            transformRequest: angular.identity,
+//			            data: { data: fd}
+//			        })
+//				
+//			        alert('done! ');
+//				
+//				
+////				angular.forEach(flows, function (flow) {
+////					alert('in loop 1');
+////			        var fd = new FormData();
+////			        fd.append("file", flow);
+////			        $http.post("/ami/doupload1", fd, {
+////			            withCredentials: true,
+////			            headers: {'Content-Type': undefined },
+////			            transformRequest: angular.identity,
+////			            data: {  data: fd}
+////			        })
+////			    });
+//				
+//				
+//			}
+			
+			
+			
 
 		});
 	
