@@ -1,4 +1,6 @@
+
 <br/>
+
 	<nav class="nav nav-pills">
 <!-- 		<section ng-init = "tab = 1" > -->
 	<section >
@@ -7,7 +9,12 @@
 			  <li role="presentation" ng-class="{'active' : page=='searchRequests'}"><a ng-href="#/searchRequest" >Search Requests</a></li>
 			  <li role="presentation" ng-class="{'active' : page=='profile'}"><a href="#/profile"  ng-click="tab = 3">Profile</a></li>
 			  <li role="presentation" ng-class="{'active' : page=='help'}"><a href="#/help"  ng-click="tab = 4">Help</a></li>
-			  <li role="presentation"><a href="#/amicust"  ng-click="tab = 5">Logout</a></li>
+<!-- 			  <li role="presentation"><a href="#/amicust"  ng-click="tab = 5">Logout</a></li> -->
+			  <li role="presentation"><a href="/j_spring_security_logout" /> Logout</a></li>
+			  
+			  
+			  
+			  
 			</ul>
 		</section>
 	</nav>

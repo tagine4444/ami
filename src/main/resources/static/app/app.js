@@ -1,7 +1,8 @@
 
 var chidra = angular.module('chidra',['flow','ngRoute','AmiCustModule']);
 
-chidra.config(['$routeProvider','flowFactoryProvider',
+
+chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', 'CSRF_TOKEN',
                     function($routeProvider) {	
                       $routeProvider.
                         when('/', {
@@ -51,7 +52,15 @@ chidra.config(['$routeProvider','flowFactoryProvider',
                     	  });
                     	  // Can be used with different implementations of Flow.js
                     	  // flowFactoryProvider.factory = fustyFlowFactory;
-                      }
+                      },
+                      function($httpProvider, CSRF_TOKEN) {
+                          /**
+                           * adds CSRF token to header
+                           */
+                          $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = CSRF_TOKEN;
+
+                       }
+                      
                       
 }]);
 		

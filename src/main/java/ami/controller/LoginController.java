@@ -1,32 +1,17 @@
 package ami.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class LoginController {
@@ -37,6 +22,23 @@ public class LoginController {
 	private MongoTemplate mongo;
 	
 	public static final String UPLOAD_DIR = "uploads";
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/ami/getuserid", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String getUserId() {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		
+		final String result = "{\"userName\": \""+ userName +"\"}";
+		return result;
+			
+	}
+	
 	
 //	@RequestMapping("/greeting")
 //    public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
@@ -53,17 +55,37 @@ public class LoginController {
 //		return "index";
 //	}
 	
-//	@RequestMapping(value = "/login", method = RequestMethod.GET)
+//	@RequestMapping(value = "/ami/login", method = RequestMethod.GET)
 //	public String login(Model model) {
 //		
-//		
+//		System.out.println(">>>>>> going to amicust!!!!");
 //		return "login";
 //	}
-	@RequestMapping(value = "/ami/logincheck", method = RequestMethod.POST)
-	public String amiLogin(Model model) {
+	
+	
+//	@RequestMapping(value = "/ami/amicusthome1", method = RequestMethod.GET)
+//	public String amiLogin(Model model) {
+//		
+//		
+//		Set<String> permissions = new HashSet();
+//		for (GrantedAuthority auth : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+//		    permissions.add(auth.getAuthority());
+//		}
+//
+//		if (permissions.contains("USER_ROLE") ) {
+//		    //do stuff
+//		}
+//		
+//		System.out.println("in amicusthome1 >>>>>> redirect:amicusthome!!!");
+//		return "redirect:amicusthome";
+//	}
+	
+	
+	@RequestMapping(value = "/ami/logincheck", method = RequestMethod.GET)
+	public String amiLoginGET(Model model) {
 		
-		System.out.println(">>>>>> going to amicust!!!!");
-		return "redirect:amicusthome";
+		System.out.println("GET CHECK >>>>>> going to amicust!!!!");
+		return "redirect:amicusthome1";
 	}
 	
 	

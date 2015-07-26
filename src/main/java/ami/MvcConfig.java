@@ -10,15 +10,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.mongodb.MongoClient;
 
 @Configuration
-public class MvcConfig extends WebMvcConfigurerAdapter {
+public class MvcConfig extends WebMvcConfigurerAdapter { 
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
 //        registry.addViewController("/ami").setViewName("index");
     	
     	registry.addViewController("/ami/index").setViewName("index");
-    	registry.addViewController("/ami/login").setViewName("login");
+    	//registry.addViewController("/ami/login").setViewName("login");
        registry.addViewController("/ami/amicusthome").setViewName("amicusthome");
+       
+       
+       
+       
+       
+       registry.addViewController("/ami/home").setViewName("home");
+       registry.addViewController("/ami").setViewName("home");
+       registry.addViewController("/ami/hello").setViewName("hello");
+       registry.addViewController("/ami/login").setViewName("login");
     }
     
     

@@ -1,16 +1,93 @@
 (function(){
 	
+	
+	 // I transform the error response, unwrapping the application dta from
+    // the API response payload.
+    function handleError( response ) {
+        // The API response from the server should be returned in a
+        // nomralized format. However, if the request was not handled by the
+        // server (or what not handles properly - ex. server error), then we
+        // may have to normalize it on our end, as best we can.
+        if (
+            ! angular.isObject( response.data ) ||
+            ! response.data.message
+            ) {
+            return( $q.reject( "An unknown error occurred." ) );
+        }
+        // Otherwise, use expected error message.
+        return( $q.reject( response.data.message ) );
+    }
+    // I transform the successful response, unwrapping the application data
+    // from the API response payload.
+    function handleSuccess( response ) {
+        return( response.data );
+    }
+    
+    
 		var app = angular.module('AmiCustModule',['flow']);
 		
 		
+		/**
+		 * 
+		 * when it thinks testing your app unit test with Karma,
+		 * this solution was better than getting token via AJAX.
+		 * Because low-level Ajax request correctly doesn't work on Karma
+		 * 
+		 * Helper idea to me :
+		 * http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on/15761835#15761835 
+		 * 
+		 */
+		var csrftoken =  (function() {
+		    // not need Jquery for doing that
+		    var metas = window.document.getElementsByTagName('meta');
 		
+		    // finding one has csrf token 
+		    for(var i=0 ; i < metas.length ; i++) {
+		
+		        if ( metas[i].name === "csrf-token") {
+		
+		            return  metas[i].content;       
+		        }
+		    }  
+		
+		})();
+
+		// adding constant into our app
+		
+		app.constant('CSRF_TOKEN', csrftoken); 
+		
+		app.service('userNameService', function( $http, $q) {
+			
+			var deferred = $q.defer();
+			this.getUserName = function() {
+				
+				var res = $http.get('/ami/getuserid.json');
+				
+				res.success(function(data, status, headers, config) {
+					deferred.resolve();
+				});
+				res.error(function(data, status, headers, config) {
+					deferred.reject('failure to get user name');
+				});	
+
+				return res;
+	        }
+			
+		});
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, userNameService) {
+
+			$scope.userName='';
+			var promise = userNameService.getUserName();
 			
-			
-			
-			
+			promise.then(function(response) {
+				$scope.userName= response.data.userName;
+			}, function(response) {
+			  alert( response.data.message);
+			}, function(update) {
+//			  alert('Got notification: ' + update);
+			});
 			
 			$scope.page = 'newRequest';
 			
@@ -28,9 +105,6 @@
 			var computedTomography 		= ['Brain With Contrast','Brain With Contrast and/or CSF tap'];
 			var radiographyFluoroscopy  = ['Thorax','Abdomen','Pelvis'];
 			var ultrasound              = ['Abdomen','Heart','Uterus'];
-			
-			
-			
 			
 			
 			$scope.servicesList = {
@@ -161,7 +235,6 @@
 						
 				};
 				
-				
 			    $scope.upload = function () {
 			      $scope.uploader.flow.upload(); 
 			  
@@ -196,59 +269,6 @@
 		  
 		    }
 			
-			
-//			$scope.doUpload = function(flows){
-//				
-//				alert('go it ' );
-////				for (i=0; i< files.length; i++){
-////					
-////					console.log(files[i].name);
-////				}
-//				
-//				
-////				var res = $http.post('amicusthome/amirequest',$scope.newRequest);
-////				res.success(function(data, status, headers, config) {
-////					$scope.message = data;
-////				});
-////				res.error(function(data, status, headers, config) {
-////					alert( "failure message: " + JSON.stringify({data: data}));
-////				});	
-//				
-//				alert('about to..');
-//				var file = flows.files[0];
-//				 var fd = new FormData();
-//			        fd.append("file", file);
-//			        
-//			        alert('ok nowwww..');
-//			        $http.post("/ami/doupload1", fd, {
-//			            withCredentials: false,
-//			            headers: {'Content-Type': 'multipart/form-data' },
-//			            
-//			            transformRequest: angular.identity,
-//			            data: { data: fd}
-//			        })
-//				
-//			        alert('done! ');
-//				
-//				
-////				angular.forEach(flows, function (flow) {
-////					alert('in loop 1');
-////			        var fd = new FormData();
-////			        fd.append("file", flow);
-////			        $http.post("/ami/doupload1", fd, {
-////			            withCredentials: true,
-////			            headers: {'Content-Type': undefined },
-////			            transformRequest: angular.identity,
-////			            data: {  data: fd}
-////			        })
-////			    });
-//				
-//				
-//			}
-			
-			
-			
-
 		});
 	
 		

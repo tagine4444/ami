@@ -15,28 +15,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
         .csrf().disable()
-            .authorizeRequests()
-                .antMatchers("/ami/index","/ami/amicusthome").permitAll()
-//                .antMatchers("amicusthome").hasRole("USER")
-//                .antMatchers("/amicusthome").hasRole("USER")
-//                .antMatchers("/ami/amicusthome").hasRole("USER")
-                //.anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/ami/login")
-                .permitAll()
-                .and()
-            .logout()
-                .permitAll();
+        .authorizeRequests()
+        .antMatchers("/", "/ami/home", "/ami/getuserid").permitAll()
+        .antMatchers("/ami/**").hasRole("USER")
+        .anyRequest().authenticated()
+        .and()
+    .formLogin()
+        .loginPage("/ami/login")
+        .permitAll()
+        .defaultSuccessUrl("/ami/amicusthome")
+        .and()
+    .logout()
+        .logoutUrl("/j_spring_security_logout")
+        .logoutSuccessUrl("/ami/login")
+        .invalidateHttpSession( true )
+        .deleteCookies("JSESSIONID");   
+//        .permitAll();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .inMemoryAuthentication()
-                .withUser("vet").password("vet").roles("USER");
+                .withUser("user").password("password").roles("USER");
         
-       
+
+        auth
+        .inMemoryAuthentication()
+            .withUser("vet").password("vet").roles("USER");
+        auth
+        .inMemoryAuthentication()
+        .withUser("chuck").password("chuck").roles("USER");
+                
+                
     }
     
     @Override
