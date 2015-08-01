@@ -80,13 +80,6 @@
 		// ============ NewRequest ===============
 		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, userNameService) {
 			
-
-//			alert('$scope.newRequestForm' + $scope.newRequestForm);
-//			$scope.newRequestForm.$setPristine();
-//			$scope.userForm.$dirty = false;
-//			$scope.userForm.$pristine = true;
-//			$scope.userForm.$submitted = false;
-			
 			$scope.userName='';
 			var promise = userNameService.getUserName();
 			
@@ -103,11 +96,54 @@
 			var ZeroYears = '0 year';
 			var ZeroMonths = '0 months';
 			
+			$scope.breedsCanine = ['Select Canine Breed', 'Greman Sheppard','Chiwawa','Boxer','Poodle'];
+			
+			$scope.breedsFeline = [
+			'Select Feline Breed',                       
+			'Persian', 
+			'Maine Coon', 
+			'Exotic Shorthair', 
+			'Abyssinian', 
+			'Siamese', 
+			'Ragdoll', 
+			'Sphynx', 
+			'Birman', 
+			'American Shorthair', 
+			'Oriental Shorthair', 
+			'Breed', 
+			'York Chocolate', 
+			'Turkish Angora', 
+			'Toyger', 
+			'Snowshoe cat', 
+			'Scottish Fold'];
+			
+			$scope.breedsBovine =[
+			'Select Bovine Breed', 
+			'American Milking Devon',
+			'Ankole-Watusi',
+			'Armorican (cattle)',
+			'Belgian Blue',
+			'Blue Albion'    
+			];
+			
+			
+			$scope.breedsBirds =[
+      			'Select Bird Breed', 
+      			'Anas crecca',
+      			'Aquila chrysaetos',
+      			'Eagle',
+      			'Pigeon',
+      			'Thanksgiving Duck',
+      			'Dove',
+      			'Falcon'
+			 ];
+
+			
 			$scope.page = 'newRequest';
 			
 			$scope.labs 				= ['PCL', 'IDEXX', 'Antech'];
-			$scope.speciesList 			= ['Canine','Feline','Bovine','Birds'];
-			$scope.breedsList 			= ['Greman Sheppard','Chiwawa','Boxer','Poodle'];
+			$scope.speciesList 			= ['Select Species','Canine','Feline','Bovine','Birds'];
+			$scope.breedsList 			= ['Select Breed'];
 			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
 			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalAgeYearsList 	= [Years ];
@@ -151,7 +187,6 @@
 				'Radiography/Fluoroscopy':radiographyFluoroscopy,
 				'Ultrasound'             :ultrasound
 			};
-			
 			
 			var hospitalAndClientInfo = { };
 			hospitalAndClientInfo.labs 			  = '';
@@ -211,9 +246,59 @@
 			};
 			
 			
+			
+			
+			$scope.newRequest = newRequest;
+			
+			$scope.updateServicesListByCategory = function(){
+			
+				var selectedSvcCategory = $scope.serviceCategory;
+				var isContrastRadiography = new String(selectedSvcCategory).toLowerCase().indexOf("contrast radiography") > -1;
+				var isComputedTomography = new String(selectedSvcCategory).toLowerCase().indexOf("computed tomography") > -1;
+				var isRadiographyFluoroscopy = new String(selectedSvcCategory).toLowerCase().indexOf("radiography/fluoroscopy") > -1;
+				var isUltrasounds = new String(selectedSvcCategory).toLowerCase().indexOf("ultrasound") > -1;
+				
+				
+				if(isContrastRadiography){
+					$scope.servicesListByCategory= contrastRadioGraphy;
+				}else if(isComputedTomography){
+					$scope.servicesListByCategory= computedTomography;
+					
+				}else if(isRadiographyFluoroscopy){
+					$scope.servicesListByCategory= radiographyFluoroscopy;
+					
+				}else if(isUltrasounds){
+					$scope.servicesListByCategory= ultrasound;
+				}
+				
+			}
+			
+			$scope.disableBreedList = true;
+			$scope.updateBreedListBox = function(){
+				var speciesValue        = newRequest.patientInfo.species;
+				
+				$scope.disableBreedList = false;
+				var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
+				var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
+				var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
+				var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
+				
+				if(isCanine){
+					$scope.breedsList  = $scope.breedsCanine;
+				}else if( isFeline){
+					$scope.breedsList  = $scope.breedsFeline;
+				}else if(isBovine){
+					$scope.breedsList  = $scope.breedsBovine;
+				}else if(isBirds){
+					$scope.breedsList  = $scope.breedsBirds;
+				}
+				else{
+					$scope.breedsList  = ['Select Breed'];
+					$scope.disableBreedList = true;
+				}
+			}
+			
 			$scope.updateAnimalYearsLabel =function(){
-				
-				
 
 				var yearValue     = $scope.newRequest.patientInfo.animalAgeYears;
 				var yearIsEmpty   =   new String(yearValue).indexOf("Years") > -1;
@@ -265,29 +350,20 @@
 			}
 			
 			$scope.selectThisService = function(aServiceType, aService){
-				requestedServices.selectedServices.push(aServiceType +"-"+aService);
+				requestedServices.selectedServices.push(aServiceType +" - "+aService);
 			}
 			
-			$scope.deleteFilteredItem = function(hashKey, sourceArray){
-				  angular.forEach(sourceArray, function(obj, index){
-					  
-				    // sourceArray is a reference to the original array passed to ng-repeat, 
-				    // rather than the filtered version. 
-				    // 1. compare the target object's hashKey to the current member of the iterable:
-				    if (obj.$$hashKey === hashKey) {
-				      // remove the matching item from the array
-				      sourceArray.splice(index, 1);
-				      // and exit the loop right away
-				      return;
-				    };
-				  });
+			
+			
+			$scope.deleteFilteredItem = function(anItem){
+				
+				
+				for(var i = $scope.newRequest.requestedServices.selectedServices.length - 1; i >= 0; i--) {
+				    if($scope.newRequest.requestedServices.selectedServices[i] === anItem) {
+				    	$scope.newRequest.requestedServices.selectedServices.splice(i, 1);
+				    }
 				}
-			
-			//$scope.hospitalAndClientInfo = hospitalAndClientInfo;
-			$scope.newRequest = newRequest;
-			
-			
-			
+			}
 		
 			$scope.saveNewRequest = function(){
 				if ($scope.newRequestForm.$valid) {

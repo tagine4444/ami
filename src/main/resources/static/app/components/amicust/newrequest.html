@@ -110,10 +110,10 @@
 					  <div class="form-group">
 						  	<input type="text" class="form-control" id="weightId" ng-model="newRequest.patientInfo.animalWeight"  placeholder="weight">
 						  
-							<select class="form-control">
-					          <option>LB</option>
-					          <option>KG</option>
-						    </select>
+								<select class="form-control">
+						          <option>LB</option>
+						          <option>KG</option>
+							    </select>
 					  </div>
 					</div>
 				</div>
@@ -132,7 +132,6 @@
 								    
 							    <div class="input-group">
 							       <select  id="monghLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeMonths" ng-change="updateAnimalYearsLabel()">
-<!-- 									  <option ng-repeat="animalMonths in animalAgeMonthsList"> {{animalMonths}}</option> -->
 									  <option ng-selected="$index==0"  ng-repeat="animalMonths in animalAgeMonthsList"> {{animalMonths}}</option>
 									</select>
 							    </div>
@@ -146,16 +145,15 @@
 			<br/>
 			
 			<div class="row">
-			    
 			     <div class="col-sm-4">
-				      <select class="form-control" ng-model="newRequest.patientInfo.species">
-						  <option  ng-repeat="aSpecies in speciesList"> {{aSpecies}}</option>
-						</select>
+				    <select class="form-control" ng-model="newRequest.patientInfo.species" ng-change="updateBreedListBox()">
+						 <option ng-selected="$index==0"  ng-repeat="aSpecies in speciesList"> {{aSpecies}}</option>
+					</select>
 			    </div>
 			    
 			    <div class="col-sm-4">
-				      <select class="form-control" ng-model="newRequest.patientInfo.breeds">
-						   <option ng-repeat="breed in breedsList"> {{breed}}</option>
+				      <select class="form-control" ng-model="newRequest.patientInfo.breeds" ng-disabled ="disableBreedList" >
+						   <option ng-selected="$index==0"  ng-repeat="breed in breedsList"> {{breed}}</option>
 						</select>
 			    </div>
 			</div>
@@ -188,7 +186,9 @@
 			    </div>
 			    
 			    <div class="col-sm-2">
-				    <button  type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" ng-disabled="newRequest.requestedServices.isInterpretationOnly">
+				    <button  type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" 
+				    ng-click="updateServicesListByCategory()"
+				    ng-disabled="newRequest.requestedServices.isInterpretationOnly">
 						  Request a service
 					</button>
 		  		</div>	
@@ -213,7 +213,7 @@
 			        		<tr> 
 					  			<td>{{aSvc}}</td>
 					  			<td>
-					  			 	<a href ng-click="deleteFilteredItem(aSvc.$hashKey, newRequest.requestedServices.selectedServices)">Remove </a>
+					  			 	<a href ng-click="deleteFilteredItem(aSvc )">Remove </a>
 					  			</td>
 				  			</tr>
 				  	</tbody>		
@@ -352,12 +352,16 @@
 				    </div>
 		    	</div>
 		    	
+		    	
+		    	
+				        
 		    	<div class="col-sm-12">
 		    		
 					<div flow-init="{target:'/ami/doupload', testChunks:false, permanentErrors: [404, 500, 501], maxChunkRetries: 1,chunkRetryInterval: 5000,simultaneousUploads: 4, singleFile: false}" flow-name="uploader.flow"
 					 flow-file-added="uploader.fileAdded($flow, $file, $message)"
 					 flow-files-submitted ="uploader.fileSubmitted($flow, $file, $message)">     
-				      
+				        
+				        <br/><br/>
 				        <button class="btn btn-primary" flow-btn ng-disabled="! newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">Add files
 				        	<span class="btn-primary glyphicon glyphicon-plus" aria-hidden="true"></span>
 				        </button>
@@ -366,9 +370,9 @@
 				        	<span class="btn-primary glyphicon glyphicon-upload" aria-hidden="true"></span>
 				        </button>
 				        
+				        <br/>
 				        <table>
 					        <tr ng-repeat="file in uploader.flow.files" >
-					         	
 					         	<td> <a ng-click="file.cancel()">Cancel upload for {{file.name}}</a></td>
 					        </tr>
 					        
@@ -392,23 +396,27 @@
 		      
 		      	<div class="panel panel-default">
 				  <!-- Default panel contents -->
-				  <div class="panel-heading">{{serviceCategory}}</div>
+				  <div class="panel-heading">{{serviceCategory}} Services</div>
 				
 				  <!-- Table -->
 				  <table class="table">
 				  	<thead>
 				  		<tr>
-				  			<th>Key</th>
-				  			<th>Value</th>
 				  			<th></th>
 				  		</tr>
 				  	</thead>
-				  	<tbody ng-repeat="(key, value) in servicesList">
-			        		<tr ng-repeat="aValue in value track by $index"> 
-					  			<td>{{key}}</td>
-					  			<td>{{aValue}}</td>
+				  	<tbody ng-repeat="aService in servicesListByCategory">
+<!-- 			        		<tr ng-repeat="aValue in value track by $index">  -->
+<!-- 					  			<td>{{key}}</td> -->
+<!-- 					  			<td>{{aValue}}</td> -->
+<!-- 					  			<td> -->
+<!-- 					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(key,aValue)">Add</button> -->
+<!-- 					  			</td> -->
+<!-- 				  			</tr> -->
+			        		<tr> 
+					  			<td>{{aService}}</td>
 					  			<td>
-					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(key,aValue)">Add</button>
+					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(serviceCategory, aService)">Add</button>
 					  			</td>
 				  			</tr>
 				  	</tbody>		
