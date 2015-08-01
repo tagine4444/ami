@@ -3,18 +3,27 @@
 
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
+	
+	
+	<form name="newRequestForm" ng-submit="saveNewRequest()"   >
    	<div class="row">
    		<div class="col-sm-8">
-   			<p>Welcome {{userName}}</p>
+<!--    			<p>Welcome {{userName}} {{newRequest.id}}</p> -->
+<!-- 	<p ng-show="newRequestForm.$invalid && isShowIncompleteFormMsg"></p> -->
+   	
+   	
+   	<p class="alert alert-warning" role="alert"  ng-show="newRequestForm.$invalid && isShowIncompleteFormMsg">You can't submit to radiologist until all required fields are provided. You can however save this request as a draft</p>
    		</div>
-	   	<div class="col-sm-4">
-	   		<button type="submit" class="btn btn-default">Cancel</button>
+	   	<div class="col-sm-4" 	ng-mouseenter="showIncompleteFormMsg()" ng-mouseleave="dontShowIncompleteFormMsg()">
+	   		<button type="submit" class="btn btn-default" >Cancel</button>
 	   		<button type="submit" class="btn btn-warning">Save As Draft</button>
-	   		<button type="submit" class="btn btn-danger" ng-click="saveNewRequest()">Submit</button>
+	   		<button type="submit" class="btn btn-danger" ng-disabled="newRequestForm.$invalid" >Submit To Radiologist</button>
 	   	</div>
    	</div>
    	<br/>
+   	<p ng-show="hasBeenSaved()" >Your Request has been saved {{newRequest.id}}</p>
    	
+   
 	<div class="panel panel-default">
 	  <div class="panel-heading">Hospital & Client Info</div>
 	  <div class="panel-body">
@@ -30,15 +39,12 @@
 				<div class="form-inline">
 				  <div class="form-group">
 						  <div class="input-group">
-						  	<input type="text" class="form-control" id="labListId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account">
+						  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account">
 						  </div>
 						  <div class="input-group">
-								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs">
-<!-- 						            <option>Select Lab</option> -->
-									<option ng-repeat="lab in labsList"> {{lab}}</option>
-									
+								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs" ng-init="newRequest.hospitalAndClientInfo.labs = 'ff'">
+									<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option>
 							    </select>
-
 						 </div> 
 				  </div>
 				</div>
@@ -48,11 +54,21 @@
 		<!--  Clients  Row -->
 		<div class="row">
 		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="vetId" ng-model= "newRequest.hospitalAndClientInfo.clientFirstName" placeholder="Client's First Name">
+			    <div class="form-group" ng-class="{ 'has-error' : newRequestForm.clientFirstName.$invalid && !newRequestForm.clientFirstName.$pristine }">
+				    <input type="text" name="clientFirstName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientFirstName" placeholder="Client's First Name" required>
+				    <p ng-show="newRequestForm.clientFirstName.$invalid && !newRequestForm.clientFirstName.$pristine" class="help-block">required field</p>
+				</div>
 		    </div>
 		    
 		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="labActId" ng-model= "newRequest.hospitalAndClientInfo.clientLastName" placeholder="Client's Last Name">
+		      
+		    
+		    	
+		    	<div class="form-group" ng-class="{ 'has-error' : newRequestForm.clientLastName.$invalid && !newRequestForm.clientLastName.$pristine }">
+				    <input type="text" name="clientLastName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientLastName" placeholder="Client's Last Name" required>
+				    <p ng-show="newRequestForm.clientLastName.$invalid && !newRequestForm.clientLastName.$pristine" class="help-block">required field</p>
+				</div>
+		    
 		    </div>
 		    
 		    <div class="col-sm-2">
@@ -84,8 +100,7 @@
 			    
 			     <div class="col-sm-1">
 				       <select class="form-control" ng-model="newRequest.patientInfo.animalSex">
-<!-- 						  <option>Sex</option> -->
-						  <option ng-repeat="animalSex in animalSexList"> {{animalSex}}</option>
+						  <option ng-selected="$index==0" ng-repeat="animalSex in animalSexList"> {{animalSex}}</option>
 						</select>
 				</div>
 				
@@ -93,45 +108,36 @@
 				<div class="col-sm-3">	    
 					<div class="form-inline">
 					  <div class="form-group">
-						  <div class="input-group">
 						  	<input type="text" class="form-control" id="weightId" ng-model="newRequest.patientInfo.animalWeight"  placeholder="weight">
-						  </div>
 						  
-						  <div class="input-group">
-								<select class="form-control">
-						          <option>LB</option>
-						          <option>KG</option>
-							    </select>
-						 </div> 
+							<select class="form-control">
+					          <option>LB</option>
+					          <option>KG</option>
+						    </select>
 					  </div>
 					</div>
 				</div>
 				
 				<!-- Age -->
-				<div class="col-sm-4">	    
+				<div class="col-sm-5">	    
 					<div class="form-inline">
 						<div class="form-group">
 								<label  for="ageLabId">Age:</label>
 								    
 							    <div class="input-group">
-							      <select id="ageLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeYears">
-<!-- 									  <option>Years</option> -->
-									  <option ng-repeat="animalYears in animalAgeYearsList"> {{animalYears}}</option>
-<!-- 									  <option>1</option> -->
-<!-- 									  <option>2</option> -->
-<!-- 									  <option>3</option> -->
-<!-- 									  <option>4</option> -->
+							      <select id="ageLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeYears" ng-change="updateAnimalYearsLabel()">
+									  <option ng-selected="$index==0"  ng-repeat="animalYears in animalAgeYearsList"> {{animalYears}}</option>
 									</select>
 							    </div>
 								    
 							    <div class="input-group">
-							       <select  id="monghLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeMonths">
-<!-- 									  <option>Months</option> -->
-									  <option ng-repeat="animalYears in animalAgeMonthsList"> {{animalYears}}</option>
+							       <select  id="monghLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeMonths" ng-change="updateAnimalYearsLabel()">
+<!-- 									  <option ng-repeat="animalMonths in animalAgeMonthsList"> {{animalMonths}}</option> -->
+									  <option ng-selected="$index==0"  ng-repeat="animalMonths in animalAgeMonthsList"> {{animalMonths}}</option>
 									</select>
 							    </div>
 							    
-								{{ newRequest.patientInfo.animalAgeYears }} year<span ng-show="newRequest.patientInfo.animalAgeYears >1" >s</span> and {{ newRequest.patientInfo.animalAgeMonths}} month<span ng-show="newRequest.patientInfo.animalAgeMonths >1" >s</span>
+								{{ newRequest.patientInfo.ageLabel }} 
 						</div>
 					</div>
 				</div>
@@ -268,11 +274,19 @@
 			    <div class="col-sm-12">
 					  	<div class="form-group">	
 						    <label for="exampleInputEmail1">Exam</label>
-						    <textarea class="form-control" rows="3" ng-model="newRequest.vetObservation.exam"></textarea>
+							<div class="form-group" ng-class="{ 'has-error' : newRequestForm.exam.$invalid && !newRequestForm.exam.$pristine }">
+							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" ng-required="true"></textarea>
+							    <p ng-show="newRequestForm.exam.$invalid && !newRequestForm.exam.$pristine" class="help-block">required field</p>
+							</div>
 					    </div>
 					  	<div class="form-group">
 						    <label for="exampleInputEmail1">Tentative Diagnosis</label>
-						    <textarea class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis"></textarea>
+						    
+						    <div class="form-group" ng-class="{ 'has-error' : newRequestForm.tentativeDiagnosis.$invalid && !newRequestForm.tentativeDiagnosis.$pristine }">
+							    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" ng-required="true"></textarea>
+							    <p ng-show="newRequestForm.tentativeDiagnosis.$invalid && !newRequestForm.tentativeDiagnosis.$pristine" class="help-block">required field</p>
+							</div>
+						    
 					    </div>
 		    	</div>
 		    </div>
@@ -280,7 +294,7 @@
 	</div>
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading">Images / Documents</div>
+	  <div class="panel-heading">Images / Documents </div>
 	    <div class="panel-body">
 		  	<div class="row">
 		  		<div class="col-sm-12">
@@ -289,21 +303,31 @@
 			   	
 			   	
 		   		<div class="col-sm-12">
-		   		   <label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox1" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">By Upload
+		   		<span id = "uploadCheckCheckboxDivId" ng-mouseleave="hoverOut()">
+		   		   <label class="checkbox-inline" >
+					
+					  <input type="checkbox" id="uploadCheckCheckbox" ng-disabled="hoverEdit"
+					  ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
+					  ng-mouseenter="hoverIn()" 
+					  />By Upload
 					</label>
+				</span>	
 				   <label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox1" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">By Carrier
+					  <input type="checkbox" id="carrierCheckboxId" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">By Carrier
 					</label>
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="inlineCheckbox2" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByEmail">By Email
+					  <input type="checkbox" id="deliveredByEmailCheckboxId" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByEmail">By Email
 					</label>
+				</div>
+				<div class="col-sm-12">
+<!-- 				 <div ng-show="!hasBeenSaved()" style="color:red">The Upload check box is currently disabled. To enable it, you must first save as draft. See the orange button above.</div> -->
+				 <div id="msg" ng-show="hoverEdit" style="color:red">The Upload check box is currently disabled. To enable it, you must first save as draft. See the orange button above.</div>
 				</div>
 				
 				<div class="col-sm-12">
 				      
 				    <div class="form-group">	
-				  		<div  ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByEmail">
+				  		<div  ng-show="!hasBeenSaved()">
 				  		</br>
 				  		<ul>
 					  		<li>If you have <strong>not sent the email yet</strong>, please provide the number of this request in the subject of the email. </li>
@@ -355,7 +379,7 @@
 			</div>	
 	    </div>
 	</div>	    
-	    
+</form>	    
 	    <!-- Modal -->
 		<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">

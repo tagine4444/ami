@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import ami.model.users.AmiAuthtorities;
+
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 @Controller
 public class LoginController {
@@ -104,6 +110,7 @@ public class LoginController {
 		return "redirect:amicusthome";
 	}
 
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.POST)
 	@ResponseBody
 	public String amiRequestSave(@RequestBody String newAmiRequest ) {
@@ -111,13 +118,26 @@ public class LoginController {
 		System.out.println(newAmiRequest);
 		
 		//Person p = new Person("Joe", 34);
-		mongo.insert(newAmiRequest, "request");
+		
+		
+		DBObject dbObject = (DBObject) JSON.parse(newAmiRequest);
+		
+		//mongo.save(newAmiRequest, "request");
+		mongo.save(dbObject, "request");
+		System.out.println(dbObject.get("_id"));
+		
+		Object object = dbObject.get("_id");
+		
+		
+		
 		
 		//p = mongo.findById(p.getId(), Person.class);
 		//log.debug("Found "+p);
 		//System.out.println("found "+p);
 		
-		return "{}";
+		
+		
+		return "{\"id\": \" "+object.toString()+" \"}";
 	}
 	
 	

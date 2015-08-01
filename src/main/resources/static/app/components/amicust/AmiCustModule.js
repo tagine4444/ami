@@ -75,9 +75,18 @@
 			
 		});
 		
+		
+		
 		// ============ NewRequest ===============
 		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, userNameService) {
+			
 
+//			alert('$scope.newRequestForm' + $scope.newRequestForm);
+//			$scope.newRequestForm.$setPristine();
+//			$scope.userForm.$dirty = false;
+//			$scope.userForm.$pristine = true;
+//			$scope.userForm.$submitted = false;
+			
 			$scope.userName='';
 			var promise = userNameService.getUserName();
 			
@@ -89,17 +98,46 @@
 //			  alert('Got notification: ' + update);
 			});
 			
+			var Years  = 'Years';
+			var Months = 'Months';
+			var ZeroYears = '0 year';
+			var ZeroMonths = '0 months';
+			
 			$scope.page = 'newRequest';
 			
 			$scope.labs 				= ['PCL', 'IDEXX', 'Antech'];
 			$scope.speciesList 			= ['Canine','Feline','Bovine','Birds'];
 			$scope.breedsList 			= ['Greman Sheppard','Chiwawa','Boxer','Poodle'];
-			$scope.labsList 			= ['PCL', 'IDEXX', 'Antech'];
-			$scope.animalSexList		= ['F/s', 'M/c', 'F','M'];
-			$scope.animalAgeYearsList 	= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
-			$scope.animalAgeMonthsList =  [0,1,2,3,4,5,6,7,8,9,10,11,12];
+			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
+			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
+			$scope.animalAgeYearsList 	= [Years ];
+			$scope.animalAgeMonthsList =  [Months];
 			$scope.serviceCategory = '';
 			
+			
+			for(var i=0; i<=100 ; i++){
+				if(i>1){
+					var aYear = i + ' years';;
+				}else if(i=1){
+					var aYear = i + ' year';
+				}else if(i==0){
+					var aYear = ZeroYears;
+				}
+
+				
+				$scope.animalAgeYearsList.push(aYear);
+			}
+			
+			for(var i=1; i<=12 ; i++){
+				if(i>1){
+					var aYear = i + ' months';
+				}else{
+					
+					var aYear = i + ' month';
+				}
+				
+				$scope.animalAgeMonthsList.push(aYear);
+			}
 			
 			var contrastRadioGraphy 	= ['Myelogram','Arthrogram'];
 			var computedTomography 		= ['Brain With Contrast','Brain With Contrast and/or CSF tap'];
@@ -129,8 +167,9 @@
 			patientInfo.animalSex		='';
 			patientInfo.animalWeight 	= '';
 			patientInfo.animalWeightUom = '';
-			patientInfo.animalAgeYears 	= 0;
-			patientInfo.animalAgeMonths 	= 0;
+			patientInfo.animalAgeYears 	= '';
+			patientInfo.animalAgeMonths = '';
+			patientInfo.ageLabel		= '';
 			patientInfo.species 		= '';
 			patientInfo.breeds 			= '';
 			
@@ -161,6 +200,8 @@
 			imagesAndDocuments.hasDocumentDeliveredByEmail   = false;
 			imagesAndDocuments.notes = '';
 			
+			
+			
 			var newRequest = {
 					'hospitalAndClientInfo'	: hospitalAndClientInfo,
 					'patientInfo'			: patientInfo,
@@ -168,6 +209,41 @@
 					'vetObservation'		: vetObservation,
 					'imagesAndDocuments'    : imagesAndDocuments
 			};
+			
+			
+			$scope.updateAnimalYearsLabel =function(){
+				
+				
+
+				var yearValue     = $scope.newRequest.patientInfo.animalAgeYears;
+				var yearIsEmpty   =   new String(yearValue).indexOf("Years") > -1;
+				
+				var monthValue     = $scope.newRequest.patientInfo.animalAgeMonths;
+				var monthIsEmpty   =   new String(monthValue).indexOf("Months") > -1;
+				
+				if( yearIsEmpty && monthIsEmpty){
+					$scope.newRequest.patientInfo.ageLabel = '';
+				
+				}else if (!yearIsEmpty && monthIsEmpty) {
+					$scope.newRequest.patientInfo.ageLabel = yearValue + ' old';
+					
+				}else if( yearIsEmpty && !monthIsEmpty){
+					$scope.newRequest.patientInfo.ageLabel =  monthValue +' old';
+				}
+				
+				else if( !yearIsEmpty && !monthIsEmpty){
+					$scope.newRequest.patientInfo.ageLabel = yearValue + ' and '+ monthValue +' old';
+				}
+				
+			}
+			$scope.isShowAnimalMonthLabel =function(){
+				
+				if(newRequest.patientInfo.animalAgeMonths = Months || newRequest.patientInfo.animalAgeMonths == ZeroMonths){
+					return false;
+				}
+				return true;
+			}
+			
 			
 			$scope.isEmployee =function(isEmployee){
 				if(isEmployee){
@@ -210,15 +286,26 @@
 			//$scope.hospitalAndClientInfo = hospitalAndClientInfo;
 			$scope.newRequest = newRequest;
 			
+			
+			
+		
 			$scope.saveNewRequest = function(){
+				if ($scope.newRequestForm.$valid) {
 				
-			   var res = $http.post('amicusthome/amirequest',$scope.newRequest);
-				res.success(function(data, status, headers, config) {
-					$scope.message = data;
-				});
-				res.error(function(data, status, headers, config) {
-					alert( "failure message: " + JSON.stringify({data: data}));
-				});	
+					
+					var res = $http.post('amicusthome/amirequest',$scope.newRequest);
+					res.success(function(data, status, headers, config) {
+						$scope.newRequest.id = data.id;
+					});
+					res.error(function(data, status, headers, config) {
+						alert( "failure message: " + JSON.stringify({data: data}));
+					});	
+				}else{
+					
+					alert('some errors found');
+				}
+				
+			   
 			}
 			
 			
@@ -235,10 +322,42 @@
 						
 				};
 				
-			    $scope.upload = function () {
-			      $scope.uploader.flow.upload(); 
-			  
-			    }
+		    $scope.upload = function () {
+		      $scope.uploader.flow.upload(); 
+		  
+		    }
+		    
+		    $scope.hoverIn = function(){
+		    	
+		    	var hasBeenSaved = Boolean( $scope.newRequest.id );
+		    	if(hasBeenSaved){
+		    		this.hoverEdit = false;
+		    	}else{
+		    		
+		    		this.hoverEdit = true;
+		    	}
+		    	
+//		       this.hoverEdit = true;
+		       
+
+		    };
+
+		    $scope.hoverOut = function(){
+		    	this.hoverEdit = false;
+		    };
+		    
+		    $scope.hasBeenSaved = function(){
+				var hasBeenSaved = Boolean( $scope.newRequest.id );
+				return hasBeenSaved;
+			}
+		    
+		    $scope.showIncompleteFormMsg = function(){
+		    	this.isShowIncompleteFormMsg = true;
+		    };
+		    
+		    $scope.dontShowIncompleteFormMsg = function(){
+		    	this.isShowIncompleteFormMsg = false;
+		    }
 
 		});
 		
