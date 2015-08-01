@@ -238,6 +238,7 @@
 			
 			
 			var newRequest = {
+					'requestNumber'         :'',
 					'hospitalAndClientInfo'	: hospitalAndClientInfo,
 					'patientInfo'			: patientInfo,
 					'requestedServices'     : requestedServices,
@@ -372,6 +373,7 @@
 					var res = $http.post('amicusthome/amirequest',$scope.newRequest);
 					res.success(function(data, status, headers, config) {
 						$scope.newRequest.id = data.id;
+						$scope.newRequest.requestNumber = data.requestNumber;
 					});
 					res.error(function(data, status, headers, config) {
 						alert( "failure message: " + JSON.stringify({data: data}));

@@ -1,9 +1,19 @@
 package ami.controller;
 
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ami.model.mongodb.Counter;
 import ami.model.users.AmiAuthtorities;
 
 import com.mongodb.DBObject;
@@ -21,6 +32,8 @@ import com.mongodb.util.JSON;
 
 @Controller
 public class LoginController {
+	
+	
 	
 	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 	
@@ -121,24 +134,38 @@ public class LoginController {
 		
 		
 		DBObject dbObject = (DBObject) JSON.parse(newAmiRequest);
+		String requestNumber =  (String)dbObject.get("requestNumber");
+		
+		if( StringUtils.isEmpty(requestNumber)){
+			requestNumber = String.valueOf(getNextSequence("counters"));
+			dbObject.put("requestNumber", requestNumber);
+		}
 		
 		//mongo.save(newAmiRequest, "request");
 		mongo.save(dbObject, "request");
 		System.out.println(dbObject.get("_id"));
-		
 		Object object = dbObject.get("_id");
 		
 		
+		Query query2 = new Query();
+		query2.addCriteria(Criteria.where("requestNumber").is(requestNumber));
 		
+		String result = mongo.findOne(query2, String.class,"request");
+		System.out.println(result);
 		
-		//p = mongo.findById(p.getId(), Person.class);
-		//log.debug("Found "+p);
-		//System.out.println("found "+p);
-		
-		
-		
-		return "{\"id\": \" "+object.toString()+" \"}";
+		return "{\"id\": \" "+object.toString()+" \", \"requestNumber\": \""+requestNumber+"\"}";
 	}
+	
+	
+	 public int getNextSequence(String collectionName) {
+		    Counter counter = mongo.findAndModify(
+		      query(where("_id").is("amirequestsequence")), 
+		      new Update().inc("seq", 1),
+		      options().returnNew(true),
+		      Counter.class);
+		       
+		    return counter.getSeq();
+		  }
 	
 	
 		
