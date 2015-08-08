@@ -27,6 +27,8 @@
 		var app = angular.module('AmiCustModule',['flow']);
 		
 		
+		
+		
 		/**
 		 * 
 		 * when it thinks testing your app unit test with Karma,
@@ -59,7 +61,8 @@
 		app.service('userNameService', function( $http, $q) {
 			
 			var deferred = $q.defer();
-			this.getUserName = function() {
+			
+			this.getUser = function() {
 				
 				var res = $http.get('/ami/getuserid.json');
 				
@@ -72,24 +75,60 @@
 
 				return res;
 	        }
+		});
+		
+		app.service('amiService', function( $http, $q, userNameService) {
+				
+				var deferred = $q.defer();
+					
+				this.getAmiUser = function(){	
+					
+					var promise = userNameService.getUser();
+					
+					promise.then(function(response) {
+						
+						var user =  response.data.user;
+						var hospitalName =  response.data.hospitalName;
+
+						var amiUser = {
+							getUserName: function(){
+								return user;
+							},
+							getHospitalName: function(){
+								return hospitalName;
+							}
+						};
+						
+						deferred.resolve(amiUser);
+					}, function(response) {
+					  alert( response.data.message);
+					}, function(update) {
+					});	
+					
+					
+					return deferred.promise;
+			}
 			
 		});
 		
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, userNameService) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, amiService) {
 			
-			$scope.userName='';
-			var promise = userNameService.getUserName();
+			var promise = amiService.getAmiUser();
 			
-			promise.then(function(response) {
-				$scope.userName= response.data.userName;
-			}, function(response) {
+			promise.then(function(amiUser) {
+				$scope.userName     = amiUser.getUserName();
+				$scope.hospitalName = amiUser.getHospitalName();
+			}, 
+			function(response) {
 			  alert( response.data.message);
-			}, function(update) {
-//			  alert('Got notification: ' + update);
+			}, 
+			function(update) {
+				alert( response.data.message);
 			});
+			
 			
 			var Years  = 'Years';
 			var Months = 'Months';
@@ -369,8 +408,11 @@
 			$scope.saveNewRequest = function(){
 				if ($scope.newRequestForm.$valid) {
 				
+					    
 					
-					var res = $http.post('amicusthome/amirequest',$scope.newRequest);
+					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName };
+					
+					var res = $http.post('amicusthome/amirequest',data);
 					res.success(function(data, status, headers, config) {
 						$scope.newRequest.id = data.id;
 						$scope.newRequest.requestNumber = data.requestNumber;

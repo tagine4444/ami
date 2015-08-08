@@ -1,22 +1,11 @@
 package ami.controller;
 
-import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.model.mongodb.Counter;
+import ami.application.services.amirequest.AmiRequestService;
+import ami.axon.CommandGenerator;
 import ami.model.users.AmiAuthtorities;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
@@ -42,72 +33,19 @@ public class LoginController {
 	
 	public static final String UPLOAD_DIR = "uploads";
 	
+	@Autowired
+	private CommandGateway commandGateway;
+	@Autowired
+	private AmiRequestService amiRequestService;
 	
 	
 	
-	
-	
-	@RequestMapping(value = "/ami/getuserid", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public String getUserId() {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		
-		final String result = "{\"userName\": \""+ userName +"\"}";
-		return result;
-			
-	}
-	
-	
-//	@RequestMapping("/greeting")
-//    public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-//        model.addAttribute("name", name);
-//        return "greeting";
-//    }
-//	
-//	
-//	@RequestMapping(value = "/ami", method = RequestMethod.GET)
-//	public String home(Model model) {
-//		
-//		System.out.println(">>>>>> going home");
-//		
-//		return "index";
-//	}
-	
-//	@RequestMapping(value = "/ami/login", method = RequestMethod.GET)
-//	public String login(Model model) {
-//		
-//		System.out.println(">>>>>> going to amicust!!!!");
-//		return "login";
-//	}
-	
-	
-//	@RequestMapping(value = "/ami/amicusthome1", method = RequestMethod.GET)
-//	public String amiLogin(Model model) {
-//		
-//		
-//		Set<String> permissions = new HashSet();
-//		for (GrantedAuthority auth : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
-//		    permissions.add(auth.getAuthority());
-//		}
-//
-//		if (permissions.contains("USER_ROLE") ) {
-//		    //do stuff
-//		}
-//		
-//		System.out.println("in amicusthome1 >>>>>> redirect:amicusthome!!!");
-//		return "redirect:amicusthome";
-//	}
-	
-	
-	@RequestMapping(value = "/ami/logincheck", method = RequestMethod.GET)
+	@RequestMapping(value = "/ami/axon", method = RequestMethod.GET)
 	public String amiLoginGET(Model model) {
 		
-		System.out.println("GET CHECK >>>>>> going to amicust!!!!");
-		return "redirect:amicusthome1";
+		CommandGenerator.sendCommands(commandGateway);
+		return "";
 	}
-	
-	
 	
 	
 	@RequestMapping(value = "/ami/save", method = RequestMethod.GET)
@@ -126,48 +64,30 @@ public class LoginController {
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.POST)
 	@ResponseBody
-	public String amiRequestSave(@RequestBody String newAmiRequest ) {
+	public String amiRequestSave(@RequestBody String data) {
+	//public String amiRequestSave(@RequestBody String amiRequest,@RequestBody String userName,  @RequestBody String hospitalName ) {
 		
-		System.out.println(newAmiRequest);
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final BasicDBObject amiRequest = (BasicDBObject) dbObject.get("amiRequest");
+		final String userName = (String) dbObject.get("userName");
+		final String hospitalName = (String) dbObject.get("hospitalName");
 		
-		//Person p = new Person("Joe", 34);
-		
-		
-		DBObject dbObject = (DBObject) JSON.parse(newAmiRequest);
-		String requestNumber =  (String)dbObject.get("requestNumber");
-		
-		if( StringUtils.isEmpty(requestNumber)){
-			requestNumber = String.valueOf(getNextSequence("counters"));
-			dbObject.put("requestNumber", requestNumber);
-		}
+		amiRequestService.createAmiRequest(amiRequest.toString() ,userName , hospitalName);
 		
 		//mongo.save(newAmiRequest, "request");
-		mongo.save(dbObject, "request");
-		System.out.println(dbObject.get("_id"));
-		Object object = dbObject.get("_id");
+//		mongo.save(dbObject, "request");
+//		System.out.println(dbObject.get("_id"));
+//		Object object = dbObject.get("_id");
+//		
+//		
+//		Query query2 = new Query();
+//		query2.addCriteria(Criteria.where("requestNumber").is(requestNumber));
+//		
+//		String result = mongo.findOne(query2, String.class,"request");
+//		System.out.println(result);
 		
-		
-		Query query2 = new Query();
-		query2.addCriteria(Criteria.where("requestNumber").is(requestNumber));
-		
-		String result = mongo.findOne(query2, String.class,"request");
-		System.out.println(result);
-		
-		return "{\"id\": \" "+object.toString()+" \", \"requestNumber\": \""+requestNumber+"\"}";
+		return "{}";
+		//return "{\"id\": \" "+object.toString()+" \", \"requestNumber\": \""+requestNumber+"\"}";
 	}
-	
-	
-	 public int getNextSequence(String collectionName) {
-		    Counter counter = mongo.findAndModify(
-		      query(where("_id").is("amirequestsequence")), 
-		      new Update().inc("seq", 1),
-		      options().returnNew(true),
-		      Counter.class);
-		       
-		    return counter.getSeq();
-		  }
-	
-	
-		
 	
 }

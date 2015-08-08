@@ -8,7 +8,7 @@
 	<form name="newRequestForm" ng-submit="saveNewRequest()"   >
    	<div class="row">
    		<div class="col-sm-8">
-<!--    			<p>Welcome {{userName}} {{newRequest.id}}</p> -->
+   			
 <!-- 	<p ng-show="newRequestForm.$invalid && isShowIncompleteFormMsg"></p> -->
    	
    	
@@ -25,7 +25,7 @@
    	
    
 	<div class="panel panel-default">
-	  <div class="panel-heading">Hospital & Client Info</div>
+	  <div class="panel-heading"><strong>{{hospitalName}} &amp; Client Section</strong></div>
 	  <div class="panel-body">
 	    <!--  Veterinarian and Lab Row -->
 	    <div class="row">
@@ -89,7 +89,7 @@
 	</div> <!-- End of 1st pannel -->
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading">Patient Info</div>
+	  <div class="panel-heading"><strong>Patient Section</strong></div>
 	  	<div class="panel-body">
 	  
 		    <div class="row">
@@ -162,7 +162,7 @@
 	</div> <!--  End of Patient Info panel -->
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading">Requested Services</div>
+	  <div class="panel-heading"><strong>Requested Services</strong></div>
 	  <div class="panel-body">
 	  		
 	  		<div class="row">
@@ -228,7 +228,7 @@
 <!-- 	</div> -->
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading">Veterinarian Observation</div>
+	  <div class="panel-heading"><strong>Veterinarian Observation</strong></div>
 	    <div class="panel-body">
 		  <div class="row">
 			   <div class="col-sm-12">
@@ -268,22 +268,24 @@
 				</div>
 				
 				<div class="col-sm-12">
-			  		<p> HISTORY, CHIEF COMPLAIN, PHYSICAL FINDINGS (S.O.A.P). Please provide a case summary, not the entire record.</p>
+			  		
 			   	</div>
 			   
 			    <div class="col-sm-12">
 					  	<div class="form-group">	
-						    <label for="exampleInputEmail1">Exam</label>
+<!-- 						    <label for="exampleInputEmail1">Exam</label> -->
 							<div class="form-group" ng-class="{ 'has-error' : newRequestForm.exam.$invalid && !newRequestForm.exam.$pristine }">
-							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" ng-required="true"></textarea>
+							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" ng-required="true"
+							    placeholder="HISTORY, CHIEF COMPLAIN, PHYSICAL FINDINGS (S.O.A.P). Please provide a summary, not the entire record." ></textarea>
 							    <p ng-show="newRequestForm.exam.$invalid && !newRequestForm.exam.$pristine" class="help-block">required field</p>
 							</div>
 					    </div>
 					  	<div class="form-group">
-						    <label for="exampleInputEmail1">Tentative Diagnosis</label>
+<!-- 						    <label for="exampleInputEmail1">Tentative Diagnosis</label> -->
 						    
 						    <div class="form-group" ng-class="{ 'has-error' : newRequestForm.tentativeDiagnosis.$invalid && !newRequestForm.tentativeDiagnosis.$pristine }">
-							    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" ng-required="true"></textarea>
+							    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" ng-required="true"
+							     placeholder="Tentative Diagnosis" ></textarea>
 							    <p ng-show="newRequestForm.tentativeDiagnosis.$invalid && !newRequestForm.tentativeDiagnosis.$pristine" class="help-block">required field</p>
 							</div>
 						    
@@ -294,7 +296,7 @@
 	</div>
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading">Images / Documents </div>
+	  <div class="panel-heading"><strong>Images / Documents </strong></div>
 	    <div class="panel-body">
 		  	<div class="row">
 		  		<div class="col-sm-12">
