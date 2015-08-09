@@ -25,7 +25,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 	@Autowired
 	private MongoTemplate mongo;
-	
+	 
 	@Autowired
 	private ObjectMapper objectMapper;
 	

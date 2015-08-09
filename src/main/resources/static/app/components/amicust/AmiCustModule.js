@@ -77,6 +77,8 @@
 	        }
 		});
 		
+		
+		
 		app.service('amiService', function( $http, $q, userNameService) {
 				
 				var deferred = $q.defer();
