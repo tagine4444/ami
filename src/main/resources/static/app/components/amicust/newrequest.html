@@ -15,9 +15,9 @@
    	<p class="alert alert-warning" role="alert"  ng-show="newRequestForm.$invalid && isShowIncompleteFormMsg">You can't submit to radiologist until all required fields are provided. You can however save this request as a draft</p>
    		</div>
 	   	<div class="col-sm-4" 	ng-mouseenter="showIncompleteFormMsg()" ng-mouseleave="dontShowIncompleteFormMsg()">
-	   		<button type="submit" class="btn btn-default" >Cancel</button>
-	   		<button type="submit" class="btn btn-warning">Save As Draft</button>
-	   		<button type="submit" class="btn btn-danger" ng-disabled="newRequestForm.$invalid" >Submit To Radiologist</button>
+	   		<button type="submit"  class="btn btn-default" >Cancel</button>
+	   		<button ng-click="setAction('draft')" type="submit" class="btn btn-warning">Save As Draft</button>
+	   		<button ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
 	   	</div>
    	</div>
    	<br/>
@@ -31,8 +31,11 @@
 	    <div class="row">
 	    
 	    	
-		    <div class="col-sm-2">
-		      <input type="text" class="form-control" id="vetId	" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian">
+		    <div class="col-sm-3">
+		    	<div class="input-group input-group-sm" ng-class="{ 'has-error' : newRequestForm.vetId.$invalid }">
+				   <span class="input-group-addon" id="vetRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" id="vetRequiredIconSpan"></span></span>
+				  <input aria-describedby="vetRequiredIcon" type="text" name="vetId" class="form-control" id="vet" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
+				</div>
 		    </div>
 		   
 		   <div class="col-sm-6">	    
@@ -42,7 +45,7 @@
 						  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account">
 						  </div>
 						  <div class="input-group">
-								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs" ng-init="newRequest.hospitalAndClientInfo.labs = 'ff'">
+								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs">
 									<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option>
 							    </select>
 						 </div> 
@@ -55,17 +58,15 @@
 		<div class="row">
 		    <div class="col-sm-2">
 			    <div class="form-group" ng-class="{ 'has-error' : newRequestForm.clientFirstName.$invalid && !newRequestForm.clientFirstName.$pristine }">
-				    <input type="text" name="clientFirstName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientFirstName" placeholder="Client's First Name" required>
+				    <input type="text" name="clientFirstName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientFirstName" placeholder="Client's First Name" ng-required='isSubmit()'  >
 				    <p ng-show="newRequestForm.clientFirstName.$invalid && !newRequestForm.clientFirstName.$pristine" class="help-block">required field</p>
 				</div>
 		    </div>
 		    
 		    <div class="col-sm-2">
-		      
-		    
 		    	
 		    	<div class="form-group" ng-class="{ 'has-error' : newRequestForm.clientLastName.$invalid && !newRequestForm.clientLastName.$pristine }">
-				    <input type="text" name="clientLastName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientLastName" placeholder="Client's Last Name" required>
+				    <input type="text" name="clientLastName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientLastName" placeholder="Client's Last Name" ng-required='isSubmit()'>
 				    <p ng-show="newRequestForm.clientLastName.$invalid && !newRequestForm.clientLastName.$pristine" class="help-block">required field</p>
 				</div>
 		    
@@ -94,15 +95,31 @@
 	  
 		    <div class="row">
 		    
-		    	 <div class="col-sm-3">
-			      <input type="text" class="form-control" id="vetId	" ng-model="newRequest.patientInfo.animalName" placeholder="Animal's Name">
+		    	<div class="col-sm-3">
+			      <input type="text" class="form-control" id="animalNameId" ng-model="newRequest.patientInfo.animalName" placeholder="Animal's Name">
 			    </div>
 			    
 			     <div class="col-sm-1">
 				       <select class="form-control" ng-model="newRequest.patientInfo.animalSex">
 						  <option ng-selected="$index==0" ng-repeat="animalSex in animalSexList"> {{animalSex}}</option>
 						</select>
-				</div>
+				 </div>
+				 
+				 
+<!-- 				  <div class="col-sm-1 input-group input-group-xs" ng-class="{ 'has-error' : newRequestForm.animalSexId.$invalid }"> -->
+<!-- 					    <span class="input-group-addon" id="animalSexRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" ></span></span> -->
+<!-- 						<select aria-describedby="animalSexRequiredIcon" id="animalSexId" name="animalSexId" class="form-control"  -->
+<!-- 							ng-required='isSexNotSelected()' -->
+<!-- 								ng-model="newRequest.patientInfo.animalSex"> -->
+<!-- 						  <option ng-selected="$index==0" ng-repeat="animalSex in animalSexList"> {{animalSex}}</option> -->
+<!-- 					   </select> -->
+					
+<!-- 				</div> -->
+				 
+				 
+				 
+				 
+				 
 				
 				<!-- Weight -->
 				<div class="col-sm-3">	    
@@ -275,7 +292,7 @@
 					  	<div class="form-group">	
 <!-- 						    <label for="exampleInputEmail1">Exam</label> -->
 							<div class="form-group" ng-class="{ 'has-error' : newRequestForm.exam.$invalid && !newRequestForm.exam.$pristine }">
-							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" ng-required="true"
+							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" ng-required='isSubmit()'
 							    placeholder="HISTORY, CHIEF COMPLAIN, PHYSICAL FINDINGS (S.O.A.P). Please provide a summary, not the entire record." ></textarea>
 							    <p ng-show="newRequestForm.exam.$invalid && !newRequestForm.exam.$pristine" class="help-block">required field</p>
 							</div>
@@ -284,7 +301,7 @@
 <!-- 						    <label for="exampleInputEmail1">Tentative Diagnosis</label> -->
 						    
 						    <div class="form-group" ng-class="{ 'has-error' : newRequestForm.tentativeDiagnosis.$invalid && !newRequestForm.tentativeDiagnosis.$pristine }">
-							    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" ng-required="true"
+							    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" ng-required='isSubmit()'
 							     placeholder="Tentative Diagnosis" ></textarea>
 							    <p ng-show="newRequestForm.tentativeDiagnosis.$invalid && !newRequestForm.tentativeDiagnosis.$pristine" class="help-block">required field</p>
 							</div>

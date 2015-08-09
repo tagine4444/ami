@@ -180,6 +180,8 @@
 			
 			$scope.page = 'newRequest';
 			
+			$scope.saveAction = '';
+			
 			$scope.labs 				= ['PCL', 'IDEXX', 'Antech'];
 			$scope.speciesList 			= ['Select Species','Canine','Feline','Bovine','Birds'];
 			$scope.breedsList 			= ['Select Breed'];
@@ -284,9 +286,6 @@
 					'vetObservation'		: vetObservation,
 					'imagesAndDocuments'    : imagesAndDocuments
 			};
-			
-			
-			
 			
 			$scope.newRequest = newRequest;
 			
@@ -405,11 +404,25 @@
 				}
 			}
 		
+			$scope.setAction= function(action){
+				$scope.saveAction = action;
+			}
+			
+			$scope.isSubmit= function(){
+				if($scope.saveAction == 'submit'){
+					return true;
+				}else{
+					return false;
+				}
+					
+			}
+			
+			
+			
 			$scope.saveNewRequest = function(){
+				
 				if ($scope.newRequestForm.$valid) {
 				
-					    
-					
 					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName };
 					
 					var res = $http.post('amicusthome/amirequest',data);
@@ -457,9 +470,6 @@
 		    		this.hoverEdit = true;
 		    	}
 		    	
-//		       this.hoverEdit = true;
-		       
-
 		    };
 
 		    $scope.hoverOut = function(){
