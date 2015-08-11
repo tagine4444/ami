@@ -77,7 +77,22 @@
 	        }
 		});
 		
-		
+//		app.factory("animalService", function($q, $h){
+//			   return {
+//			       getAnimals: function(){
+//			    	   var res = $http.get('/ami/animals');
+//			    	   
+//			    	   res.success(function(data, status, headers, config) {
+//							deferred.resolve();
+//						});
+//						res.error(function(data, status, headers, config) {
+//							deferred.reject('failure to get user name');
+//						});	
+//
+//						return res;
+//			       }
+//			   }
+//		});
 		
 		app.service('amiService', function( $http, $q, userNameService) {
 				
@@ -116,8 +131,39 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, amiService) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, amiService,animals) {
 			
+			
+			var canineBreed = [];
+			var felineBreed = [];
+			var bovineBreed = [];
+			var birdBreed   = [];
+			var otherBreed   = [];
+			
+			for (var i in animals) {
+			
+			  var anAnimal = animals[i];
+			  var species = anAnimal.id;
+			  var breeds = anAnimal.breeds;
+				
+			  if(species== 'Canine'){
+				  canineBreed = breeds;
+				  
+			  }else if(species== 'Feline' ){
+				  felineBreed =  breeds;
+				  
+			  }else if(species == 'Bovine'){
+				  bovineBreed =  breeds;
+				  
+			  }
+			  else if(species == 'Birds'){
+				birdBreed =  breeds;
+				
+			  } else if( species == 'Others'){
+				  otherBreed = breeds;
+			  }
+			  
+			}
 			var promise = amiService.getAmiUser();
 			
 			promise.then(function(amiUser) {
@@ -137,47 +183,54 @@
 			var ZeroYears = '0 year';
 			var ZeroMonths = '0 months';
 			
-			$scope.breedsCanine = ['Select Canine Breed', 'Greman Sheppard','Chiwawa','Boxer','Poodle'];
+			$scope.breedsCanine =  canineBreed;
+			$scope.breedsFeline =  felineBreed;
+			$scope.breedsBovine =  bovineBreed;
+			$scope.breedsBirds  =  birdBreed;
+			$scope.breedsOthers =  otherBreed;
 			
-			$scope.breedsFeline = [
-			'Select Feline Breed',                       
-			'Persian', 
-			'Maine Coon', 
-			'Exotic Shorthair', 
-			'Abyssinian', 
-			'Siamese', 
-			'Ragdoll', 
-			'Sphynx', 
-			'Birman', 
-			'American Shorthair', 
-			'Oriental Shorthair', 
-			'Breed', 
-			'York Chocolate', 
-			'Turkish Angora', 
-			'Toyger', 
-			'Snowshoe cat', 
-			'Scottish Fold'];
+					
+//			$scope.breedsCanine = ['Select Canine Breed', 'Greman Sheppard','Chiwawa','Boxer','Poodle'];
 			
-			$scope.breedsBovine =[
-			'Select Bovine Breed', 
-			'American Milking Devon',
-			'Ankole-Watusi',
-			'Armorican (cattle)',
-			'Belgian Blue',
-			'Blue Albion'    
-			];
+//			$scope.breedsFeline = [
+//			'Select Feline Breed',                       
+//			'Persian', 
+//			'Maine Coon', 
+//			'Exotic Shorthair', 
+//			'Abyssinian', 
+//			'Siamese', 
+//			'Ragdoll', 
+//			'Sphynx', 
+//			'Birman', 
+//			'American Shorthair', 
+//			'Oriental Shorthair', 
+//			'Breed', 
+//			'York Chocolate', 
+//			'Turkish Angora', 
+//			'Toyger', 
+//			'Snowshoe cat', 
+//			'Scottish Fold'];
+			
+//			$scope.breedsBovine =[
+//			'Select Bovine Breed', 
+//			'American Milking Devon',
+//			'Ankole-Watusi',
+//			'Armorican (cattle)',
+//			'Belgian Blue',
+//			'Blue Albion'    
+//			];
 			
 			
-			$scope.breedsBirds =[
-      			'Select Bird Breed', 
-      			'Anas crecca',
-      			'Aquila chrysaetos',
-      			'Eagle',
-      			'Pigeon',
-      			'Thanksgiving Duck',
-      			'Dove',
-      			'Falcon'
-			 ];
+//			$scope.breedsBirds =[
+//      			'Select Bird Breed', 
+//      			'Anas crecca',
+//      			'Aquila chrysaetos',
+//      			'Eagle',
+//      			'Pigeon',
+//      			'Thanksgiving Duck',
+//      			'Dove',
+//      			'Falcon'
+//			 ];
 
 			
 			$scope.page = 'newRequest';

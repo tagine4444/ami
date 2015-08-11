@@ -1,6 +1,7 @@
 package ami.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ami.application.services.animals.AnimalService;
+import ami.domain.referencedata.Animals;
 import ami.model.users.AmiAdminAuthority;
 import ami.model.users.AmiUser;
 import ami.model.users.AmiUserAuthority;
@@ -30,6 +32,9 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
 	private AnimalService animalService;
+	
+	@Autowired
+	private Environment env;
 	
 	
 	@RequestMapping(value = "/ami/init/user", method = RequestMethod.GET)
@@ -60,7 +65,40 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@RequestMapping(value = "/ami/init/animals", method = RequestMethod.GET)
 	public String addAnimals(Model model) {
 		
-		animalService.addAnimals();
+		
+		
+		String canines       = (String) env.getProperty("Canine");
+		String[] canineArray = canines.split(",");
+		List<String> canineBreedList  =  Arrays.asList(canineArray);
+		Animals canine = new Animals("Canine", canineBreedList);
+		animalService.addAnimals(canine);
+		
+		
+		
+		String felines       = (String)env.getProperty("Feline");
+		String[] felineArray = felines.split(",");
+		List<String> felineBreedList  =  Arrays.asList(felineArray);
+		Animals feline = new Animals("Feline", felineBreedList);
+		animalService.addAnimals(feline);
+		
+		String bovines       = (String)env.getProperty("Bovine");
+		String[] bovineArray = bovines.split(",");
+		List<String> bovineBreedList  =  Arrays.asList(bovineArray);
+		Animals bovine = new Animals("Bovine", bovineBreedList);
+		animalService.addAnimals(bovine);
+		
+		String birds       = (String)env.getProperty("Birds");
+		String[] birdArray = birds.split(",");
+		List<String> birdBreedList  =  Arrays.asList(birdArray);
+		Animals bird = new Animals("Birds", birdBreedList);
+		animalService.addAnimals(bird);
+		
+		String others       = (String)env.getProperty("Others");
+		String[] othersArray = others.split(",");
+		List<String> othersArrayBreedList  =  Arrays.asList(othersArray);
+		Animals other = new Animals("Others", othersArrayBreedList);
+		animalService.addAnimals(other);
+		
 		
 		return "redirect:amicusthome";
 	}

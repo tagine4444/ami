@@ -1,11 +1,10 @@
 package ami.application.services.animals;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,26 +29,11 @@ public class AnimalServiceImpl implements AnimalService {
 	}
 	
 	@Override
-	public void addAnimals(){
+	@CachePut(value = "animals")
+	public Animals addAnimals(Animals animal){
+		mongo.save(animal, "animals");
+		return animal;
 		
-		String canines       = (String)env.getProperty("Canine");
-		String[] canineArray = canines.split(",");
-		List<String> canineBreedList  =  Arrays.asList(canineArray);
-		Animals canine = new Animals("Canine", canineBreedList);
-		
-		
-		
-		String felines       = (String)env.getProperty("Feline");
-		String[] felineArray = felines.split(",");
-		List<String> felineBreedList  =  Arrays.asList(felineArray);
-		Animals feline = new Animals("Feline", felineBreedList);
-		
-		
-		mongo.save(canine, "animals");
-		mongo.save(feline, "animals");
-
 	}
-
-	
 
 }

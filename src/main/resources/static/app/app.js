@@ -1,13 +1,69 @@
 
 var chidra = angular.module('chidra',['flow','ngRoute','AmiCustModule']);
 
+//chidra.factory("animalService", function($q, $h){
+//	   return {
+//	       getAnimals: function(){
+//	    	   var res = $http.get('/ami/animals');
+//	    	   
+//	    	   res.success(function(data, status, headers, config) {
+//					deferred.resolve();
+//				});
+//				res.error(function(data, status, headers, config) {
+//					deferred.reject('failure to get user name');
+//				});	
+//
+//				return res;
+//	       }
+//	   }
+//});
+
+chidra.factory('animalService', function($http,$q){return {
+	
+	
+	 getAnimals: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/animals');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get user name');
+			});	
+
+			return res;
+	 				
+	 	
+	 
+	 }
+	
+}});
 
 chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', 'CSRF_TOKEN',
                     function($routeProvider) {	
                       $routeProvider.
                         when('/', {
-                        	templateUrl: '/app/components/amicust/newrequest.html',
-                            controller: 'NewRequestCtrl'
+                        	templateUrl: "/app/components/amicust/newrequest.html",
+                            controller: "NewRequestCtrl",
+                            
+                            resolve: {
+                            	
+                            	animals: ['animalService', function (animalService) {
+                            		return animalService.getAnimals().then(
+                            			function(result){
+                            				console.log('>>>>>>> '+result.data);
+                            				return result.data;
+                            			}	
+                            		);
+                            		//return 1;
+                                }] 
+                            	
+//                                animals: function(animalService){
+//                                    return animalService.getAnimals();
+//                                }                      
+                            }
                         }).
                         when('/searchRequest', {
                         	templateUrl: '/app/components/amicust/searchrequests.html',

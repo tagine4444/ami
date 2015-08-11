@@ -10,5 +10,7 @@ public interface AnimalService {
 //	List<String>  getBreeds(String breed);
 	List<Animals> getAnimals() ;
 
-	void addAnimals();
+//	void addAnimals();
+
+	Animals addAnimals(Animals animal);
 }
