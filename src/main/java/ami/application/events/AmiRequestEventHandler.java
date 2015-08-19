@@ -19,14 +19,22 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestCreatedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
        
-    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), event.getHospitalName());
+    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), event.getHospitalName(), time);
     	
-    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
-                                         event.getId(),
-                                         time.toString("d-M-y H:m")));
-        
-        System.out.println("the ami request is ");
-        System.out.println("==================================\n\n");
-        System.out.println(event.getAmiRequestJson());
+//    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
+//                                         event.getId(),
+//                                         time.toString("d-M-y H:m")));
+//        
+//        System.out.println("the ami request is ");
+//        System.out.println("==================================\n\n");
+//        System.out.println(event.getAmiRequestJson());
+    }
+    
+    @EventHandler
+    public void handle(AmiRequestSavedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    	
+    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), event.getHospitalName(), time);
+    	
+    	
     }
 }

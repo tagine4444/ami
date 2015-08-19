@@ -7,10 +7,9 @@ import ami.domain.referencedata.Animals;
 
 public interface AnimalService {
 
-//	List<String>  getBreeds(String breed);
 	List<Animals> getAnimals() ;
 
-//	void addAnimals();
-
 	Animals addAnimals(Animals animal);
+
+	List<String> getSpecies();
 }

@@ -16,8 +16,10 @@ public class Application {
 	
 	@Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("animals");
+        return new ConcurrentMapCacheManager("amicache");
     }
+	
+	
 	
 	 public static void main(String[] args) {
 	        SpringApplication.run(Application.class, args);

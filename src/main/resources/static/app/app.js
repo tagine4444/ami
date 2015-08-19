@@ -18,7 +18,7 @@ var chidra = angular.module('chidra',['flow','ngRoute','AmiCustModule']);
 //	   }
 //});
 
-chidra.factory('animalService', function($http,$q){return {
+chidra.factory('animalService', function($http,$q, $routeParams){return {
 	
 	
 	 getAnimals: function(){ 
@@ -30,14 +30,58 @@ chidra.factory('animalService', function($http,$q){return {
 				deferred.resolve();
 			});
 			res.error(function(data, status, headers, config) {
-				deferred.reject('failure to get user name');
+				deferred.reject('failure to get animals');
 			});	
 
 			return res;
-	 				
-	 	
+	 },
 	 
+	 getSpecies: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/animals/species');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get species');
+			});	
+
+			return res;
+	 },
+	 
+	 getAmiServices: function(){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/services');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AMI Services');
+			});	
+
+			return res;
+	 },
+	 
+	 getAmiRequest: function(requestNumber){
+		 
+		 //var myRequestNumber = $route.current.requestNumber;
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest?requestNumber='+requestNumber);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AMI Services');
+			});	
+
+			return res;
 	 }
+
 	
 }});
 
@@ -53,17 +97,41 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', 'CSRF_TOK
                             	animals: ['animalService', function (animalService) {
                             		return animalService.getAnimals().then(
                             			function(result){
-                            				console.log('>>>>>>> '+result.data);
                             				return result.data;
                             			}	
                             		);
-                            		//return 1;
-                                }] 
-                            	
-//                                animals: function(animalService){
-//                                    return animalService.getAnimals();
-//                                }                      
+                                }],
+                                species: ['animalService', function (animalService) {
+                            		return animalService.getSpecies().then(
+                            			function(result){
+                            				return result.data;
+                            			}	
+                            		);
+                                }],
+                                amiServices:  ['animalService', function (animalService) {
+                            		return animalService.getAmiServices().then(
+                                			function(result){
+                                				return result.data;
+                                			}	
+                                		);
+                                    }],
+                            
                             }
+                        }).
+                        when('/editRequest/:requestNumber', {
+                        	templateUrl: '/app/components/amicust/editrequest.html',
+                        	controller: 'EditRequestCtrl',
+                        	 resolve: {
+                             	
+                             	amiRequest: ['animalService','$route', function (animalService, $route) {
+                             		var requestNumber = $route.current.params.requestNumber;
+                             		return animalService.getAmiRequest(requestNumber).then(
+                             			function(result){
+                             				return result.data;
+                             			}	
+                             		);
+                                 }]
+                        }
                         }).
                         when('/searchRequest', {
                         	templateUrl: '/app/components/amicust/searchrequests.html',

@@ -1,6 +1,6 @@
 package ami.application.services.animals;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,27 @@ public class AnimalServiceImpl implements AnimalService {
 	private Environment env;
 	
 
-	@Cacheable("animals")
+	@Override
+	@Cacheable("amicache")
 	public List<Animals> getAnimals() {
 		List<Animals> animals = mongo.findAll(Animals.class);
 		return animals;
 	}
 	
 	@Override
-	@CachePut(value = "animals")
+	public List<String> getSpecies() {
+        
+		List<Animals> animals = mongo.findAll(Animals.class);
+		
+		List<String> species = new ArrayList<String>(animals.size());
+		for (Animals animals2 : animals) {
+			species.add(animals2.getId());
+		}
+		return species;
+	}
+	
+	@Override
+	@CachePut(value = "amicache")
 	public Animals addAnimals(Animals animal){
 		mongo.save(animal, "animals");
 		return animal;

@@ -27,8 +27,6 @@
 		var app = angular.module('AmiCustModule',['flow']);
 		
 		
-		
-		
 		/**
 		 * 
 		 * when it thinks testing your app unit test with Karma,
@@ -77,23 +75,6 @@
 	        }
 		});
 		
-//		app.factory("animalService", function($q, $h){
-//			   return {
-//			       getAnimals: function(){
-//			    	   var res = $http.get('/ami/animals');
-//			    	   
-//			    	   res.success(function(data, status, headers, config) {
-//							deferred.resolve();
-//						});
-//						res.error(function(data, status, headers, config) {
-//							deferred.reject('failure to get user name');
-//						});	
-//
-//						return res;
-//			       }
-//			   }
-//		});
-		
 		app.service('amiService', function( $http, $q, userNameService) {
 				
 				var deferred = $q.defer();
@@ -131,39 +112,42 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, amiService,animals) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, amiService,animals,species, amiServices) {
 			
+			$scope.page = 'newRequest';
 			
-			var canineBreed = [];
-			var felineBreed = [];
-			var bovineBreed = [];
-			var birdBreed   = [];
-			var otherBreed   = [];
+			$scope.saveAction = '';
+			
+			var Years  = 'Years';
+			var Months = 'Months';
+			var ZeroYears = '0 year';
+			var ZeroMonths = '0 months';
 			
 			for (var i in animals) {
 			
 			  var anAnimal = animals[i];
-			  var species = anAnimal.id;
-			  var breeds = anAnimal.breeds;
+			  var aSpecies = anAnimal.id;
+			  var anAnimalBreed = anAnimal.breeds;
 				
-			  if(species== 'Canine'){
-				  canineBreed = breeds;
-				  
-			  }else if(species== 'Feline' ){
-				  felineBreed =  breeds;
-				  
-			  }else if(species == 'Bovine'){
-				  bovineBreed =  breeds;
-				  
+			  if(aSpecies== 'Canine'){
+				  $scope.breedsCanine =  anAnimalBreed;
+			  }else if(aSpecies== 'Feline' ){
+					$scope.breedsFeline =  anAnimalBreed;
+			  }else if(aSpecies == 'Bovine'){
+					$scope.breedsBovine =  anAnimalBreed;
 			  }
-			  else if(species == 'Birds'){
-				birdBreed =  breeds;
+			  else if(aSpecies == 'Birds'){
+				$scope.breedsBirds  =  anAnimalBreed;
 				
-			  } else if( species == 'Others'){
-				  otherBreed = breeds;
+			  } else if( aSpecies == 'Others'){
+					$scope.breedsOthers =  anAnimalBreed;
 			  }
 			  
 			}
+			
+			$scope.speciesList = species;
+			$scope.speciesList.splice (0,0, 'Select Species');
+			
 			var promise = amiService.getAmiUser();
 			
 			promise.then(function(amiUser) {
@@ -177,70 +161,9 @@
 				alert( response.data.message);
 			});
 			
-			
-			var Years  = 'Years';
-			var Months = 'Months';
-			var ZeroYears = '0 year';
-			var ZeroMonths = '0 months';
-			
-			$scope.breedsCanine =  canineBreed;
-			$scope.breedsFeline =  felineBreed;
-			$scope.breedsBovine =  bovineBreed;
-			$scope.breedsBirds  =  birdBreed;
-			$scope.breedsOthers =  otherBreed;
-			
-					
-//			$scope.breedsCanine = ['Select Canine Breed', 'Greman Sheppard','Chiwawa','Boxer','Poodle'];
-			
-//			$scope.breedsFeline = [
-//			'Select Feline Breed',                       
-//			'Persian', 
-//			'Maine Coon', 
-//			'Exotic Shorthair', 
-//			'Abyssinian', 
-//			'Siamese', 
-//			'Ragdoll', 
-//			'Sphynx', 
-//			'Birman', 
-//			'American Shorthair', 
-//			'Oriental Shorthair', 
-//			'Breed', 
-//			'York Chocolate', 
-//			'Turkish Angora', 
-//			'Toyger', 
-//			'Snowshoe cat', 
-//			'Scottish Fold'];
-			
-//			$scope.breedsBovine =[
-//			'Select Bovine Breed', 
-//			'American Milking Devon',
-//			'Ankole-Watusi',
-//			'Armorican (cattle)',
-//			'Belgian Blue',
-//			'Blue Albion'    
-//			];
-			
-			
-//			$scope.breedsBirds =[
-//      			'Select Bird Breed', 
-//      			'Anas crecca',
-//      			'Aquila chrysaetos',
-//      			'Eagle',
-//      			'Pigeon',
-//      			'Thanksgiving Duck',
-//      			'Dove',
-//      			'Falcon'
-//			 ];
-
-			
-			$scope.page = 'newRequest';
-			
-			$scope.saveAction = '';
-			
-			$scope.labs 				= ['PCL', 'IDEXX', 'Antech'];
-			$scope.speciesList 			= ['Select Species','Canine','Feline','Bovine','Birds'];
-			$scope.breedsList 			= ['Select Breed'];
+			$scope.animalWeightUomList = ['LB', 'KG'];
 			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
+			$scope.breedsList 			= ['Select Breed'];
 			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalAgeYearsList 	= [Years ];
 			$scope.animalAgeMonthsList =  [Months];
@@ -271,10 +194,37 @@
 				$scope.animalAgeMonthsList.push(aYear);
 			}
 			
-			var contrastRadioGraphy 	= ['Myelogram','Arthrogram'];
-			var computedTomography 		= ['Brain With Contrast','Brain With Contrast and/or CSF tap'];
-			var radiographyFluoroscopy  = ['Thorax','Abdomen','Pelvis'];
-			var ultrasound              = ['Abdomen','Heart','Uterus'];
+			var servicesMap = new Map();
+				
+			var servicesMap1 =	angular.fromJson(amiServices);
+			angular.copy(servicesMap1, servicesMap);
+			
+			
+			var contrastRadioGraphy = null;
+			var computedTomography = null;
+			var radiographyFluoroscopy  = null;
+			var ultrasound              = null;
+				
+			for(var i in servicesMap) {
+			    if (servicesMap.hasOwnProperty(i)) {
+			    
+			    	var ServiceCategory = i;
+			    	var servicesForCategory = servicesMap[ServiceCategory];
+			    	
+			    	if( ServiceCategory =="CONTRAST_RADIOGRAPHY"){
+			    		 contrastRadioGraphy = servicesForCategory;
+			    		
+			    	} else if(ServiceCategory =="COMPUTED_TOMOGRAPHY"){
+			    		computedTomography = servicesForCategory;
+			    		
+			    	} else if(ServiceCategory =="RADIOGRAPHY_FLUOROSCOPY"){
+			    		radiographyFluoroscopy = servicesForCategory;
+					    	
+					}else if(ServiceCategory =="ULTRASOUND"){
+						ultrasound = servicesForCategory;;
+					}
+			    }
+			}
 			
 			
 			$scope.servicesList = {
@@ -319,7 +269,6 @@
 			vetObservation.fractious	=false;
 			vetObservation.shocky		=false;
 			vetObservation.dyspneic		=false;
-			vetObservation.fractious	=false;
 			vetObservation.died			=false;
 			vetObservation.euthanized	=false;
 			vetObservation.exam ='';
@@ -376,6 +325,7 @@
 				var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
 				var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
 				var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
+				var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
 				
 				if(isCanine){
 					$scope.breedsList  = $scope.breedsCanine;
@@ -385,6 +335,9 @@
 					$scope.breedsList  = $scope.breedsBovine;
 				}else if(isBirds){
 					$scope.breedsList  = $scope.breedsBirds;
+				}
+				else if(isOthers){
+					$scope.breedsList  = $scope.breedsOthers;
 				}
 				else{
 					$scope.breedsList  = ['Select Breed'];
@@ -444,7 +397,7 @@
 			}
 			
 			$scope.selectThisService = function(aServiceType, aService){
-				requestedServices.selectedServices.push(aServiceType +" - "+aService);
+				requestedServices.selectedServices.push(aServiceType +" - "+aService.name);
 			}
 			
 			
@@ -476,6 +429,23 @@
 			
 			$scope.saveNewRequest = function(){
 				
+				
+				if (!$scope.isSubmit()){
+					
+					
+					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName };
+					
+					var res = $http.post('amicusthome/amidraftrequest',data);
+					res.success(function(data, status, headers, config) {
+						$scope.newRequest.id = data.id;
+						$scope.newRequest.requestNumber = data.requestNumber;
+					});
+					res.error(function(data, status, headers, config) {
+						alert( "failure message: " + JSON.stringify({data: data}));
+					});	
+					return;
+				}
+				
 				if ($scope.newRequestForm.$valid) {
 				
 					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName };
@@ -499,7 +469,7 @@
 			
 			$scope.uploader = {
 					fileAdded: function ($flow, $file, $message) {
-						console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
+						//console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
 					    $file.msg = $message;// Just display message for a convenience
 					  },
 				
@@ -551,29 +521,30 @@
 		// ============ SearchRequest ===============
 		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location) {
 			$scope.page = 'searchRequests';
+			$scope.searchType = 'pending';
 			
 			
-			$scope.uploader = {
-				fileAdded: function ($flow, $file, $message) {
-					console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
-				    $file.msg = $message;// Just display message for a convenience
-				  },
-			
-				fileSubmitted: function ($flow, $file, $message) {
-					console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
-				    //$file.msg = $message;// Just display message for a convenience
-				}
-					
-			};
-			
-			
-			
-		    $scope.upload = function () {
-		      $scope.uploader.flow.upload(); 
-		  
-		    }
 			
 		});
+		// ============ SearchRequest ===============
+		app.controller('EditRequestCtrl', function ($scope, $http, $window,$location, $routeParams, amiRequest) {
+			$scope.page = 'EditRequest';
+			
+			var myAmiRequest = {};
+			var amiRequest1 =	angular.fromJson(amiRequest);
+			angular.copy(amiRequest1, myAmiRequest);
+			
+			$scope.requestNumber = $routeParams.requestNumber;
+			//$scope.animalName = myAmiRequest.patientInfo.animalName;
+			$scope.amiRequest = myAmiRequest.amiRequest;
+			
+			
+			
+		});
+		
+		
+		
+		
 	
 		
 		// ============ Profile ===============

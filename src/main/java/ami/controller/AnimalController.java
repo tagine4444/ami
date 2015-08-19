@@ -26,13 +26,24 @@ public class AnimalController {
 	
 	@RequestMapping(value = "/ami/animals", method = RequestMethod.GET)
 	@ResponseBody
-	public String addAnimals(Model model) throws JsonProcessingException {
+	public String getAnimals(Model model) throws JsonProcessingException {
 		
 		List<Animals> animals = animalService.getAnimals();
 		String animalsString = objectMapper.writeValueAsString(animals);
 		System.out.println(animalsString);
 		
 		return animalsString;
+		
+	}
+	@RequestMapping(value = "/ami/animals/species", method = RequestMethod.GET)
+	@ResponseBody
+	public String getSpecies(Model model) throws JsonProcessingException {
+		
+		List<String> animals = animalService.getSpecies();
+		String speciesString = objectMapper.writeValueAsString(animals);
+		System.out.println("species:   ====> " + speciesString);
+		
+		return speciesString;
 		
 	}
 }
