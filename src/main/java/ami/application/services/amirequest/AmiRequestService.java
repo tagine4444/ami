@@ -2,7 +2,7 @@ package ami.application.services.amirequest;
 
 import org.joda.time.DateTime;
 
-import ami.domain.AmiRequestView;
+import ami.application.views.AmiRequestView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

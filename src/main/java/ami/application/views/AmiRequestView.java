@@ -1,4 +1,4 @@
-package ami.domain;
+package ami.application.views;
 
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
@@ -22,17 +22,13 @@ public class AmiRequestView {
 		this.time = time;
 	}
 
-//	@JsonValue
-//    @JsonRawValue
 	public String getAmiRequest() {
 		return amiRequest;
 	}
 	
-//	@JsonProperty
 	public String getUserName() {
 		return userName;
 	}
-//	@JsonProperty
 	public String getHospitalName() {
 		return hospitalName;
 	}

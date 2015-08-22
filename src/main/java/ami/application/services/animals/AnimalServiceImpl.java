@@ -14,7 +14,9 @@ import ami.domain.referencedata.Animals;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
-
+	
+	public final static String REFDATA_ANIMAL = "refdataAnimals";
+	
 	@Autowired
 	private MongoTemplate mongo;
 
@@ -25,14 +27,14 @@ public class AnimalServiceImpl implements AnimalService {
 	@Override
 	@Cacheable("amicache")
 	public List<Animals> getAnimals() {
-		List<Animals> animals = mongo.findAll(Animals.class);
+		List<Animals> animals = mongo.findAll(Animals.class,REFDATA_ANIMAL);
 		return animals;
 	}
 	
 	@Override
 	public List<String> getSpecies() {
         
-		List<Animals> animals = mongo.findAll(Animals.class);
+		List<Animals> animals = mongo.findAll(Animals.class,REFDATA_ANIMAL);
 		
 		List<String> species = new ArrayList<String>(animals.size());
 		for (Animals animals2 : animals) {
@@ -44,7 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
 	@Override
 	@CachePut(value = "amicache")
 	public Animals addAnimals(Animals animal){
-		mongo.save(animal, "animals");
+		mongo.save(animal, REFDATA_ANIMAL);
 		return animal;
 		
 	}

@@ -1,4 +1,4 @@
-package ami.model.users;
+package ami.domain.security;
 
 import org.springframework.security.core.GrantedAuthority;
 

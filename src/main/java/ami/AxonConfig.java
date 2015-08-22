@@ -24,6 +24,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import ami.axon.annotated.ToDoEventHandler;
 import ami.axon.annotated.ToDoItem;
 import ami.domain.AmiRequestAggregate;
+import ami.domain.SecurityAggregate;
 
 import com.mongodb.Mongo;
 
@@ -64,7 +65,7 @@ public class AxonConfig {
 	   String domainEventsCollectionName ="domainevents";
        String snapshotEventsCollectionName ="snapshotevents"; 
        String userName =""; 
-       char[] password = {'a'}; 
+       char[] password = {}; 
        
        
 	   	MongoFactory mongoFactory = new MongoFactory();
@@ -100,18 +101,38 @@ public class AxonConfig {
        return listener;
    }
    
+   
+   // ==================================== TodoItem ====================================
+   @Bean(name = "todoItemRepository")
+   public Repository<ToDoItem> todoItemRepository() {
+	   
+	   EventSourcingRepository<ToDoItem> repository = new EventSourcingRepository<ToDoItem>(ToDoItem.class, eventStore());
+	   repository.setEventBus(eventBus());
+	   return repository;
+   }
+   
    @SuppressWarnings("unchecked")
    @Bean
    public AggregateAnnotationCommandHandler<ToDoItem> groupCommandHandler() {
        AggregateAnnotationCommandHandler<ToDoItem> commandHandler = AggregateAnnotationCommandHandler.subscribe(ToDoItem.class, todoItemRepository(), commandBus());
        return commandHandler;
    }
+   
+   
+//   @Bean
+//   public AggregateAnnotationCommandHandler<ToDoItem> todoItemCommandHandler() {
+//       return AggregateAnnotationCommandHandler.subscribe(ToDoItem.class, todoItemRepository(), commandBus());
+//   }
+   
+   
+   // ==================================== AmiRequestAggregate ====================================
    @SuppressWarnings("unchecked")
    @Bean
    public AggregateAnnotationCommandHandler<AmiRequestAggregate> AmiRequestCommandHandler() {
 	   AggregateAnnotationCommandHandler<AmiRequestAggregate> commandHandler = AggregateAnnotationCommandHandler.subscribe(AmiRequestAggregate.class, amiRequestAggregateRepository(), commandBus());
 	   return commandHandler;
    }
+   
 
    @Bean(name = "amiRequestAggregateRepository")
    public Repository<AmiRequestAggregate> amiRequestAggregateRepository() {
@@ -121,19 +142,23 @@ public class AxonConfig {
        return repository;
    }
    
-   @Bean(name = "todoItemRepository")
-   public Repository<ToDoItem> todoItemRepository() {
+   
+   // ==================================== SecurityAggregate ====================================
+   @SuppressWarnings("unchecked")
+   @Bean
+   public AggregateAnnotationCommandHandler<SecurityAggregate> SecurityCommandHandler() {
+	   AggregateAnnotationCommandHandler<SecurityAggregate> commandHandler = AggregateAnnotationCommandHandler.subscribe(SecurityAggregate.class, securityAggregateRepository(), commandBus());
+	   return commandHandler;
+   }
+   
+   @Bean(name = "securityAggregateRepository")
+   public Repository<SecurityAggregate> securityAggregateRepository() {
 	   
-	   EventSourcingRepository<ToDoItem> repository = new EventSourcingRepository<ToDoItem>(ToDoItem.class, eventStore());
+	   EventSourcingRepository<SecurityAggregate> repository = new EventSourcingRepository<SecurityAggregate>(SecurityAggregate.class, eventStore());
 	   repository.setEventBus(eventBus());
 	   return repository;
    }
    
-   
-   @Bean
-   public AggregateAnnotationCommandHandler<ToDoItem> todoItemCommandHandler() {
-       return AggregateAnnotationCommandHandler.subscribe(ToDoItem.class, todoItemRepository(), commandBus());
-   }
 
 
 }

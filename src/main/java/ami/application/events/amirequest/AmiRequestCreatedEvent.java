@@ -1,11 +1,11 @@
-package ami.application.events;
+package ami.application.events.amirequest;
 
 public class AmiRequestCreatedEvent {
 
 	private final String id;
 	private final String amiRequestJson;
 	private final String userName;
-	private String hospitalName;
+	private final String hospitalName;
 
     public AmiRequestCreatedEvent(String id, String amiRequestJson, String userName, String hospitalName) {
         this.id = id;

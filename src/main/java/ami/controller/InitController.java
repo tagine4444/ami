@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.application.services.amiservices.AmiServices;
 import ami.application.services.animals.AnimalService;
+import ami.application.services.security.AmiUserService;
+import ami.application.services.security.HospitalService;
+import ami.domain.amiusers.AmiUser;
+import ami.domain.amiusers.AmiUserAuthority;
+import ami.domain.hospitals.Hospital;
+import ami.domain.hospitals.Phone;
 import ami.domain.referencedata.Animals;
-import ami.domain.referencedata.amiservices.Services;
 import ami.domain.referencedata.amiservices.AmiServiceCategory;
-import ami.model.users.AmiAdminAuthority;
-import ami.model.users.AmiUser;
-import ami.model.users.AmiUserAuthority;
+import ami.domain.referencedata.amiservices.Services;
+import ami.domain.security.AmiAdminAuthority;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,10 +53,17 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@Autowired
 	private ObjectMapper mapper;
 	
+	@Autowired
+	private HospitalService hospitalService;
+	
+	@Autowired
+	private AmiUserService amiUserService;
+	
+	
 	
 	@RequestMapping(value = "/ami/init/user", method = RequestMethod.GET)
 	public String addUsers(Model model) {
-		
+/*	
 		List<AmiAdminAuthority> adminList =  new ArrayList<AmiAdminAuthority>();
 		AmiAdminAuthority admin = new AmiAdminAuthority();
 		adminList.add(admin);
@@ -60,20 +72,56 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 		AmiUserAuthority user = new AmiUserAuthority();
 		userList.add(user);
 		
-		AmiUser vet = new AmiUser("vet", "vet","Pet Hospital",userList);
-		mongo.insert(vet);
+		DateTime now = new DateTime();
 		
-		AmiUser chuck = new AmiUser("chuck", "chuck","Animal Medical Imaging", adminList);
-		mongo.insert(chuck);
+		AmiUser vet = new AmiUser("vet", "vet","Pet Hospital", 11, now, userList);
+		mongo.insert(vet,"amiuser1");
 		
-		vet = mongo.findById(vet.getId(), AmiUser.class);
-		chuck = mongo.findById(chuck.getId(), AmiUser.class);
+		AmiUser chuck = new AmiUser("chuck", "chuck","Animal Medical Imaging",12, now,  adminList);
+		mongo.insert(chuck,"amiuser1");
+		
+		vet = mongo.findById(vet.getId(), AmiUser.class,"amiuser1");
+		chuck = mongo.findById(chuck.getId(), AmiUser.class,"amiuser1");
 		log.debug("Found "+vet);
 		log.debug("Found "+chuck);
+		
+*/	
+		
+		
+		
+		
+		try {
+			
+			DateTime now = new DateTime();
+			
+			List<AmiAdminAuthority> adminList =  new ArrayList<AmiAdminAuthority>();
+			AmiAdminAuthority admin = new AmiAdminAuthority();
+			adminList.add(admin);
+			
+			Hospital amiHospital = getHospital("Animal Medical Imaging");
+			AmiUser chuck = new AmiUser("chuck", "chuck","Animal Medical Imaging",12, now,  adminList);
+			hospitalService.createHospital(amiHospital, now);
+			amiUserService.createAmiUser(amiHospital.getId(), amiHospital.getName(), chuck);
+			
+			
+			List<AmiUserAuthority> userList =  new ArrayList<AmiUserAuthority>();
+			AmiUserAuthority user = new AmiUserAuthority();
+			userList.add(user);
+			Hospital petClinicHospital = getHospital("Pet Clinic");
+			AmiUser vet = new AmiUser("vet", "vet","Pet Hospital", 11, now, userList);
+			hospitalService.createHospital(petClinicHospital, now);
+			amiUserService.createAmiUser(petClinicHospital.getId(), petClinicHospital.getName(), vet);
+			
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return "redirect:amicusthome";
 	}
 	
+	
+
 	@RequestMapping(value = "/ami/init/animals", method = RequestMethod.GET)
 	@ResponseBody
 	public String addAnimals(Model model) {
@@ -195,5 +243,34 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 		return result;
 	
 	}
+	
+	
+	private Hospital getHospital(String hospitalName) {
+		
+		String id = String.valueOf(System.currentTimeMillis());
+		String address = "1100 Main Street, WA 98221 USA";
+		String mainPhone = "321 213 6732";
+		String mainFax = "212 221 9876";
+		String fax2 =  "212 221 9876";
+		
+		Phone phone = new Phone("Cell Phone", "298 334 9832");
+		List<Phone> phones = new ArrayList<Phone>();
+		phones.add(phone);
+		phones.add(phone);
+		phones.add(phone);
+		
+
+
+		Hospital hospital = new Hospital( id,
+				hospitalName,
+				 address,
+				 mainPhone,
+				 mainFax,
+				 fax2,
+				 phones);
+		return hospital;
+	}
+	
+	
 
 }

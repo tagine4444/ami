@@ -5,10 +5,10 @@ import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
-import ami.application.commands.CreateAmiRequestCmd;
-import ami.application.commands.SaveAmiRequestAsDraftCmd;
-import ami.application.events.AmiRequestCreatedEvent;
-import ami.application.events.AmiRequestSavedAsDraftEvent;
+import ami.application.commands.amirequest.CreateAmiRequestCmd;
+import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
+import ami.application.events.amirequest.AmiRequestCreatedEvent;
+import ami.application.events.amirequest.AmiRequestSavedAsDraftEvent;
 
 public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 
@@ -18,7 +18,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	private String amiRequest;
 	private String userName;
 	private String hospitalName;
-	private boolean hasBeenSaved;
+	private boolean hasBeenSavedAndSubmittedToRadiologist;
 	
 
 	// No-arg constructor, required by Axon
@@ -33,9 +33,9 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	
 	@CommandHandler
 	public AmiRequestAggregate(SaveAmiRequestAsDraftCmd command) {
-		if(hasBeenSaved){
+		if(hasBeenSavedAndSubmittedToRadiologist){
 			// should never be here, the UI should disable the save as draft button once the request is saved.
-			throw new RuntimeException("Cannot save as draft once the request has been created.");
+			throw new RuntimeException("Requests cannot be saved as draft save as draft once they have been submitted to the radiologist.");
 		}
 		apply(new AmiRequestSavedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName()) );
@@ -48,7 +48,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		this.hasBeenSaved = true;
+		this.hasBeenSavedAndSubmittedToRadiologist = true;
 	}
 	
 	

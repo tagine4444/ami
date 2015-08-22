@@ -5,15 +5,14 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import ami.application.commands.CreateAmiRequestCmd;
-import ami.application.commands.SaveAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.CreateAmiRequestCmd;
+import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.services.utils.MongoSequenceService;
-import ami.domain.AmiRequestView;
+import ami.application.views.AmiRequestView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +20,8 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 @Service
 public class AmiRequestServiceImpl implements AmiRequestService {
+	
+	public final static String AMIREQUEST_VIEW = "ViewAmirequest";
 
 	@Autowired
 	private CommandGateway commandGateway;
@@ -72,7 +73,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		
 		String amiRequestView = objectMapper.writeValueAsString(view);
 		
-		mongo.save(amiRequestView, "amirequestview");
+		mongo.save(amiRequestView, AMIREQUEST_VIEW);
 		
 	}
 
@@ -84,7 +85,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 //		BasicQuery basicQuery = new BasicQuery(s);
 //		AmiRequestView amiRequestView1 = mongo.findOne(basicQuery, AmiRequestView.class,"amirequestview");
 		
-		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("amiRequest.requestNumber").is(requestNumber)), AmiRequestView.class,"amirequestview");
+		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("amiRequest.requestNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestView;
 	}
 	

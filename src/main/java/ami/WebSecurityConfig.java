@@ -8,9 +8,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
-import ami.model.users.AmiAdminAuthority;
-import ami.model.users.AmiAuthenticationProvider;
-import ami.model.users.AmiAuthtorities;
+import ami.domain.security.AmiAdminAuthority;
+import ami.domain.security.AmiAuthenticationProvider;
+import ami.domain.security.AmiAuthtorities;
 
 @Configuration
 @EnableWebMvcSecurity
@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
         .csrf().disable()
         .authorizeRequests()
-        .antMatchers("/", "/ami/index", "/ami/getuserid", "/ami/newuser").permitAll()
+        .antMatchers("/", "/ami/index", "/ami/getuserid", "/ami/newuser", "/ami/init/user").permitAll()
 //        .antMatchers("/ami/**").hasAuthority(AmiAuthtorities.AMI_USER)
 //        .antMatchers("/ami/**").hasAuthority(AmiAuthtorities.AMI_USER)
 //        .antMatchers("/ami/**").hasAuthority(AmiAuthtorities.AMI_ADMIN)

@@ -1,4 +1,4 @@
-package ami.application.events;
+package ami.application.events.amirequest;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventhandling.annotation.Timestamp;

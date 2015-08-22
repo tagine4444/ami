@@ -1,6 +1,8 @@
-package ami.model.users;
+package ami.domain.amiusers;
 
 import org.springframework.security.core.GrantedAuthority;
+
+import ami.domain.security.AmiAuthtorities;
 
 public class AmiUserAuthority implements GrantedAuthority {
 

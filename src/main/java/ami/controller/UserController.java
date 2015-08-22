@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.model.users.AmiUser;
+import ami.application.services.security.AmiUserService;
+import ami.domain.amiusers.AmiUser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,9 @@ public class UserController {
 	private MongoTemplate mongo;
 	
 	@Autowired
+	private AmiUserService amiUserService;
+	
+	@Autowired
 	private ObjectMapper objectMapper;
 	
 	
@@ -36,10 +40,12 @@ public class UserController {
 	public String getUserId() throws JsonProcessingException {
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		
-		AmiUser amiUser = mongo.findOne(
-				query(where("user").is(userName)),AmiUser.class);
+		AmiUser amiUser = amiUserService.findAmiUser(userName).getAmiUser();
 		amiUser.blurPassword();
+		
+//		AmiUser amiUser = mongo.findOne(
+//				query(where("user").is(userName)),AmiUser.class,"amiuser1");
+//		//amiUser.blurPassword();
 		
 		String amiUserString = objectMapper.writeValueAsString(amiUser);
 		//String amiUserString = JSON.serialize(amiUser);

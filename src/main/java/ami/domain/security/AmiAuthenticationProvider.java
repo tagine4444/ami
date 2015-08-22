@@ -1,22 +1,26 @@
-package ami.model.users;
+package ami.domain.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;  
-import org.springframework.security.core.userdetails.User;  
+
+import ami.application.services.security.AmiUserService;
+import ami.application.views.AmiUserView;
+import ami.domain.amiusers.AmiUser;
 
 @Service
 public class AmiAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
-
+//
+//	@Autowired
+//	private MongoTemplate mongo;
+	
 	@Autowired
-	private MongoTemplate mongo;
+	private AmiUserService amiUserService;
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails arg0,
@@ -36,7 +40,10 @@ public class AmiAuthenticationProvider extends AbstractUserDetailsAuthentication
 
         try {
         	final String userName =  arg1.getName();
-        	AmiUser amiUser = mongo.findOne(new Query(Criteria.where("user").is(userName)), AmiUser.class);
+//        	AmiUser amiUser = mongo.findOne(new Query(Criteria.where("user").is(userName)), AmiUser.class,"amiuser1");
+        	
+        	AmiUserView userView = amiUserService.findAmiUser(userName);
+        	AmiUser amiUser =userView.getAmiUser();
             loadedUser = new User(amiUser.getUser(), amiUser.getPwd(), amiUser.getRole());
         } catch (Exception repositoryProblem) {
             throw new InternalAuthenticationServiceException(repositoryProblem.getMessage(), repositoryProblem);

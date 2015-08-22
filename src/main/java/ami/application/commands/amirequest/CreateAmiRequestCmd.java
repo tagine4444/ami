@@ -1,4 +1,4 @@
-package ami.application.commands;
+package ami.application.commands.amirequest;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
