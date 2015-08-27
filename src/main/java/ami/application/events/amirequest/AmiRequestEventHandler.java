@@ -19,7 +19,17 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestCreatedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
        
-    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), event.getHospitalName(), time);
+//    	boolean hasBeenSavedAndSubmittedToRadiologist, 
+//		boolean interpretationInProgress,              
+//		boolean interpretationReadyForReview,          
+//		boolean interpretationReadyComplete,           
+//		boolean editable, 
+    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), 
+    			event.getHospitalName(), event.getHospitalId(), 
+    			event.getHasBeenSavedAndSubmittedToRadiologist(), event.getInterpretationInProgress(),
+    			event.getInterpretationReadyForReview(),event.getInterpretationReadyComplete(),
+    			event.isEditable(),
+    			time);
     	
 //    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
 //                                         event.getId(),
@@ -33,7 +43,12 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestSavedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), event.getHospitalName(), time);
+    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
+    			event.getHospitalName(), event.getHospitalId(),
+    			event.getHasBeenSavedAndSubmittedToRadiologist(), event.getInterpretationInProgress(),
+    			event.getInterpretationReadyForReview(),event.getInterpretationReadyComplete(),
+    			event.isEditable(),
+    			time);
     	
     	
     }

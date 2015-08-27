@@ -80,7 +80,25 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 			});	
 
 			return res;
+	 },
+	 
+	 getPendingAmiRequest: function(){
+		 
+		 //var myRequestNumber = $route.current.requestNumber;
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/pending');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AMI Services');
+			});	
+
+			return res;
 	 }
+	 
+	 
 
 	
 }});
@@ -135,7 +153,17 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', 'CSRF_TOK
                         }).
                         when('/searchRequest', {
                         	templateUrl: '/app/components/amicust/searchrequests.html',
-                        	controller: 'SearchRequestCtrl'
+                        	controller: 'SearchRequestCtrl',
+                        	 
+                            resolve: {
+                            	pendingRequests: ['animalService', function (animalService) {
+                            		return animalService.getPendingAmiRequest().then(
+                            			function(result){
+                            				return result.data;
+                            			}	
+                            		);
+                                }]
+                            }
                         }).
                         when('/profile', {
                         	templateUrl: '/app/components/amicust/profile.html',

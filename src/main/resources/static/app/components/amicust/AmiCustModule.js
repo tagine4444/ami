@@ -87,6 +87,7 @@
 						
 						var user =  response.data.user;
 						var hospitalName =  response.data.hospitalName;
+						var hospitalId =  response.data.hospitalId;
 
 						var amiUser = {
 							getUserName: function(){
@@ -94,13 +95,19 @@
 							},
 							getHospitalName: function(){
 								return hospitalName;
+							},
+							getHospitalId: function(){
+								return hospitalId;
 							}
 						};
 						
 						deferred.resolve(amiUser);
-					}, function(response) {
-					  alert( response.data.message);
-					}, function(update) {
+					}, 
+					function(response) {
+							alert( response.data.message);
+					}, 
+					function(update) {
+							
 					});	
 					
 					
@@ -153,6 +160,7 @@
 			promise.then(function(amiUser) {
 				$scope.userName     = amiUser.getUserName();
 				$scope.hospitalName = amiUser.getHospitalName();
+				$scope.hospitalId = amiUser.getHospitalId();
 			}, 
 			function(response) {
 			  alert( response.data.message);
@@ -425,15 +433,13 @@
 					
 			}
 			
-			
-			
 			$scope.saveNewRequest = function(){
 				
 				
 				if (!$scope.isSubmit()){
 					
 					
-					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName };
+					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
 					
 					var res = $http.post('amicusthome/amidraftrequest',data);
 					res.success(function(data, status, headers, config) {
@@ -448,7 +454,7 @@
 				
 				if ($scope.newRequestForm.$valid) {
 				
-					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName };
+					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
 					
 					var res = $http.post('amicusthome/amirequest',data);
 					res.success(function(data, status, headers, config) {
@@ -519,9 +525,12 @@
 		
 		
 		// ============ SearchRequest ===============
-		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location) {
+		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests) {
 			$scope.page = 'searchRequests';
 			$scope.searchType = 'pending';
+			
+			
+			
 			
 			
 			

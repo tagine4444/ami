@@ -12,7 +12,7 @@ public class AmiUser {
 	private String user;
 	private String pwd;
 	private String hospitalName;
-	private long hospitalId;
+	private String hospitalId;
 	private  DateTime creationDate;
 	private  String createdBy;
 	private  DateTime deactivationDate;
@@ -24,7 +24,7 @@ public class AmiUser {
 	public AmiUser(){
 		
 	}
-	public AmiUser(String user,String pwd, String hospitalName, long hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
+	public AmiUser(String user,String pwd, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
 		this.user = user;
 		this.pwd = pwd;
 		this.hospitalName = hospitalName;
@@ -58,7 +58,7 @@ public class AmiUser {
 	public String toString() {
 		return "AmiUser [  user=" + user +", role=" + role.get(0).getAuthority() +"]";
 	}
-	public long getHospitalId() {
+	public String getHospitalId() {
 		return hospitalId;
 	}
 	public DateTime getCreationDate() {

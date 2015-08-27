@@ -11,6 +11,7 @@ public interface HospitalService {
 
 	
 	Hospital findHospital(String hospitalId) ;
+	Hospital findHospitalbyName(String name) ;
 	void createHospitalView(Hospital hospital, DateTime hospitalActivationDate) throws JsonProcessingException ;
 	void createHospital(Hospital hospital, DateTime hospitalActivationDate)
 			throws JsonProcessingException;

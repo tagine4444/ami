@@ -10,16 +10,16 @@
 <!-- 		  <li role="presentation"><a href="#">All Requests</a></li> -->
 <!-- 		</ul>   -->
 		<ul class="nav nav-tabs">
-		  <li role="presentation" ng-class="{'active' : searchType=='pending'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pending'" >Pending</a></li>
-		  <li role="presentation" ng-class="{'active' : searchType=='last30Days'}"><a href="#/searchRequest" ng-click="searchType = 'last30Days'">Processed in the last 30 days</a></li>
-		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">All Requests</a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='pending'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pending'" >Pending Requests</a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='last30Days'}"><a href="#/searchRequest" ng-click="searchType = 'last30Days'">Processed Requests (last 30 days) </a></li>
+		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">Search Requests</a></li>
 		</ul>  
 		
 		
-		              	  
+		<br/>         	  
 		<div class="panel panel-default" ng-show="searchType=='pending'">
 		  <!-- Default panel contents -->
-		  <div class="panel-heading">Pending Requests</div>
+<!-- 		  <div class="panel-heading">Pending Requests</div> -->
 		  <div class="panel-body">
 <!-- 		    <p>...</p> -->
 		    
@@ -37,7 +37,7 @@
 				  </thead>
 				  <tbody>
 				   <tr>
-				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">CTL333</a></td>
+				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">CTL333001</a></td>
 				   	<td>Dr Danoukso</td>
 				   	<td>Rex</td>
 				   	<td>German Sheppard</td>
@@ -56,7 +56,7 @@
 		
 		<div class="panel panel-default" ng-show="searchType=='last30Days'">
 		  <!-- Default panel contents -->
-		  <div class="panel-heading">Requests processed in the last 30 days</div>
+		  <div class="panel-heading">Processed Requests Queue</div>
 		  <div class="panel-body">
 		    <p>...</p>
 		  </div>

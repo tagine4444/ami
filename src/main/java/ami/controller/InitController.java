@@ -94,23 +94,34 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			
 			DateTime now = new DateTime();
 			
+			
+			// create hospital
+			final String hospitalName = "Animal Medical Imaging";
+			Hospital amiHospital = getHospital(hospitalName);
+			hospitalService.createHospital(amiHospital, now);
+			Hospital savedHospital = hospitalService.findHospitalbyName(hospitalName);
+			
+			// create user
 			List<AmiAdminAuthority> adminList =  new ArrayList<AmiAdminAuthority>();
 			AmiAdminAuthority admin = new AmiAdminAuthority();
 			adminList.add(admin);
-			
-			Hospital amiHospital = getHospital("Animal Medical Imaging");
-			AmiUser chuck = new AmiUser("chuck", "chuck","Animal Medical Imaging",12, now,  adminList);
-			hospitalService.createHospital(amiHospital, now);
-			amiUserService.createAmiUser(amiHospital.getId(), amiHospital.getName(), chuck);
+			AmiUser chuck = new AmiUser("chuck", "chuck",hospitalName,savedHospital.getId(), now,  adminList);
+			amiUserService.createAmiUser(savedHospital.getId(), savedHospital.getName(), chuck);
 			
 			
+			
+			// create hospital
+			final String hospitalName2 = "Pet Clinic";
+			Hospital petClinicHospital = getHospital(hospitalName2);
+			hospitalService.createHospital(petClinicHospital, now);
+			Hospital savedHospital2 = hospitalService.findHospitalbyName(hospitalName2);
+			
+			// create user
 			List<AmiUserAuthority> userList =  new ArrayList<AmiUserAuthority>();
 			AmiUserAuthority user = new AmiUserAuthority();
 			userList.add(user);
-			Hospital petClinicHospital = getHospital("Pet Clinic");
-			AmiUser vet = new AmiUser("vet", "vet","Pet Hospital", 11, now, userList);
-			hospitalService.createHospital(petClinicHospital, now);
-			amiUserService.createAmiUser(petClinicHospital.getId(), petClinicHospital.getName(), vet);
+			AmiUser vet = new AmiUser("vet", "vet",hospitalName2, savedHospital2.getId(), now, userList);
+			amiUserService.createAmiUser(savedHospital2.getId(), savedHospital2.getName(), vet);
 			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block

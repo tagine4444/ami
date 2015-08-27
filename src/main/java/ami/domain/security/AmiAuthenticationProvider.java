@@ -36,16 +36,18 @@ public class AmiAuthenticationProvider extends AbstractUserDetailsAuthentication
 	protected UserDetails retrieveUser(String arg0,
 			UsernamePasswordAuthenticationToken arg1)
 			throws AuthenticationException {
+		
 		UserDetails loadedUser;
 
-        try {
+        try 
+        {
         	final String userName =  arg1.getName();
-//        	AmiUser amiUser = mongo.findOne(new Query(Criteria.where("user").is(userName)), AmiUser.class,"amiuser1");
-        	
         	AmiUserView userView = amiUserService.findAmiUser(userName);
-        	AmiUser amiUser =userView.getAmiUser();
+        	AmiUser amiUser = userView.getAmiUser();
             loadedUser = new User(amiUser.getUser(), amiUser.getPwd(), amiUser.getRole());
-        } catch (Exception repositoryProblem) {
+        } 
+        catch (Exception repositoryProblem) 
+        {
             throw new InternalAuthenticationServiceException(repositoryProblem.getMessage(), repositoryProblem);
         }
 

@@ -1,5 +1,7 @@
 package ami.domain.amirequest;
 
+import org.springframework.util.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -44,6 +46,16 @@ public class AmiRequest {
 	}
 	public ImagesAndDocuments getImagesAndDocuments() {
 		return imagesAndDocuments;
+	}
+	
+	public boolean hasRequestNumber(){
+		return ! StringUtils.isEmpty(this.requestNumber);
+		
+	}
+
+	public void setRequestNumber(String requestNumber) {
+		this.requestNumber = requestNumber;
+		
 	}
 	
 }

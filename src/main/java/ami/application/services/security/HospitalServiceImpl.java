@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @Service
 public class HospitalServiceImpl implements HospitalService{
 	
-	private final static String AMI_HOSPITAL_VIEW = "viewSechospital";
+	private final static String AMI_HOSPITAL_VIEW = "viewSecHospital";
 	
 	@Autowired
 	private MongoTemplate mongo;
@@ -60,6 +60,12 @@ public class HospitalServiceImpl implements HospitalService{
 	            Update.update("amiUsers", view.getAmiUsers()),
 	            AMI_HOSPITAL_VIEW);
 		
+	}
+	@Override
+	public Hospital findHospitalbyName(String name) {
+
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.name").is(name)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		return view.getHospital();
 	}
 
 }
