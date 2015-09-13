@@ -33,20 +33,20 @@
 				</div>
 		    </div>
 		   
-		   <div class="col-sm-6">	    
-				<div class="form-inline">
-				  <div class="form-group">
-						  <div class="input-group">
-						  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account">
-						  </div>
-						  <div class="input-group">
-								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs">
-									<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option>
-							    </select>
-						 </div> 
-				  </div>
-				</div>
-			</div>
+<!-- 		   <div class="col-sm-6">	     -->
+<!-- 				<div class="form-inline"> -->
+<!-- 				  <div class="form-group"> -->
+<!-- 						  <div class="input-group"> -->
+<!-- 						  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account"> -->
+<!-- 						  </div> -->
+<!-- 						  <div class="input-group"> -->
+<!-- 								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs"> -->
+<!-- 									<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option> -->
+<!-- 							    </select> -->
+<!-- 						 </div>  -->
+<!-- 				  </div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 		</div>
 		<br/>
 		<!--  Clients  Row -->
@@ -333,11 +333,32 @@
 					  </div>
 				    </div>
 				    
-				    <div class="form-group">	
-				  		<input type="text" class="form-control" id="carrieNameId" 
-				  		ng-model="newRequest.patientInfo.animalWeight"  ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier" 
-				  		placeholder="Which Carrier did you use?  And what date did you tender the documents to the carrier? For example: UPS on 9/10/2015" >
-				    </div>
+<!-- 				    <div class="form-group">	 -->
+<!-- 				  		<input type="text" class="form-control" id="carrieNameId"  -->
+<!-- 				  		ng-model="newRequest.patientInfo.animalWeight"  ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier"  -->
+<!-- 				  		placeholder="Which Carrier did you use?  And what date did you tender the documents to the carrier? For example: UPS on 9/10/2015" > -->
+<!-- 				    </div> -->
+				    
+				    <div class="col-sm-6">	    
+						<div class="form-inline">
+						  <div class="form-group" ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier" >
+								  <div class="input-group">
+								  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.imagesAndDocuments.labAccount" placeholder="Lab Account">
+								  </div>
+								  <div class="input-group">
+										<select class="form-control" ng-model="newRequest.imagesAndDocuments.labs">
+											<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option>
+									    </select>
+								 </div> 
+						  </div>
+						</div>
+					</div>
+				    
+				    
+				    
+				    
+				    
+				    
 		    	</div>
 		    	
 		    	

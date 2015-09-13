@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class HospitalAndClientInfo {
-
-	private String	labs; 
+	
+//	private String	labAccount; 
+//	private String	labs; 
 	private String	vet; 
-	private String	labAccount; 
+	
 	private String	clientFirstName; 
 	private String	clientLastName; 
 	private String	clientId; 
@@ -17,32 +18,33 @@ public class HospitalAndClientInfo {
 		
 	}
 	
-	public HospitalAndClientInfo(String	labs,           
+	public HospitalAndClientInfo(
+//			String	labs,           
 			String	vet,            
-			String	labAccount,     
+//			String	labAccount,     
 			String	clientFirstName,
 			String	clientLastName, 
 			String	clientId,       
 			boolean	isEmployee ) {
 		
-		this.labs = labs;           
+//		this.labs = labs;           
+//		this.labAccount = labAccount;     
 		this.vet = vet;            
-		this.labAccount = labAccount;     
 		this.clientFirstName = clientFirstName;
 		this.clientLastName = clientLastName; 
 		this.clientId = clientId;       
 		this.isEmployee = isEmployee;
 	}
 	
-	public String getLabs() {
-		return labs;
-	}
+//	public String getLabs() {
+//		return labs;
+//	}
 	public String getVet() {
 		return vet;
 	}
-	public String getLabAccount() {
-		return labAccount;
-	}
+//	public String getLabAccount() {
+//		return labAccount;
+//	}
 	public String getClientFirstName() {
 		return clientFirstName;
 	}

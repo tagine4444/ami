@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ImagesAndDocuments {
 
+	private String	labAccount; 
+	private String	labs; 
 	private boolean hasDocumentDeliveredByUpload;
 	private boolean hasDocumentDeliveredByCarrier;
 	private boolean hasDocumentDeliveredByEmail;
@@ -13,11 +15,16 @@ public class ImagesAndDocuments {
      ImagesAndDocuments() {
 	}
 	
-	public ImagesAndDocuments( boolean hasDocumentDeliveredByUpload,
+	public ImagesAndDocuments( 
+			String	labAccount,
+			String	labs,
+			boolean hasDocumentDeliveredByUpload,
 			boolean hasDocumentDeliveredByCarrier,
 			boolean hasDocumentDeliveredByEmail,
 			String notes) {
 		
+		  this.labAccount = labAccount;
+		  this.labs = labs;
 		  this.hasDocumentDeliveredByUpload = hasDocumentDeliveredByUpload;
 		  this.hasDocumentDeliveredByCarrier = hasDocumentDeliveredByCarrier;
 		  this.hasDocumentDeliveredByEmail = hasDocumentDeliveredByEmail;
@@ -42,6 +49,14 @@ public class ImagesAndDocuments {
 
 	public String getNotes() {
 		return notes;
+	}
+
+	public String getLabAccount() {
+		return labAccount;
+	}
+
+	public String getLabs() {
+		return labs;
 	}
 	
 }

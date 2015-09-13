@@ -243,9 +243,9 @@
 			};
 			
 			var hospitalAndClientInfo = { };
-			hospitalAndClientInfo.labs 			  = '';
+//			hospitalAndClientInfo.labs 			  = '';
+//			hospitalAndClientInfo.labAccount 	  = '';
 			hospitalAndClientInfo.vet			  = '';
-			hospitalAndClientInfo.labAccount 	  = '';
 			hospitalAndClientInfo.clientFirstName = '';
 			hospitalAndClientInfo.clientLastName  = '';
 			hospitalAndClientInfo.clientId		  = '';
@@ -283,6 +283,8 @@
 			vetObservation.tentativeDiagnosis = '';
 			
 			var imagesAndDocuments = {};
+			imagesAndDocuments.labs 			  = '';
+			imagesAndDocuments.labAccount 	  = '';
 			imagesAndDocuments.hasDocumentDeliveredByUpload  = false;
 			imagesAndDocuments.hasDocumentDeliveredByCarrier = false;
 			imagesAndDocuments.notes = '';
