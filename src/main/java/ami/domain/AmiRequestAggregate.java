@@ -1,5 +1,8 @@
 package ami.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -8,9 +11,14 @@ import org.joda.time.DateTime;
 
 import ami.application.commands.amirequest.CreateAmiRequestCmd;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.UploadFileCommand;
 import ami.application.events.amirequest.AmiRequestCreatedEvent;
 import ami.application.events.amirequest.AmiRequestSavedAsDraftEvent;
+import ami.application.events.amirequest.AmiRequestUpdatedAsDraftEvent;
+import ami.application.events.amirequest.UploadFileRequestedEvent;
 import ami.domain.amirequest.AmiRequest;
+import ami.domain.amirequest.FileUploadInfo;
 
 public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 
@@ -21,6 +29,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	private AmiRequest amiRequest;
 	private String userName;
 	private String hospitalName;
+	private List<FileUploadInfo> fileUploads = new ArrayList<FileUploadInfo>();
 	
 	private boolean editable;
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
@@ -60,8 +69,27 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 				 command.getInterpretationReadyComplete(),
 				 command.isEditable()) );
 	}
-
-
+	
+	
+	@CommandHandler
+    public void updateAmiRequestAsDraftCmd(UpdateAmiRequestAsDraftCmd command) {
+		
+		apply(new AmiRequestUpdatedAsDraftEvent(command.getId(),
+				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
+				 command.getHospitalId(),
+				 command.getHasBeenSavedAndSubmittedToRadiologist(),
+				 command.getInterpretationInProgress(),
+				 command.getInterpretationReadyForReview(),
+				 command.getInterpretationReadyComplete(),
+				 command.isEditable()) );
+    }
+	
+	@CommandHandler
+    public void uploadFile(UploadFileCommand command) {
+		
+        apply(new UploadFileRequestedEvent(command.getId(),
+        		command.getUserName(),  command.getFileName(), command.getFilePath(), command.getCreationDate()));
+    }
 
 
 	@EventSourcingHandler
@@ -91,6 +119,30 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.interpretationReadyForReview = event.getInterpretationReadyForReview();          
 		this.interpretationReadyComplete = event.getInterpretationReadyComplete();           
 		this.editable   = event.isEditable(); 
+	}
+	
+	@EventSourcingHandler
+	public void on(AmiRequestUpdatedAsDraftEvent event) {
+		this.id = event.getId();
+		this.amiRequest = event.getAmiRequestJson();
+		this.userName = event.getUserName();
+		this.hospitalName = event.getHospitalName();
+		
+		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist(); 
+		this.interpretationInProgress = event.getInterpretationInProgress() ;              
+		this.interpretationReadyForReview = event.getInterpretationReadyForReview();          
+		this.interpretationReadyComplete = event.getInterpretationReadyComplete();           
+		this.editable   = event.isEditable(); 
+	}
+	
+	
+	@EventSourcingHandler
+	public void on(UploadFileRequestedEvent event) {
+		FileUploadInfo info = 
+				new FileUploadInfo(event.getId(), event.getFileName(), event.getFilePath(), userName, 
+						event.getCreationDate());
+		this.fileUploads.add(info);
+		
 	}
 	
 	private boolean hasBeenSavedAndSubmittedToRadiologist() {

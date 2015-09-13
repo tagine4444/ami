@@ -1,27 +1,17 @@
 <div class="row">
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
-		     
-		     
-<!-- 		<ul class="nav nav-tabs"> -->
-<!-- 		  <li role="presentation" ng-class="{'active' : page=='newRequest'}"><a ng-href="#/" >Submit New Request</a></li> -->
-<!-- 		  <li role="presentation" class="active"><a href="#">Pending</a></li> -->
-<!-- 		  <li role="presentation"><a href="#">Processed in the last 30 days</a></li> -->
-<!-- 		  <li role="presentation"><a href="#">All Requests</a></li> -->
-<!-- 		</ul>   -->
 		<ul class="nav nav-tabs">
-		  <li role="presentation" ng-class="{'active' : searchType=='pending'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pending'" >Pending Requests</a></li>
-		  <li role="presentation" ng-class="{'active' : searchType=='last30Days'}"><a href="#/searchRequest" ng-click="searchType = 'last30Days'">Processed Requests (last 30 days) </a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='last30Days'}"><a href="#/searchRequest" ng-click="searchType = 'last30Days'">Draft Requests <span class="badge">42</span></a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='pending'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pending'" >Pending Requests <span class="badge">16</span></a></li>
 		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">Search Requests</a></li>
 		</ul>  
-		
 		
 		<br/>         	  
 		<div class="panel panel-default" ng-show="searchType=='pending'">
 		  <!-- Default panel contents -->
-<!-- 		  <div class="panel-heading">Pending Requests</div> -->
+		  <div class="panel-heading">Pending Requests are submitted requests that have not yet been processed. Pending Requests can still be modified. </div>
 		  <div class="panel-body">
-<!-- 		    <p>...</p> -->
 		    
 		    
 		     <table class="table">
@@ -36,13 +26,13 @@
 				   </tr>
 				  </thead>
 				  <tbody>
-				   <tr>
-				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">CTL333001</a></td>
-				   	<td>Dr Danoukso</td>
-				   	<td>Rex</td>
-				   	<td>German Sheppard</td>
-				   	<td>Joe Smith</td>
-				   	<td>June 21st 2015</td>
+				   <tr ng-repeat="aPendingRequest in pendingRequests">
+				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">{{aPendingRequest.amiRequest.requestNumber}}</a></td>
+				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
+				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
+				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
+				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aPendingRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
+				   	<td>{{ aPendingRequest.creationDate }} </td>
 				   </tr>
 				   </tbody>
 			</table>
@@ -56,7 +46,7 @@
 		
 		<div class="panel panel-default" ng-show="searchType=='last30Days'">
 		  <!-- Default panel contents -->
-		  <div class="panel-heading">Processed Requests Queue</div>
+		  <div class="panel-heading">Draft Requests are requests that have been saved as draft. They won't be processed until they are submitted to the radiologist.</div>
 		  <div class="panel-body">
 		    <p>...</p>
 		  </div>
@@ -72,13 +62,65 @@
 		  <!-- Default panel contents -->
 		  <div class="panel-heading">All Requests</div>
 		  <div class="panel-body">
-		    <p>...</p>
+		  
+			<div class="row">
+			  <form class="navbar-form navbar-left" role="search">
+				  <div class="form-group">
+				    <input type="text" class="form-control" placeholder="Begining">
+				  </div>
+				  <div class="form-group">
+				    <input type="text" class="form-control" placeholder="End">
+				  </div>
+				  <button type="submit" class="btn btn-default">Search By Date</button>
+				</form>
+			</div>	
+					  
+			<div class="row">
+			  <div class="col-lg-5">
+			    <div class="input-group">
+			      <div class="input-group-btn">
+			        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search By <span class="caret"></span></button>
+			        <ul class="dropdown-menu">
+			          <li><a href="#">Request Number</a></li>
+			          <li><a href="#">Animal Name</a></li>
+			          <li><a href="#">Client Name</a></li>
+			          <li role="separator" class="divider"></li>
+			          <li><a href="#">Separated link</a></li>
+			        </ul>
+			      </div><!-- /btn-group -->
+			      <input type="text" class="form-control" aria-label="...">
+			    </div><!-- /input-group -->
+			  </div><!-- /.col-lg-6 -->
+			 
+			</div><!-- /.row -->
+
 		  </div>
 		
 		  <!-- Table -->
+		  <br/><br/>
+		  
 		  <table class="table">
-		    
-		  </table>
+			     <thead>
+				   <tr>
+				   	<th>Request Number</th>
+				   	<th>Veterinarian</th>
+				   	<th>Animal</th>
+				   	<th>Species</th>
+				   	<th>Owner</th>
+				   	<th>Date</th>
+				   </tr>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="aPendingRequest in pendingRequests">
+				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">{{aPendingRequest.amiRequest.requestNumber}}</a></td>
+				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
+				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
+				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
+				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aPendingRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
+				   	<td>{{ aPendingRequest.creationDate }} </td>
+				   </tr>
+				   </tbody>
+			</table>
 		</div>
 
 </div>

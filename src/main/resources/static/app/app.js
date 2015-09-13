@@ -1,5 +1,5 @@
 
-var chidra = angular.module('chidra',['flow','ngRoute','AmiCustModule']);
+var chidra = angular.module('chidra',['flow','ngRoute','mgcrea.ngStrap','AmiCustModule']);
 
 //chidra.factory("animalService", function($q, $h){
 //	   return {
@@ -17,6 +17,17 @@ var chidra = angular.module('chidra',['flow','ngRoute','AmiCustModule']);
 //	       }
 //	   }
 //});
+
+
+chidra.filter('jsonDate', ['$filter', function ($filter) {
+    return function (input, format) {
+        
+        if(input == null){ return ""; } 
+        
+        var myDate = $filter('date')(new Date(input.millis),format);
+        return myDate;
+    };
+}]);
 
 chidra.factory('animalService', function($http,$q, $routeParams){return {
 	
@@ -103,7 +114,7 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 	
 }});
 
-chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', 'CSRF_TOKEN',
+chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalProvider','CSRF_TOKEN',
                     function($routeProvider) {	
                       $routeProvider.
                         when('/', {
@@ -211,8 +222,13 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', 'CSRF_TOK
                            */
                           $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = CSRF_TOKEN;
 
+                       },
+                       
+                       function($modalProvider) {
+                    	   angular.extend($modalProvider.defaults, {
+                    	     html: true
+                    	   });
                        }
-                      
                       
 }]);
 		

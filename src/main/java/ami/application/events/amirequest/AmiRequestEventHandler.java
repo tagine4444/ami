@@ -4,11 +4,16 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import ami.application.services.amirequest.AmiRequestService;
+import ami.application.views.AmiRequestView;
+import ami.domain.amirequest.FileUploadInfo;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class AmiRequestEventHandler {
@@ -52,4 +57,28 @@ public class AmiRequestEventHandler {
     	
     	
     }
+    
+    @EventHandler
+    public void handle(AmiRequestUpdatedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    	
+    	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
+    			event.getHospitalName(), event.getHospitalId(),
+    			event.getHasBeenSavedAndSubmittedToRadiologist(), event.getInterpretationInProgress(),
+    			event.getInterpretationReadyForReview(),event.getInterpretationReadyComplete(),
+    			event.isEditable(),
+    			time);
+    	
+    	
+    }
+    
+    @EventHandler
+    public void handle(UploadFileRequestedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    	
+    	FileUploadInfo info = new FileUploadInfo(event.getId(),event.getFileName(), event.getFilePath(), event.getUserName(),time);
+    	  
+    	amiServiceRequestSvc.updateUploadedFileList(info, time);
+		
+    }
+    
+    
 }

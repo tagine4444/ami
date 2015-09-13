@@ -1,7 +1,6 @@
 package ami;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -9,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mongodb.MongoClient;
 
 @Configuration
@@ -39,6 +39,8 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 //      @Primary
       public @Bean ObjectMapper objectMapper()  {
     	  ObjectMapper om = new ObjectMapper();
+    	  om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+                  false);
     	  return om;
       }
       

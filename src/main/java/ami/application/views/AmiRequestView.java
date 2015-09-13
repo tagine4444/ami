@@ -1,9 +1,11 @@
 package ami.application.views;
 
-import org.axonframework.eventhandling.annotation.Timestamp;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 import ami.domain.amirequest.AmiRequest;
+import ami.domain.amirequest.FileUploadInfo;
 
 public class AmiRequestView {
 	
@@ -13,13 +15,17 @@ public class AmiRequestView {
 	private String userName;
 	private String hospitalName;
 	private String hospitalId;
-	private DateTime time ;
+	
+	private String creationDate ;
+	private String updateDate ;
+	private String updateUser;
 	
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
 	private DateTime interpretationReadyComplete;
 	private boolean editable;
+	private List<FileUploadInfo> fileUploads ;
 	
 	
 	public AmiRequestView( AmiRequest amiRequest, String userName,
@@ -30,7 +36,10 @@ public class AmiRequestView {
     		DateTime interpretationReadyForReview,          
     		DateTime interpretationReadyComplete,           
     		boolean editable,
-			@Timestamp DateTime time ) {
+			String creationDate,
+			List<FileUploadInfo> fileUploads,
+			String updateUser,
+			String updateDate) {
 		
 		this.amiRequest    = amiRequest;   
 		this.userName      = userName;     
@@ -42,8 +51,32 @@ public class AmiRequestView {
 		this.interpretationInProgress = interpretationInProgress ;
 		this.interpretationReadyForReview = interpretationReadyForReview ;
 		this.interpretationReadyComplete =  interpretationReadyComplete;
+		this.creationDate = creationDate;
+		this.fileUploads = fileUploads;
 		
-		this.time = time;
+		this.updateDate = null;
+		this.updateUser = null;
+	}
+	
+	public void update(AmiRequestView updatedView, String updateDate, String updateUser){
+		
+		this.updateDate = updateDate;
+		this.updateUser = updateUser;
+		
+		this.amiRequest    = updatedView.getAmiRequest();   
+		this.userName      = updatedView.getUserName();     
+		this.hospitalId    = updatedView.getHospitalId();
+		this.hospitalName  = updatedView.getHospitalName(); 
+		
+		this.editable =  updatedView.isEditable();
+		this.hasBeenSavedAndSubmittedToRadiologist = updatedView.getHasBeenSavedAndSubmittedToRadiologist() ;
+		this.interpretationInProgress = updatedView.getInterpretationInProgress() ;
+		this.interpretationReadyForReview = updatedView.getInterpretationReadyForReview() ;
+		this.interpretationReadyComplete =  updatedView.getInterpretationReadyComplete();
+		
+		this.creationDate = updatedView.getCreationDate();
+		this.fileUploads = updatedView.getFileUploads();
+		
 	}
 
 	public AmiRequest getAmiRequest() {
@@ -57,8 +90,8 @@ public class AmiRequestView {
 		return hospitalName;
 	}
 
-	public DateTime getTime() {
-		return time;
+	public String getCreationDate() {
+		return creationDate;
 	}
 
 	public boolean isEditable() {
@@ -87,6 +120,16 @@ public class AmiRequestView {
 		return interpretationReadyComplete;
 	}
 
-	
+	public List<FileUploadInfo> getFileUploads() {
+		return fileUploads;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public String getUpdateUser() {
+		return updateUser;
+	}
 
 }

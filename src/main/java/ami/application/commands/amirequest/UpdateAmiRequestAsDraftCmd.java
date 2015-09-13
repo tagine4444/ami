@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 
 import ami.domain.amirequest.AmiRequest;
 
-public class SaveAmiRequestAsDraftCmd {
+public class UpdateAmiRequestAsDraftCmd {
 	
 	@TargetAggregateIdentifier
     private final String id;
@@ -21,7 +21,7 @@ public class SaveAmiRequestAsDraftCmd {
    	private boolean editable;
 
 
-    public SaveAmiRequestAsDraftCmd(String id, AmiRequest amiRequestJson, String userName,   
+    public UpdateAmiRequestAsDraftCmd(String id, AmiRequest amiRequestJson, String userName,   
     		String hospitalName, String hospitalId,
     		DateTime hasBeenSavedAndSubmittedToRadiologist, 
     		DateTime interpretationInProgress,              

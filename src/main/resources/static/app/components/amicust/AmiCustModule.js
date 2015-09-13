@@ -119,7 +119,7 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, amiService,animals,species, amiServices) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices) {
 			
 			$scope.page = 'newRequest';
 			
@@ -285,7 +285,6 @@
 			var imagesAndDocuments = {};
 			imagesAndDocuments.hasDocumentDeliveredByUpload  = false;
 			imagesAndDocuments.hasDocumentDeliveredByCarrier = false;
-			imagesAndDocuments.hasDocumentDeliveredByEmail   = false;
 			imagesAndDocuments.notes = '';
 			
 			
@@ -432,19 +431,29 @@
 				}
 					
 			}
+			$scope.isSaveAsDraft= function(){
+				if($scope.saveAction == 'draft'){
+					return true;
+				}else{
+					return false;
+				}
+				
+			}
 			
 			$scope.saveNewRequest = function(){
 				
 				
-				if (!$scope.isSubmit()){
+				if ($scope.isSaveAsDraft()){
 					
-					
+					$scope.saveAction == '';
+						
 					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
 					
 					var res = $http.post('amicusthome/amidraftrequest',data);
 					res.success(function(data, status, headers, config) {
-						$scope.newRequest.id = data.id;
+//					$scope.newRequest.id = data.id;
 						$scope.newRequest.requestNumber = data.requestNumber;
+						//$location.path('/searchRequest');
 					});
 					res.error(function(data, status, headers, config) {
 						alert( "failure message: " + JSON.stringify({data: data}));
@@ -452,65 +461,80 @@
 					return;
 				}
 				
-				if ($scope.newRequestForm.$valid) {
-				
-					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+				if ($scope.isSubmit()){
+					$scope.saveAction == '';
 					
-					var res = $http.post('amicusthome/amirequest',data);
-					res.success(function(data, status, headers, config) {
-						$scope.newRequest.id = data.id;
-						$scope.newRequest.requestNumber = data.requestNumber;
-					});
-					res.error(function(data, status, headers, config) {
-						alert( "failure message: " + JSON.stringify({data: data}));
-					});	
-				}else{
+					if ($scope.newRequestForm.$valid) {
 					
-					alert('some errors found');
-				}
-				
+						var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+						
+						var res = $http.post('amicusthome/amirequest',data);
+						res.success(function(data, status, headers, config) {
+							$scope.newRequest.requestNumber = data.requestNumber;
+							
+							$location.path('/searchRequest');
+						});
+						res.error(function(data, status, headers, config) {
+							alert( "failure message: " + JSON.stringify({data: data}));
+						});	
+						
+						
+					}else{
+						
+						$scope.saveAction == '';
+						alert('some errors found');
+					}
+					return;
+				}	
 			   
 			}
 			
 			
+			//var myModal = $modal({controller: this, templateUrl: './processmodal.html', show: false});
+			var myModal = $modal({title: '', content: 'Please wait...', show: false});
+			
 			$scope.uploader = {
+					
 					fileAdded: function ($flow, $file, $message) {
-						//console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
 					    $file.msg = $message;// Just display message for a convenience
 					  },
 				
 					fileSubmitted: function ($flow, $file, $message) {
-						console.log($flow, $file, $message); // Note, you have to JSON.parse message yourself.
+						 
+						var reqNumber = $scope.newRequest.requestNumber;
+						$flow.opts.query = { requestNumber: reqNumber };
 					    //$file.msg = $message;// Just display message for a convenience
+
+					},
+					
+					fileCompleted: function ($flow, $file, $message) {
+						myModal.$promise.then(myModal.hide);
+					    $file.msg = $message;// Just display message for a convenience
+					 },
+					 fileUploadStarted: function ($flow, $file, $message) {
+						 myModal.$promise.then(myModal.show);
+						$file.msg = $message;// Just display message for a convenience
 					}
 						
 				};
 				
 		    $scope.upload = function () {
+		    
 		      $scope.uploader.flow.upload(); 
-		  
 		    }
 		    
-		    $scope.hoverIn = function(){
-		    	
-		    	var hasBeenSaved = Boolean( $scope.newRequest.id );
-		    	if(hasBeenSaved){
-		    		this.hoverEdit = false;
-		    	}else{
-		    		
-		    		this.hoverEdit = true;
-		    	}
-		    	
-		    };
-
-		    $scope.hoverOut = function(){
-		    	this.hoverEdit = false;
-		    };
-		    
 		    $scope.hasBeenSaved = function(){
-				var hasBeenSaved = Boolean( $scope.newRequest.id );
+				var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
 				return hasBeenSaved;
 			}
+		    
+		    $scope.showTransferFileMsg = function(){
+				var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
+				var uploadSelected = newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload
+				return !hasBeenSaved && uploadSelected;
+			}
+		    
+		    
 		    
 		    $scope.showIncompleteFormMsg = function(){
 		    	this.isShowIncompleteFormMsg = true;
@@ -530,8 +554,32 @@
 			$scope.searchType = 'pending';
 			
 			
+			$scope.pendingRequests = pendingRequests;
 			
 			
+			
+
+			for (var i in pendingRequests) {
+			  var aPendingRequests = pendingRequests[i];
+			  
+			  var myDate = aPendingRequests.creationDate;
+			  console.log('=====================> year '+myDate.millis	);
+			  console.log('=====================> year '+myDate.year	);
+			  console.log('=====================> month '+myDate.monthOfYear	);
+			  console.log('=====================> day '+myDate.dayOfMonth	);
+			  console.log('=====================> hour '+myDate.hourOfDay	);
+			  console.log('=====================> min '+myDate.minuteOfHour	);
+			  console.log('=====================> sec '+myDate.secondOfMinute	);
+			  console.log('=====================> milli '+myDate.millisOfSecond	);
+			  console.log('=========================='	);
+			  console.log('=========================='	);
+			  console.log('=========================='	);
+			  
+			  
+			  
+			 // new Date(year, month, day, hours, minutes, seconds, milliseconds)
+			  
+			}
 			
 			
 		});

@@ -14,14 +14,9 @@
    	
    	<p class="alert alert-warning" role="alert"  ng-show="newRequestForm.$invalid && isShowIncompleteFormMsg">You can't submit to radiologist until all required fields are provided. You can however save this request as a draft</p>
    		</div>
-	   	<div class="col-sm-4" 	ng-mouseenter="showIncompleteFormMsg()" ng-mouseleave="dontShowIncompleteFormMsg()">
-	   		<button type="submit"  class="btn btn-default" >Cancel</button>
-	   		<button ng-click="setAction('draft')" type="submit" class="btn btn-warning">Save As Draft</button>
-	   		<button ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
-	   	</div>
    	</div>
    	<br/>
-   	<p ng-show="hasBeenSaved()" >Your Request has been saved {{newRequest.requestNumber}} - {{newRequest.id}} -</p>
+   	<p ng-show="hasBeenSaved()" >Your Request has been saved {{newRequest.requestNumber}} - {{newRequest.id}} </p>
    	
    
 	<div class="panel panel-default">
@@ -152,7 +147,6 @@
 									  <option ng-selected="$index==0"  ng-repeat="animalMonths in animalAgeMonthsList"> {{animalMonths}}</option>
 									</select>
 							    </div>
-							    
 								{{ newRequest.patientInfo.ageLabel }} 
 						</div>
 					</div>
@@ -310,52 +304,39 @@
 	</div>
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading"><strong>Images / Documents </strong></div>
+	  <div class="panel-heading"><strong>Documents &#47; Notes</strong></div>
 	    <div class="panel-body">
 		  	<div class="row">
 		  		<div class="col-sm-12">
-			  		<p>Please check <strong>all</strong> that applies: I am providing Images / documents with this request.</p>
+			  		<p>I am providing documents with this request.</p>
 			   	</div>
 			   	
-			   	
 		   		<div class="col-sm-12">
-		   		<span id = "uploadCheckCheckboxDivId" ng-mouseleave="hoverOut()">
+		   		<span id = "uploadCheckCheckboxDivId" >
 		   		   <label class="checkbox-inline" >
 					
-					  <input type="checkbox" id="uploadCheckCheckbox" ng-disabled="hoverEdit"
+					  <input type="checkbox" id="uploadCheckCheckbox" 
 					  ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
-					  ng-mouseenter="hoverIn()" 
 					  />By Upload
 					</label>
 				</span>	
 				   <label class="checkbox-inline">
 					  <input type="checkbox" id="carrierCheckboxId" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">By Carrier
 					</label>
-					<label class="checkbox-inline">
-					  <input type="checkbox" id="deliveredByEmailCheckboxId" ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByEmail">By Email
-					</label>
 				</div>
-				<div class="col-sm-12">
-<!-- 				 <div ng-show="!hasBeenSaved()" style="color:red">The Upload check box is currently disabled. To enable it, you must first save as draft. See the orange button above.</div> -->
-				 <div id="msg" ng-show="hoverEdit" style="color:red">The Upload check box is currently disabled. To enable it, you must first save as draft. See the orange button above.</div>
 				</div>
 				
 				<div class="col-sm-12">
 				      
 				    <div class="form-group">	
 				  		<div  ng-show="!hasBeenSaved()">
-				  		</br>
-				  		<ul>
-					  		<li>If you have <strong>not sent the email yet</strong>, please provide the number of this request in the subject of the email. </li>
-						  	<li>If you have <strong>already sent the email</strong>, please copy and paste the subject of your email and the date the email was sent in the note below. It will help us find your email.</li>
-					  	</ul>
 					  </div>
 				    </div>
 				    
 				    <div class="form-group">	
 				  		<input type="text" class="form-control" id="carrieNameId" 
 				  		ng-model="newRequest.patientInfo.animalWeight"  ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier" 
-				  		placeholder="Which Carrier did you use?  And what was the date you sent it?" >
+				  		placeholder="Which Carrier did you use?  And what date did you tender the documents to the carrier? For example: UPS on 9/10/2015" >
 				    </div>
 		    	</div>
 		    	
@@ -364,97 +345,164 @@
 				<div class="col-sm-12">
 				  	<div class="form-group">	
 					    <label for="exampleInputEmail1">Notes</label>
-					    <textarea class="form-control" ng-model="newRequest.imagesAndDocuments.notes" rows="3" placeholder="Please provide any information you would like to commmunicate..."></textarea>
+					    <textarea class="form-control" ng-model="newRequest.imagesAndDocuments.notes" rows="3" placeholder="If you have any additional information about this request you'd like provide, this is the place!"></textarea>
 				    </div>
 		    	</div>
 		    	
-		    	
-		    	
+		    	<div class="col-sm-10">
+			        <button 
+			        	ng-click="setAction('transfer')" 
+			        	data-toggle="modal" 
+				        data-target="#uploadModal" class="btn btn-default" 
+				        ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
+				        ng-disabled="!hasBeenSaved()">
+				        Image Upload</button>
 				        
-		    	<div class="col-sm-12">
-		    		
-					<div flow-init="{target:'/ami/doupload', testChunks:false, permanentErrors: [404, 500, 501], maxChunkRetries: 1,chunkRetryInterval: 5000,simultaneousUploads: 4, singleFile: false}" flow-name="uploader.flow"
-					 flow-file-added="uploader.fileAdded($flow, $file, $message)"
-					 flow-files-submitted ="uploader.fileSubmitted($flow, $file, $message)">     
-				        
-				        <br/><br/>
-				        <button class="btn btn-primary" flow-btn ng-disabled="! newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">Add files
-				        	<span class="btn-primary glyphicon glyphicon-plus" aria-hidden="true"></span>
-				        </button>
-				        
-				        <button class="btn btn-primary" ng-click="upload()" ng-disabled="! newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">Upload
-				        	<span class="btn-primary glyphicon glyphicon-upload" aria-hidden="true"></span>
-				        </button>
-				        
-				        <button type="submit"  class="btn btn-default" >Cancel</button>
-	   					<button ng-click="setAction('draft')" type="submit" class="btn btn-warning">Save As Draft</button>
-	   					<button ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
-				        
-				        <br/>
-				        <table>
-					        <tr ng-repeat="file in uploader.flow.files" >
-					         	<td> <a ng-click="file.cancel()">Cancel upload for {{file.name}}</a></td>
-					        </tr>
-					        
-					    </table>    
-						</div>
-						
-						
-		    	
+   					<button ng-click="setAction('draft')" type="submit" class="btn btn-primary">Save As Draft</button>
 		    	</div>
+		    	
+		    	<div class="col-sm-2">
+		    		<button ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
+		    	</div>
+		    	<div class="col-sm-12">
+		    	<p style="color:red;" ng-show="showTransferFileMsg()">Image Upload is disabled. You must <strong>first push the &quot;Save As Draft&quot; Button.</strong> Once the request is saved, you can upload images.</p>
+				</div>
 			</div>	
 	    </div>
-	</div>	    
 </form>	    
-	    <!-- Modal -->
-		<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">A.M.I Services</h4>
-		      </div>
-		      <div class="modal-body">
-		      
-		      	<div class="panel panel-default">
-				  <!-- Default panel contents -->
-				  <div class="panel-heading">{{serviceCategory}} Services</div>
-				
-				  <!-- Table -->
-				  <table class="table">
-				  	<thead>
-				  		<tr>
-				  			<th></th>
-				  		</tr>
-				  	</thead>
-				  	<tbody ng-repeat="aService in servicesListByCategory">
-<!-- 			        		<tr ng-repeat="aValue in value track by $index">  -->
-<!-- 					  			<td>{{key}}</td> -->
-<!-- 					  			<td>{{aValue}}</td> -->
-<!-- 					  			<td> -->
-<!-- 					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(key,aValue)">Add</button> -->
-<!-- 					  			</td> -->
-<!-- 				  			</tr> -->
-			        		<tr> 
-					  			<td>{{aService.name}}</td>
-					  			<td>
-					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(serviceCategory, aService)">Add</button>
-					  			</td>
-				  			</tr>
-				  	</tbody>		
-				  </table>
-				</div>
-		        
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
+	   
+	   
+	   
+   <!-- Modal -->
+	<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">A.M.I Services</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      	<div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">{{serviceCategory}} Services</div>
+			
+			  <!-- Table -->
+			  <table class="table">
+			  	<thead>
+			  		<tr>
+			  			<th></th>
+			  		</tr>
+			  	</thead>
+			  	<tbody ng-repeat="aService in servicesListByCategory">
+	<!-- 			        		<tr ng-repeat="aValue in value track by $index">  -->
+	<!-- 					  			<td>{{key}}</td> -->
+	<!-- 					  			<td>{{aValue}}</td> -->
+	<!-- 					  			<td> -->
+	<!-- 					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(key,aValue)">Add</button> -->
+	<!-- 					  			</td> -->
+	<!-- 				  			</tr> -->
+		        		<tr> 
+				  			<td>{{aService.name}}</td>
+				  			<td>
+				  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(serviceCategory, aService)">Add</button>
+				  			</td>
+			  			</tr>
+			  	</tbody>		
+			  </table>
+			</div>
+	        
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	
+	<!-- Modal -->
+	<div class="modal fade bs-example-modal-lg" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="uploadModalLabel">Image Upload</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      	<div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">
+				  Uploading images is done in 2 steps. 
+				  <ol>
+				  	 <li>Push the &quot;Select Images&quot; button to select all the images you wish to upload</li>
+				  	 <li>Push the &quot;Upload&quot; button once all files are selected to upload them </li>
+				  </ol>
+			  </div>
+			  
+			  	<div class="col-sm-12">
+		    		
+					<div flow-init="{target:'/ami/doupload', testChunks:false, permanentErrors: [404, 500, 501], maxChunkRetries: 1,chunkRetryInterval: 5000,simultaneousUploads: 4, singleFile: false}" flow-name="uploader.flow"
+					 	flow-file-added="uploader.fileAdded($flow, $file, $message)"
+					 	flow-files-submitted ="uploader.fileSubmitted($flow, $file, $message)"
+					 	flow-upload-started ="uploader.fileUploadStarted($flow, $file, $message)"
+					 	flow-complete ="uploader.fileCompleted($flow, $file, $message)"
+					 	
+					 	>     
+				        
+					        <br/><br/>
+					        <button class="btn btn-primary" 
+					        	flow-btn ng-click="setAction('addFiles')" 
+					        	data-trigger="hover" 
+	          					data-placement="top"
+	          					data-title="Select the documents to transfer"
+	          					bs-tooltip>Select Images
+					        	<span class="btn-primary glyphicon glyphicon-plus" aria-hidden="true"></span>
+					        </button>
+					        &nbsp;
+					        <button class="btn btn-primary" 
+					        	data-dismiss="modal"
+					        	ng-click="upload()"  
+					        	data-trigger="hover" 
+	          					data-placement="top"
+	          					data-title="Transfer documents"
+	          					bs-tooltip>Upload
+					        	<span class="btn-primary glyphicon glyphicon-upload" aria-hidden="true"></span>
+					        </button>
+		   					
+					        <br/> <br/>
+					        
+					        <div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading">Images Selected For Upload</div>
+								  <table class="table">
+								  	 <thead>
+									   <tr>
+									   	<th>File Name</th>
+									   	<th></th>
+									   </tr>
+									  </thead>
+								  	<tbody>
+								  		<tr ng-repeat="file in uploader.flow.files" >
+								         	<td>{{file.name}}</td>
+								         	<td> <a ng-click="file.cancel()">Remove</a></td>
+							        	</tr>
+								  	</tbody>
+								    
+								  </table>
+							</div>
+				       </div>
+		    	</div>
+			</div>
+	        
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	    
 </div>
-	
-
-
-

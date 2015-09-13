@@ -1,5 +1,8 @@
 package ami.domain.amirequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,6 +16,7 @@ public class AmiRequest {
 	private RequestedServices requestedServices;
 	private VetObservation vetObservation;
 	private ImagesAndDocuments imagesAndDocuments;
+	
 	
 	public AmiRequest() {
 	}
@@ -57,5 +61,5 @@ public class AmiRequest {
 		this.requestNumber = requestNumber;
 		
 	}
-	
+
 }

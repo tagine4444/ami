@@ -106,8 +106,8 @@ public class AmiRequestController {
 		final String hospitalName = (String) dbObject.get("hospitalName");
 		final String hospitalId = (String) dbObject.get("hospitalId");
 		
-		amiRequestService.saveAmiRequestAsDraft(req ,userName , hospitalName, hospitalId);
+		String requestNumber = amiRequestService.saveAmiRequestAsDraft(req ,userName , hospitalName, hospitalId);
 		
-		return "{}";
+		return "{\"requestNumber\": \""+requestNumber+"\"}";
 	}
 }
