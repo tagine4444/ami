@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -14,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.UploadFileCommand;
 import ami.controller.HttpUtils;
 import ami.controller.ResumableInfo;
 import ami.controller.ResumableInfoStorage;
+import ami.domain.amirequest.FileUploadInfo;
 
 @Service
 public class UploadFileServiceImpl implements UploadFileService{
@@ -26,6 +29,9 @@ public class UploadFileServiceImpl implements UploadFileService{
 	
 	@Autowired
 	private CommandGateway commandGateway;
+	
+	@Autowired
+	private AmiRequestService amiRequestService;
 	
 	
 	@Override
@@ -76,7 +82,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 	            ResumableInfoStorage.getInstance().remove(info);
 	           // response.getWriter().print("All finished.");
 	            
-	            commandGateway.sendAndWait(new UploadFileCommand(requestNumber, userName, info.resumableFilename, info.resumableFilePath, new DateTime()));
+	            commandGateway.sendAndWait(new UploadFileCommand(requestNumber, userName, info.resumableFilename,flowFilename, info.resumableFilePath, new DateTime()));
 	        } else {
 	            //response.getWriter().print("Upload");
 	        }
@@ -96,12 +102,6 @@ public class UploadFileServiceImpl implements UploadFileService{
 	    		) throws ServletException {
 	        String base_dir = UPLOAD_DIR  ;
 
-	        
-//	        String flowChunkNumber, 
-//			String flowChunkSize, 
-//			String flowFilename, 
-//			String flowRelativePath, 
-//			String flowTotalChunks
 	        
 	        int resumableChunkSize          = HttpUtils.toInt(flowChunkSize, -1);
 	        long resumableTotalSize         = HttpUtils.toLong(flowTotalSize  , -1) ;
@@ -124,4 +124,14 @@ public class UploadFileServiceImpl implements UploadFileService{
 	        }
 	        return info;
 	    }
+
+	@Override
+	public List<FileUploadInfo> deleteUploadedFile(String fileName, String requestNumber,
+			String userName, DateTime dateTime) {
+		
+		commandGateway.sendAndWait(new DeleteUploadedFileCommand(requestNumber, userName, fileName,  dateTime));
+		List<FileUploadInfo> uploadedFiles = amiRequestService.getUploadedFile(requestNumber);
+		
+		return uploadedFiles;
+	}
 }

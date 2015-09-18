@@ -4,13 +4,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import ami.application.services.amirequest.AmiRequestService;
-import ami.application.views.AmiRequestView;
 import ami.domain.amirequest.FileUploadInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -74,10 +70,18 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(UploadFileRequestedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	FileUploadInfo info = new FileUploadInfo(event.getId(),event.getFileName(), event.getFilePath(), event.getUserName(),time);
+    	FileUploadInfo info = new FileUploadInfo(event.getId(),event.getFileName(), event.getOriginalFileName(), event.getFilePath(), event.getUserName(),time);
     	  
     	amiServiceRequestSvc.updateUploadedFileList(info, time);
 		
+    }
+    
+    @EventHandler
+    public void handle(UploadedFileDeletedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    	
+    	
+    	amiServiceRequestSvc.deleteUploadedFile(event.getFileName() ,event.getId(), time);
+    	
     }
     
     

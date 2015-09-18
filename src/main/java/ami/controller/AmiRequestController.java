@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ami.application.services.amirequest.AmiRequestService;
 import ami.application.views.AmiRequestView;
 import ami.domain.amirequest.AmiRequest;
+import ami.domain.amirequest.FileUploadInfo;
 import ami.domain.security.AmiAuthtorities;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -65,6 +66,21 @@ public class AmiRequestController {
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/amirequest/uploadedfiles", method = RequestMethod.GET)
+	@ResponseBody
+	public String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException {
+		
+		AmiRequestView amiRequestView = amiRequestService.findAmiRequest( requestNumber);
+		List<FileUploadInfo> fileUploads = amiRequestView.getFileUploads();
+		
+		String fileUploadsString = objectMapper.writeValueAsString(fileUploads);
+		return fileUploadsString;
+	}
+	
+	
+	
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")

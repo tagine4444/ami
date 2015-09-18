@@ -1,6 +1,7 @@
 package ami.application.services.amirequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -11,6 +12,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -185,33 +187,30 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		return amiRequestView;
 	}
 	
-	
-	@Override
+	 @Override
 	 public void updateUploadedFileList(FileUploadInfo info, @Timestamp DateTime time) throws JsonProcessingException {
 	    
 		final String requestNumberJson = "amiRequest.requestNumber";
 		final String requestNumber = info.getRequestNumber();
 		 
-//		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where(requestNumberJson).is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
-	    	
-//    	List<FileUploadInfo> fileUploads = amiRequestView.getFileUploads();
-//    	fileUploads.add(info);
-//    	
-//		
-//		mongo.updateFirst(
-//	            new Query(Criteria.where(requestNumberJson).is(requestNumber)),
-//	            Update.update("fileUploads", fileUploads),
-//	            AMIREQUEST_VIEW);
-		
-		
-		
-		
 		Query query1 = new Query(Criteria.where(requestNumberJson).is(requestNumber));
 		Update update = new Update() ;
 		update.push("fileUploads", info);
 		
-		AmiRequestView updatedView = mongo.findAndModify(query1, update, AmiRequestView.class, AMIREQUEST_VIEW); 
-			
+		mongo.updateFirst(query1, update, AmiRequestView.class, AMIREQUEST_VIEW); 
+	 }
+	 
+	 @Override
+	 public void deleteUploadedFile( String fileName, String requestNumber, @Timestamp DateTime time) throws JsonProcessingException {
+		 
+		 final String requestNumberJson = "amiRequest.requestNumber";
+		 
+		 Query query1 = new Query(Criteria.where(requestNumberJson).is(requestNumber));
+		 Update update = new Update() ;
+		 
+		 update.pull("fileUploads", Collections.singletonMap("fileName", fileName));
+		 
+		 mongo.updateFirst(query1, update, AmiRequestView.class, AMIREQUEST_VIEW); 
 		 
 	 }
 	
@@ -230,6 +229,13 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 	   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		return amiRequestView;
+	}
+
+	@Override
+	public List<FileUploadInfo> getUploadedFile(String requestNumber) {
+		
+		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("amiRequest.requestNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestView.getFileUploads();
 	}
 
 	

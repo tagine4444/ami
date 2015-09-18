@@ -377,7 +377,7 @@
 				        data-target="#uploadModal" class="btn btn-default" 
 				        ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
 				        ng-disabled="!hasBeenSaved()">
-				        Image Upload</button>
+				        Add images to this request</button>
 				        
    					<button ng-click="setAction('draft')" type="submit" class="btn btn-primary">Save As Draft</button>
 		    	</div>
@@ -386,9 +386,32 @@
 		    		<button ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
 		    	</div>
 		    	<div class="col-sm-12">
-		    	<p style="color:red;" ng-show="showTransferFileMsg()">Image Upload is disabled. You must <strong>first push the &quot;Save As Draft&quot; Button.</strong> Once the request is saved, you can upload images.</p>
+		    	<p style="color:red;" ng-show="showTransferFileMsg()">To Add images to this request, you must <strong>first push the &quot;Save As Draft&quot; Button.</strong> </p>
 				</div>
 			</div>	
+	    </div>
+	    
+	    <div id="uploadedFilesDiv" class="col-sm-3" ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">
+	    
+	     <table class="table">
+			  	<thead>
+			  		<tr>
+			  			<th>Num</th>
+			  			<th>Uploaded Files</th>
+			  			<th></th>
+			  		</tr>
+			  	</thead>
+			  	<tbody ng-repeat="aFileUpload in newRequest.imagesAndDocuments.uploadedFiles">
+		        		
+		        		<tr> 
+		        			<td>{{$index +1 }}</td>
+				  			<td>{{aFileUpload.originalFileName}}</td>
+				  			<td> <a ng-click="deleteUploadedFile(aFileUpload.fileName)">Remove</a></td>
+			  			</tr>
+			  	</tbody>		
+			  </table>
+	    
+	    
 	    </div>
 </form>	    
 	   
@@ -449,18 +472,19 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="uploadModalLabel">Image Upload</h4>
+	        <h4 class="modal-title" id="uploadModalLabel">Add images to this request</h4>
 	      </div>
 	      <div class="modal-body">
 	      
 	      	<div class="panel panel-default">
 			  <!-- Default panel contents -->
 			  <div class="panel-heading">
-				  Uploading images is done in 2 steps. 
+				  Adding images to this request is done in 2 steps. 
 				  <ol>
 				  	 <li>Push the &quot;Select Images&quot; button to select all the images you wish to upload</li>
 				  	 <li>Push the &quot;Upload&quot; button once all files are selected to upload them </li>
 				  </ol>
+				  <strong>Note</strong> You can only select 1 image at a time. So repeat step 1 until all images are selected, then push the upload button.
 			  </div>
 			  
 			  	<div class="col-sm-12">

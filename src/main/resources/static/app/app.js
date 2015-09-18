@@ -93,6 +93,21 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 			return res;
 	 },
 	 
+	 getUploadedFiles: function(requestNumber){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/uploadedfiles?requestNumber='+requestNumber);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get uploaded files');
+			});	
+
+			return res;
+	 },
+	 
 	 getPendingAmiRequest: function(){
 		 
 		 //var myRequestNumber = $route.current.requestNumber;

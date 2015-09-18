@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import ami.application.events.amirequest.UploadFileRequestedEvent;
 import ami.application.views.AmiRequestView;
 import ami.domain.amirequest.AmiRequest;
 import ami.domain.amirequest.FileUploadInfo;
@@ -50,6 +49,15 @@ public interface AmiRequestService {
 			DateTime interpretationReadyForReview,
 			DateTime interpretationReadyComplete, boolean editable,
 			DateTime time) throws JsonProcessingException;
+
+
+
+	List<FileUploadInfo> getUploadedFile(String requestNumber);
+
+
+
+	void deleteUploadedFile(String fileName, String requestNumber, DateTime time)
+			throws JsonProcessingException;
 
 	
 	
