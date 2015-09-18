@@ -3,7 +3,7 @@ package ami.application.events.amirequest;
 import org.joda.time.DateTime;
 
 public class UploadedFileDeletedEvent {
-
+ //comment
     private final String id;
     private final String userName;
     private final String fileName;
