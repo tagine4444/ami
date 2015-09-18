@@ -1,6 +1,7 @@
 package ami.domain;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
@@ -10,6 +11,7 @@ import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import org.joda.time.DateTime;
 
 import ami.application.commands.amirequest.CreateAmiRequestCmd;
+import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
@@ -17,6 +19,7 @@ import ami.application.events.amirequest.AmiRequestCreatedEvent;
 import ami.application.events.amirequest.AmiRequestSavedAsDraftEvent;
 import ami.application.events.amirequest.AmiRequestUpdatedAsDraftEvent;
 import ami.application.events.amirequest.UploadFileRequestedEvent;
+import ami.application.events.amirequest.UploadedFileDeletedEvent;
 import ami.domain.amirequest.AmiRequest;
 import ami.domain.amirequest.FileUploadInfo;
 
@@ -88,8 +91,15 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
     public void uploadFile(UploadFileCommand command) {
 		
         apply(new UploadFileRequestedEvent(command.getId(),
-        		command.getUserName(),  command.getFileName(), command.getFilePath(), command.getCreationDate()));
+        		command.getUserName(),  command.getFileName(), command.getOriginalFileName() , command.getFilePath(), command.getCreationDate()));
     }
+	
+	@CommandHandler
+	public void deleteUploadedFile(DeleteUploadedFileCommand command) {
+		
+		apply(new UploadedFileDeletedEvent(command.getId(),
+				command.getUserName(), command.getFileName(), command.getDateTime()));
+	}
 
 
 	@EventSourcingHandler
@@ -138,10 +148,28 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	
 	@EventSourcingHandler
 	public void on(UploadFileRequestedEvent event) {
+		
+		
 		FileUploadInfo info = 
-				new FileUploadInfo(event.getId(), event.getFileName(), event.getFilePath(), userName, 
+				new FileUploadInfo(event.getId(), event.getFileName(),event.getOriginalFileName() , event.getFilePath(), userName, 
 						event.getCreationDate());
 		this.fileUploads.add(info);
+		
+	}
+	@EventSourcingHandler
+	public void on(UploadedFileDeletedEvent event) {
+		
+		if(this.fileUploads==null || !this.fileUploads.isEmpty())
+		{
+			for (Iterator<FileUploadInfo> iterator = fileUploads.iterator(); iterator.hasNext();) {
+				
+				FileUploadInfo fileUploadInfo = (FileUploadInfo) iterator.next();
+				
+				if(fileUploadInfo.getFileName().equals(event.getFileName())){
+					iterator.remove();
+				}
+			}
+		}
 		
 	}
 	

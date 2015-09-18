@@ -119,7 +119,7 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService) {
 			
 			$scope.page = 'newRequest';
 			
@@ -243,8 +243,6 @@
 			};
 			
 			var hospitalAndClientInfo = { };
-//			hospitalAndClientInfo.labs 			  = '';
-//			hospitalAndClientInfo.labAccount 	  = '';
 			hospitalAndClientInfo.vet			  = '';
 			hospitalAndClientInfo.clientFirstName = '';
 			hospitalAndClientInfo.clientLastName  = '';
@@ -288,9 +286,8 @@
 			imagesAndDocuments.hasDocumentDeliveredByUpload  = false;
 			imagesAndDocuments.hasDocumentDeliveredByCarrier = false;
 			imagesAndDocuments.notes = '';
-			
-			
-			
+			imagesAndDocuments.uploadedFiles = [];
+			 
 			var newRequest = {
 					'requestNumber'         :'',
 					'hospitalAndClientInfo'	: hospitalAndClientInfo,
@@ -377,6 +374,7 @@
 				}
 				
 			}
+			
 			$scope.isShowAnimalMonthLabel =function(){
 				
 				if(newRequest.patientInfo.animalAgeMonths = Months || newRequest.patientInfo.animalAgeMonths == ZeroMonths){
@@ -412,7 +410,6 @@
 			
 			
 			$scope.deleteFilteredItem = function(anItem){
-				
 				
 				for(var i = $scope.newRequest.requestedServices.selectedServices.length - 1; i >= 0; i--) {
 				    if($scope.newRequest.requestedServices.selectedServices[i] === anItem) {
@@ -480,7 +477,6 @@
 							alert( "failure message: " + JSON.stringify({data: data}));
 						});	
 						
-						
 					}else{
 						
 						$scope.saveAction == '';
@@ -510,12 +506,27 @@
 					},
 					
 					fileCompleted: function ($flow, $file, $message) {
+					    
+					    var myRequestNumber = $scope.newRequest.requestNumber;
+					    var promise = animalService.getUploadedFiles(myRequestNumber);
+						
+						promise.then(function(result) {
+							$scope.newRequest.imagesAndDocuments.uploadedFiles  = result.data;
+							$scope.$apply();
+						}, 
+						function(response) {
+						  alert( response.data.message);
+						}, 
+						function(update) {
+							alert( response.data.message);
+						});
+						
 						myModal.$promise.then(myModal.hide);
-					    $file.msg = $message;// Just display message for a convenience
-					 },
+					    
+					},
 					 fileUploadStarted: function ($flow, $file, $message) {
 						 myModal.$promise.then(myModal.show);
-						$file.msg = $message;// Just display message for a convenience
+//						$file.msg = $message;// Just display message for a convenience
 					}
 						
 				};
@@ -523,6 +534,23 @@
 		    $scope.upload = function () {
 		    
 		      $scope.uploader.flow.upload(); 
+		    }
+		    
+		    
+		    $scope.deleteUploadedFile = function (fileName) {
+		    	
+		    	var data = {requestNumber: $scope.newRequest.requestNumber , fileName: fileName};
+				
+				var res = $http.post('/ami/upload/delete',data).then(function(response) {
+					var uploadedFileRes =  response.data;
+					
+					$scope.newRequest.imagesAndDocuments.uploadedFiles = uploadedFileRes;
+				},
+				function(response) {
+					var uploadedFileRes =  response.data.uploadedFiles;
+					alert('finaly done ' + uploadedFileRes);
+				});
+				
 		    }
 		    
 		    $scope.hasBeenSaved = function(){

@@ -10,14 +10,16 @@ public class UploadFileCommand {
     private final String userName;
 
     private final String fileName;
+    private final String  originalFileName;
     private final String filePath;
     private DateTime creationDate;
     
     public UploadFileCommand(String id,  String userName,   
-    		String fileName, String filePath,DateTime creationDate) {
+    		String fileName, String  originalFileName, String filePath,DateTime creationDate) {
         this.id = id;
         this.userName = userName;
         this.fileName = fileName;
+        this.originalFileName = originalFileName;
         this.filePath = filePath;
         this.creationDate = creationDate;
         
@@ -38,5 +40,8 @@ public class UploadFileCommand {
 	}
 	public DateTime getCreationDate() {
 		return creationDate;
+	}
+	public String getOriginalFileName() {
+		return originalFileName;
 	}
 }
