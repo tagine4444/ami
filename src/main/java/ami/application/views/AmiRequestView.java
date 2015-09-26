@@ -1,6 +1,5 @@
 package ami.application.views;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -17,8 +16,10 @@ public class AmiRequestView {
 	private String hospitalName;
 	private String hospitalId;
 	
-	private String creationDate ;
-	private String updateDate ;
+	private String creationDateString ;
+	private DateTime creationDate ;
+	private String updateDateString ;
+	private DateTime updateDate ;
 	private String updateUser;
 	
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
@@ -37,10 +38,12 @@ public class AmiRequestView {
     		DateTime interpretationReadyForReview,          
     		DateTime interpretationReadyComplete,           
     		boolean editable,
-			String creationDate,
+			String creationDateString,
+			DateTime creationDate,
 			List<FileUploadInfo> fileUploads,
 			String updateUser,
-			String updateDate) {
+			String updateDateString,
+			DateTime updateDate) {
 		
 		this.amiRequest    = amiRequest;   
 		this.userName      = userName;     
@@ -52,16 +55,21 @@ public class AmiRequestView {
 		this.interpretationInProgress = interpretationInProgress ;
 		this.interpretationReadyForReview = interpretationReadyForReview ;
 		this.interpretationReadyComplete =  interpretationReadyComplete;
+		this.creationDateString = creationDateString;
 		this.creationDate = creationDate;
 		this.fileUploads = fileUploads;
 		
-		this.updateDate = null;
+		this.updateDateString = updateDateString;
+		this.updateDate = updateDate;
 		this.updateUser = null;
+		
 	}
 	
-	public void update(AmiRequestView updatedView, String updateDate, String updateUser){
+	
+	public void update(AmiRequestView updatedView, String updateDateString, String updateUser , DateTime updateDate){
 		
 		this.updateDate = updateDate;
+		this.updateDateString = updateDateString;
 		this.updateUser = updateUser;
 		
 		this.amiRequest    = updatedView.getAmiRequest();   
@@ -75,8 +83,10 @@ public class AmiRequestView {
 		this.interpretationReadyForReview = updatedView.getInterpretationReadyForReview() ;
 		this.interpretationReadyComplete =  updatedView.getInterpretationReadyComplete();
 		
-		this.creationDate = updatedView.getCreationDate();
+		this.creationDateString = updatedView.getCreationDateString();
 		this.fileUploads = updatedView.getFileUploads();
+		
+		
 		
 	}
 
@@ -91,8 +101,8 @@ public class AmiRequestView {
 		return hospitalName;
 	}
 
-	public String getCreationDate() {
-		return creationDate;
+	public String getCreationDateString() {
+		return creationDateString;
 	}
 
 	public boolean isEditable() {
@@ -125,12 +135,20 @@ public class AmiRequestView {
 		return fileUploads;
 	}
 
-	public String getUpdateDate() {
-		return updateDate;
+	public String getUpdateDateString() {
+		return updateDateString;
 	}
 
 	public String getUpdateUser() {
 		return updateUser;
+	}
+
+	public DateTime getCreationDate() {
+		return creationDate;
+	}
+
+	public DateTime getUpdateDate() {
+		return updateDate;
 	}
 
 }

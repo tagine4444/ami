@@ -12,15 +12,15 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import ami.application.commands.amirequest.CreateAmiRequestCmd;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
+import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
 import ami.application.services.security.AmiUserService;
 import ami.application.services.utils.MongoSequenceService;
@@ -56,37 +56,33 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 	
 	@Override
-	public void createAmiRequest(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
+	public void submitAmiRequestToRadiologist(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
 		
-//		DBObject dbObject = (DBObject) JSON.parse(amiRequestJson);
-//		String requestNumber =  (String)dbObject.get("requestNumber");
+		DateTime hasBeenSavedAndSubmittedToRadiologist = new DateTime();
+		boolean editable = true;
 		
-//		if( StringUtils.isEmpty(requestNumber)){
-//			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
-//			dbObject.put("requestNumber", requestNumber);
-//		}
 		
 		String requestNumber = amiRequestJson.getRequestNumber();
 		if( !amiRequestJson.hasRequestNumber()){
 			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
 			amiRequestJson.setRequestNumber(requestNumber);
+			
+			commandGateway.sendAndWait(new SubmitNewAmiRequestCmd(requestNumber,amiRequestJson, userName, 
+					hospitalName, hospitalId,
+					hasBeenSavedAndSubmittedToRadiologist, editable));
+		}else{
+			
+			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(requestNumber,amiRequestJson, userName, 
+					hospitalName, hospitalId,
+					hasBeenSavedAndSubmittedToRadiologist, editable, new DateTime()));
+			
 		}
-		
-		DateTime hasBeenSavedAndSubmittedToRadiologist= null;
-		DateTime interpretationInProgress= null;
-		DateTime interpretationReadyForReview= null;
-		DateTime interpretationReadyComplete= null;
-		boolean editable= true;
-		
 		                              
-		commandGateway.sendAndWait(new CreateAmiRequestCmd(requestNumber,amiRequestJson, userName, 
-				hospitalName, hospitalId,
-				hasBeenSavedAndSubmittedToRadiologist,  interpretationInProgress,
-				interpretationReadyForReview, interpretationReadyComplete, editable));
+		
 	}
 	
 	@Override 
-	public String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
+	public String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId, DateTime dateTime) {
 		
 //		DBObject dbObject = (DBObject) JSON.parse(amiRequestJson);
 //		String requestNumber =  (String)dbObject.get("requestNumber");
@@ -111,13 +107,11 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 			amiRequestJson.setRequestNumber(requestNumber);
 			
 			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId,
-					hasBeenSavedAndSubmittedToRadiologist,  interpretationInProgress,
-					interpretationReadyForReview, interpretationReadyComplete, editable));
+					editable));
 		}else{
 			
 			commandGateway.sendAndWait(new UpdateAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId,
-					hasBeenSavedAndSubmittedToRadiologist,  interpretationInProgress,
-					interpretationReadyForReview, interpretationReadyComplete, editable));
+					editable, new DateTime()));
 		}
 		
 		return requestNumber;
@@ -145,8 +139,9 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 				interpretationReadyForReview, 
 				interpretationReadyComplete, editable,
 				creationDate,
+				time,
 				new ArrayList<FileUploadInfo>(),
-				null,null);
+				null,null,time);
 		
 		String amiRequestView = objectMapper.writeValueAsString(view);
 		
@@ -172,7 +167,8 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		Query query = new Query(Criteria.where(requestNumberJson).is(amiRequest.getRequestNumber()));
 		Update update = new Update() ;
 		update.set("amiRequest", amiRequest);
-		update.set("updateDate", updateDateString);
+		update.set("updateDateString", updateDateString);
+		update.set("updateDate", updateDate);
 		update.set("updateUser", userName);
 		
 		AmiRequestView updatedView = mongo.findAndModify(query, update, AmiRequestView.class, AMIREQUEST_VIEW); 

@@ -12,33 +12,26 @@ public class AmiRequestUpdatedAsDraftEvent {
 	private String hospitalName;
 	private String hospitalId;
 	
-	private DateTime hasBeenSavedAndSubmittedToRadiologist;
-	private DateTime interpretationInProgress;
-	private DateTime interpretationReadyForReview;
-	private DateTime interpretationReadyComplete;
+//	private DateTime hasBeenSavedAndSubmittedToRadiologist;
+//	private DateTime interpretationInProgress;
+//	private DateTime interpretationReadyForReview;
+//	private DateTime interpretationReadyComplete;
 	private boolean editable;
- 
+    private DateTime dateTime;
     
         
        
 
     public AmiRequestUpdatedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,
-    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		DateTime interpretationInProgress,              
-    		DateTime interpretationReadyForReview,          
-    		DateTime interpretationReadyComplete,           
-    		boolean editable ) {
+    		boolean editable,DateTime dateTime ) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId   = hospitalId;
         
-        this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-		this.interpretationInProgress = interpretationInProgress ;              
-		this.interpretationReadyForReview = interpretationReadyForReview;          
-		this.interpretationReadyComplete = interpretationReadyComplete;           
 		this.editable   = editable;    
+		this.dateTime = dateTime;
     }
     
     public String getUserName() {
@@ -65,19 +58,23 @@ public class AmiRequestUpdatedAsDraftEvent {
 		return editable;
 	}
 
-	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
-		return hasBeenSavedAndSubmittedToRadiologist;
+	public DateTime getDateTime() {
+		return dateTime;
 	}
 
-	public DateTime getInterpretationInProgress() {
-		return interpretationInProgress;
-	}
-
-	public DateTime getInterpretationReadyForReview() {
-		return interpretationReadyForReview;
-	}
-
-	public DateTime getInterpretationReadyComplete() {
-		return interpretationReadyComplete;
-	}
+//	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
+//		return hasBeenSavedAndSubmittedToRadiologist;
+//	}
+//
+//	public DateTime getInterpretationInProgress() {
+//		return interpretationInProgress;
+//	}
+//
+//	public DateTime getInterpretationReadyForReview() {
+//		return interpretationReadyForReview;
+//	}
+//
+//	public DateTime getInterpretationReadyComplete() {
+//		return interpretationReadyComplete;
+//	}
 }

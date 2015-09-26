@@ -175,7 +175,7 @@
 			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalAgeYearsList 	= [Years ];
 			$scope.animalAgeMonthsList =  [Months];
-			$scope.serviceCategory = '';
+			$scope.serviceCategory = 'Imaging Modalities';
 			
 			
 			for(var i=0; i<=100 ; i++){
@@ -230,10 +230,20 @@
 					    	
 					}else if(ServiceCategory =="ULTRASOUND"){
 						ultrasound = servicesForCategory;;
+					}else{
+						
 					}
 			    }
 			}
 			
+			$scope.isImageModalityNotSelected = function(){ 
+				
+				if( $scope.serviceCategory == 'Imaging Modalities'){
+					return false;
+				}
+				
+				return true;
+			}
 			
 			$scope.servicesList = {
 				'Contrast Radiography'   :contrastRadioGraphy,
@@ -318,6 +328,10 @@
 					
 				}else if(isUltrasounds){
 					$scope.servicesListByCategory= ultrasound;
+				}else{
+					
+					// no service category picked,when showing 'Imaging Modalities'
+					$scope.servicesListByCategory= [];
 				}
 				
 			}
@@ -354,10 +368,10 @@
 			$scope.updateAnimalYearsLabel =function(){
 
 				var yearValue     = $scope.newRequest.patientInfo.animalAgeYears;
-				var yearIsEmpty   =   new String(yearValue).indexOf("Years") > -1;
+				var yearIsEmpty   =   new String(yearValue).indexOf("year") == -1;
 				
 				var monthValue     = $scope.newRequest.patientInfo.animalAgeMonths;
-				var monthIsEmpty   =   new String(monthValue).indexOf("Months") > -1;
+				var monthIsEmpty   =   monthValue.indexOf("month") == -1;
 				
 				if( yearIsEmpty && monthIsEmpty){
 					$scope.newRequest.patientInfo.ageLabel = '';
@@ -404,7 +418,22 @@
 			}
 			
 			$scope.selectThisService = function(aServiceType, aService){
-				requestedServices.selectedServices.push(aServiceType +" - "+aService.name);
+				
+				
+				var serviceToAdd = aServiceType +" - "+aService.name;
+				
+				var serviceAlredayAdded = false;
+				for(var i = 0; i < requestedServices.selectedServices.length; i++) {
+				    if (requestedServices.selectedServices[i] == serviceToAdd) {
+				    	serviceAlredayAdded = true;
+				    	return;
+				    }
+				}
+//				if(serviceAlredayAdded){
+//					return;
+//				}
+				
+				requestedServices.selectedServices.push(serviceToAdd);
 			}
 			
 			
@@ -470,7 +499,6 @@
 						var res = $http.post('amicusthome/amirequest',data);
 						res.success(function(data, status, headers, config) {
 							$scope.newRequest.requestNumber = data.requestNumber;
-							
 							$location.path('/searchRequest');
 						});
 						res.error(function(data, status, headers, config) {
@@ -482,7 +510,6 @@
 						$scope.saveAction == '';
 						alert('some errors found');
 					}
-					return;
 				}	
 			   
 			}
@@ -560,7 +587,7 @@
 		    
 		    $scope.showTransferFileMsg = function(){
 				var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
-				var uploadSelected = newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload
+				var uploadSelected = $scope.newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload
 				return !hasBeenSaved && uploadSelected;
 			}
 		    

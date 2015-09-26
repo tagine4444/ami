@@ -1,7 +1,5 @@
 package ami.application.events.amirequest;
 
-import org.joda.time.DateTime;
-
 import ami.domain.amirequest.AmiRequest;
 
 public class AmiRequestSavedAsDraftEvent {
@@ -12,10 +10,11 @@ public class AmiRequestSavedAsDraftEvent {
 	private String hospitalName;
 	private String hospitalId;
 	
-	private DateTime hasBeenSavedAndSubmittedToRadiologist;
-	private DateTime interpretationInProgress;
-	private DateTime interpretationReadyForReview;
-	private DateTime interpretationReadyComplete;
+//	private DateTime hasBeenSavedAndSubmittedToRadiologist;
+//	private DateTime interpretationInProgress;
+//	private DateTime interpretationReadyForReview;
+//	private DateTime interpretationReadyComplete;
+	
 	private boolean editable;
  
     
@@ -23,10 +22,10 @@ public class AmiRequestSavedAsDraftEvent {
        
 
     public AmiRequestSavedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,
-    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		DateTime interpretationInProgress,              
-    		DateTime interpretationReadyForReview,          
-    		DateTime interpretationReadyComplete,           
+//    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
+//    		DateTime interpretationInProgress,              
+//    		DateTime interpretationReadyForReview,          
+//    		DateTime interpretationReadyComplete,           
     		boolean editable ) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
@@ -34,10 +33,10 @@ public class AmiRequestSavedAsDraftEvent {
         this.hospitalName = hospitalName;
         this.hospitalId   = hospitalId;
         
-        this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-		this.interpretationInProgress = interpretationInProgress ;              
-		this.interpretationReadyForReview = interpretationReadyForReview;          
-		this.interpretationReadyComplete = interpretationReadyComplete;           
+//        this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
+//		this.interpretationInProgress = interpretationInProgress ;              
+//		this.interpretationReadyForReview = interpretationReadyForReview;          
+//		this.interpretationReadyComplete = interpretationReadyComplete;           
 		this.editable   = editable;    
     }
     
@@ -65,19 +64,19 @@ public class AmiRequestSavedAsDraftEvent {
 		return editable;
 	}
 
-	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
-		return hasBeenSavedAndSubmittedToRadiologist;
-	}
-
-	public DateTime getInterpretationInProgress() {
-		return interpretationInProgress;
-	}
-
-	public DateTime getInterpretationReadyForReview() {
-		return interpretationReadyForReview;
-	}
-
-	public DateTime getInterpretationReadyComplete() {
-		return interpretationReadyComplete;
-	}
+//	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
+//		return hasBeenSavedAndSubmittedToRadiologist;
+//	}
+//
+//	public DateTime getInterpretationInProgress() {
+//		return interpretationInProgress;
+//	}
+//
+//	public DateTime getInterpretationReadyForReview() {
+//		return interpretationReadyForReview;
+//	}
+//
+//	public DateTime getInterpretationReadyComplete() {
+//		return interpretationReadyComplete;
+//	}
 }

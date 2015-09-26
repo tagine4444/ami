@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ami.application.services.amirequest.AmiRequestService;
+import ami.domain.amirequest.AmiRequest;
 import ami.domain.amirequest.FileUploadInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,17 +19,12 @@ public class AmiRequestEventHandler {
 	private AmiRequestService amiServiceRequestSvc;
 
     @EventHandler
-    public void handle(AmiRequestCreatedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    public void handle(NewAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
        
-//    	boolean hasBeenSavedAndSubmittedToRadiologist, 
-//		boolean interpretationInProgress,              
-//		boolean interpretationReadyForReview,          
-//		boolean interpretationReadyComplete,           
-//		boolean editable, 
     	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), 
     			event.getHospitalName(), event.getHospitalId(), 
-    			event.getHasBeenSavedAndSubmittedToRadiologist(), event.getInterpretationInProgress(),
-    			event.getInterpretationReadyForReview(),event.getInterpretationReadyComplete(),
+    			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
+    			null,null,
     			event.isEditable(),
     			time);
     	
@@ -46,9 +42,7 @@ public class AmiRequestEventHandler {
     	
     	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
-    			event.getHasBeenSavedAndSubmittedToRadiologist(), event.getInterpretationInProgress(),
-    			event.getInterpretationReadyForReview(),event.getInterpretationReadyComplete(),
-    			event.isEditable(),
+    			null, null,null,null,event.isEditable(),
     			time);
     	
     	
@@ -59,12 +53,19 @@ public class AmiRequestEventHandler {
     	
     	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
-    			event.getHasBeenSavedAndSubmittedToRadiologist(), event.getInterpretationInProgress(),
-    			event.getInterpretationReadyForReview(),event.getInterpretationReadyComplete(),
+    			null,null,null,null, 
     			event.isEditable(),
     			time);
+    }
+    
+    @EventHandler
+    public void handle(DraftAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	
+    	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
+    			event.getHospitalName(), event.getHospitalId(),
+    			event.getHasBeenSavedAndSubmittedToRadiologist(),null,null,null, 
+    			event.isEditable(),
+    			time);
     }
     
     @EventHandler
@@ -78,7 +79,6 @@ public class AmiRequestEventHandler {
     
     @EventHandler
     public void handle(UploadedFileDeletedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
-    	
     	
     	amiServiceRequestSvc.deleteUploadedFile(event.getFileName() ,event.getId(), time);
     	

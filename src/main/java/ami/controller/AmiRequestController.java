@@ -3,6 +3,7 @@ package ami.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class AmiRequestController {
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.POST)
 	@ResponseBody
-	public String amiRequestSave(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
+	public String submitAmiRequestToRadiologist(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		
 		//String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		
@@ -98,8 +99,7 @@ public class AmiRequestController {
 		
 		AmiRequest amiRequest1 = objectMapper.readValue(amiRequest.toString(), AmiRequest.class);
 		
-		//amiRequestService.createAmiRequest(amiRequest.toString() ,userName , hospitalName);
-		amiRequestService.createAmiRequest(amiRequest1 ,userName , hospitalName,hospitalId);
+		amiRequestService.submitAmiRequestToRadiologist(amiRequest1 ,userName , hospitalName,hospitalId);
 		
 		return "{}";
 	}
@@ -122,7 +122,7 @@ public class AmiRequestController {
 		final String hospitalName = (String) dbObject.get("hospitalName");
 		final String hospitalId = (String) dbObject.get("hospitalId");
 		
-		String requestNumber = amiRequestService.saveAmiRequestAsDraft(req ,userName , hospitalName, hospitalId);
+		String requestNumber = amiRequestService.saveAmiRequestAsDraft(req ,userName , hospitalName, hospitalId ,new DateTime());
 		
 		return "{\"requestNumber\": \""+requestNumber+"\"}";
 	}

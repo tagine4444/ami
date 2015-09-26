@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 
 import ami.domain.amirequest.AmiRequest;
 
-public class CreateAmiRequestCmd {
+public class SubmitNewAmiRequestCmd {
 
 	@TargetAggregateIdentifier
     private final String id;
@@ -15,17 +15,17 @@ public class CreateAmiRequestCmd {
     private final String hospitalId;
     
     private DateTime hasBeenSavedAndSubmittedToRadiologist;
-	private DateTime interpretationInProgress;
-	private DateTime interpretationReadyForReview;
-	private DateTime interpretationReadyComplete;
+//	private DateTime interpretationInProgress;
+//	private DateTime interpretationReadyForReview;
+//	private DateTime interpretationReadyComplete;
 	private boolean editable;
 
-    public CreateAmiRequestCmd(String id, AmiRequest amiRequestJson, String userName,   
+    public SubmitNewAmiRequestCmd(String id, AmiRequest amiRequestJson, String userName,   
     		String hospitalName, String hospitalId,
     		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		DateTime interpretationInProgress,              
-    		DateTime interpretationReadyForReview,          
-    		DateTime interpretationReadyComplete,           
+//    		DateTime interpretationInProgress,              
+//    		DateTime interpretationReadyForReview,          
+//    		DateTime interpretationReadyComplete,           
     		boolean editable
     		) {
         this.id = id;
@@ -35,9 +35,9 @@ public class CreateAmiRequestCmd {
         this.hospitalId = hospitalId;
         
         this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-		this.interpretationInProgress = interpretationInProgress ;              
-		this.interpretationReadyForReview = interpretationReadyForReview;          
-		this.interpretationReadyComplete = interpretationReadyComplete;           
+//		this.interpretationInProgress = interpretationInProgress ;              
+//		this.interpretationReadyForReview = interpretationReadyForReview;          
+//		this.interpretationReadyComplete = interpretationReadyComplete;           
 		this.editable   = editable;         
     }
 
@@ -71,15 +71,15 @@ public class CreateAmiRequestCmd {
 		return hasBeenSavedAndSubmittedToRadiologist;
 	}
 
-	public DateTime getInterpretationInProgress() {
-		return interpretationInProgress;
-	}
-
-	public DateTime getInterpretationReadyForReview() {
-		return interpretationReadyForReview;
-	}
-
-	public DateTime getInterpretationReadyComplete() {
-		return interpretationReadyComplete;
-	}
+//	public DateTime getInterpretationInProgress() {
+//		return interpretationInProgress;
+//	}
+//
+//	public DateTime getInterpretationReadyForReview() {
+//		return interpretationReadyForReview;
+//	}
+//
+//	public DateTime getInterpretationReadyComplete() {
+//		return interpretationReadyComplete;
+//	}
 }

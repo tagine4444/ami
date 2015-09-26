@@ -29,9 +29,9 @@ public interface AmiRequestService {
     		DateTime interpretationReadyComplete,           
     		boolean editable, DateTime time) throws JsonProcessingException;
 
-	void createAmiRequest(AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId);
+	void submitAmiRequestToRadiologist(AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId);
 	
-	String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId);
+	String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime);
 
 	List<AmiRequestView> findPendingAmiRequest();
 

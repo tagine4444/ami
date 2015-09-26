@@ -10,14 +10,16 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import org.joda.time.DateTime;
 
-import ami.application.commands.amirequest.CreateAmiRequestCmd;
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
+import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
-import ami.application.events.amirequest.AmiRequestCreatedEvent;
 import ami.application.events.amirequest.AmiRequestSavedAsDraftEvent;
 import ami.application.events.amirequest.AmiRequestUpdatedAsDraftEvent;
+import ami.application.events.amirequest.DraftAmiRequestSubmittedEvent;
+import ami.application.events.amirequest.NewAmiRequestSubmittedEvent;
 import ami.application.events.amirequest.UploadFileRequestedEvent;
 import ami.application.events.amirequest.UploadedFileDeletedEvent;
 import ami.domain.amirequest.AmiRequest;
@@ -44,19 +46,19 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	public AmiRequestAggregate() {
 	}
 
+	
+	// ----------------- Submit to radiologist (for the 1st time)  ----------------- 
 	@CommandHandler
-	public AmiRequestAggregate(CreateAmiRequestCmd command) {
-		apply(new AmiRequestCreatedEvent(command.getId(),
+	public AmiRequestAggregate(SubmitNewAmiRequestCmd command) {
+		apply(new NewAmiRequestSubmittedEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), 
 				command.getHospitalName(),
 				command.getHospitalId(),
 				command.getHasBeenSavedAndSubmittedToRadiologist(),
-				command.getInterpretationInProgress(),
-				command.getInterpretationReadyForReview(),
-				command.getInterpretationReadyComplete(),
 				command.isEditable()));
 	}
 	
+	// ----------------- Save as Draft  (for the 1st time) ----------------- 
 	@CommandHandler
 	public AmiRequestAggregate(SaveAmiRequestAsDraftCmd command) {
 		if(hasBeenSavedAndSubmittedToRadiologist()){
@@ -66,53 +68,81 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		apply(new AmiRequestSavedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
 				 command.getHospitalId(),
-				 command.getHasBeenSavedAndSubmittedToRadiologist(),
-				 command.getInterpretationInProgress(),
-				 command.getInterpretationReadyForReview(),
-				 command.getInterpretationReadyComplete(),
 				 command.isEditable()) );
 	}
 	
 	
+	// ===============================  Submit to Radio a Draft Req (update) =============================
+	@CommandHandler
+	public void submitDraftAmiRequestCmd(SubmitDraftAmiRequestCmd command) {
+		if(hasBeenSavedAndSubmittedToRadiologist()){
+			// should never be here, the UI should disable the save as draft button once the request is saved.
+			throw new RuntimeException("This request has already been submitted. It cannot be submitted to radiologist twice.");
+		}
+		apply(new DraftAmiRequestSubmittedEvent(command.getId(),
+				command.getAmiRequestJson() , command.getUserName(), 
+				command.getHospitalName(),
+				command.getHospitalId(),
+				command.getHasBeenSavedAndSubmittedToRadiologist(),
+				command.isEditable(), 
+				command.getDateTime()));
+	}
+	
+	// ===============================  update Draft Req (update) =============================
 	@CommandHandler
     public void updateAmiRequestAsDraftCmd(UpdateAmiRequestAsDraftCmd command) {
+		
+		if(hasBeenSavedAndSubmittedToRadiologist()){
+			// should never be here, the UI should disable the save as draft button once the request is saved.
+			throw new RuntimeException("This request has already been submitted. It cannot be updated.");
+		}
 		
 		apply(new AmiRequestUpdatedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
 				 command.getHospitalId(),
-				 command.getHasBeenSavedAndSubmittedToRadiologist(),
-				 command.getInterpretationInProgress(),
-				 command.getInterpretationReadyForReview(),
-				 command.getInterpretationReadyComplete(),
-				 command.isEditable()) );
+				 command.isEditable() , command.getDateTime()) );
     }
 	
 	@CommandHandler
     public void uploadFile(UploadFileCommand command) {
-		
+
+		if(hasBeenSavedAndSubmittedToRadiologist()){
+			// should never be here, the UI should disable the save as draft button once the request is saved.
+			throw new RuntimeException("This request has already been submitted. It can no longer upload files");
+		}
         apply(new UploadFileRequestedEvent(command.getId(),
         		command.getUserName(),  command.getFileName(), command.getOriginalFileName() , command.getFilePath(), command.getCreationDate()));
     }
 	
 	@CommandHandler
 	public void deleteUploadedFile(DeleteUploadedFileCommand command) {
-		
+		if(hasBeenSavedAndSubmittedToRadiologist()){
+			// should never be here, the UI should disable the save as draft button once the request is saved.
+			throw new RuntimeException("This request has already been submitted. It can no longer del files");
+		}
 		apply(new UploadedFileDeletedEvent(command.getId(),
 				command.getUserName(), command.getFileName(), command.getDateTime()));
 	}
 
 
+	// -==-=-=-=-=-=-=-=--=-=-=- EventSourceHandlers -==-=-=-=-=-=-=-=--=-=-=- 
+	
 	@EventSourcingHandler
-	public void on(AmiRequestCreatedEvent event) {
+	public void on(NewAmiRequestSubmittedEvent event) {
 		this.id = event.getId();
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		
-		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist(); 
-		this.interpretationInProgress = event.getInterpretationInProgress() ;              
-		this.interpretationReadyForReview = event.getInterpretationReadyForReview();          
-		this.interpretationReadyComplete = event.getInterpretationReadyComplete();           
+		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist();
+		this.editable   = event.isEditable();    
+	}
+	
+	@EventSourcingHandler
+	public void on(SubmitDraftAmiRequestCmd event) {
+		this.id = event.getId();
+		this.amiRequest = event.getAmiRequestJson();
+		this.userName = event.getUserName();
+		this.hospitalName = event.getHospitalName();
 		this.editable   = event.isEditable();    
 	}
 	
@@ -123,11 +153,6 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		
-		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist(); 
-		this.interpretationInProgress = event.getInterpretationInProgress() ;              
-		this.interpretationReadyForReview = event.getInterpretationReadyForReview();          
-		this.interpretationReadyComplete = event.getInterpretationReadyComplete();           
 		this.editable   = event.isEditable(); 
 	}
 	
@@ -137,11 +162,16 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
+		this.editable   = event.isEditable(); 
 		
-		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist(); 
-		this.interpretationInProgress = event.getInterpretationInProgress() ;              
-		this.interpretationReadyForReview = event.getInterpretationReadyForReview();          
-		this.interpretationReadyComplete = event.getInterpretationReadyComplete();           
+	}
+	
+	@EventSourcingHandler
+	public void on(DraftAmiRequestSubmittedEvent event) {
+		this.id = event.getId();
+		this.amiRequest = event.getAmiRequestJson();
+		this.userName = event.getUserName();
+		this.hospitalName = event.getHospitalName();
 		this.editable   = event.isEditable(); 
 	}
 	

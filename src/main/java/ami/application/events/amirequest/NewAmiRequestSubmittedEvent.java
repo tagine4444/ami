@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import ami.domain.amirequest.AmiRequest;
 
-public class AmiRequestCreatedEvent {
+public class NewAmiRequestSubmittedEvent {
 
 	private final String id;
 	private final AmiRequest amiRequestJson;
@@ -13,19 +13,13 @@ public class AmiRequestCreatedEvent {
 	private final String hospitalId;
 	
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
-	private DateTime interpretationInProgress;
-	private DateTime interpretationReadyForReview;
-	private DateTime interpretationReadyComplete;
 	private boolean editable;
  
-    public AmiRequestCreatedEvent(String id, AmiRequest amiRequestJson, 
+    public NewAmiRequestSubmittedEvent(String id, AmiRequest amiRequestJson, 
     		String userName, 
     		String hospitalName, 
     		String hospitalId,
     		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		DateTime interpretationInProgress,              
-    		DateTime interpretationReadyForReview,          
-    		DateTime interpretationReadyComplete,           
     		boolean editable ) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
@@ -34,9 +28,6 @@ public class AmiRequestCreatedEvent {
         this.hospitalId  = hospitalId;
         
         this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-		this.interpretationInProgress = interpretationInProgress ;              
-		this.interpretationReadyForReview = interpretationReadyForReview;          
-		this.interpretationReadyComplete = interpretationReadyComplete;           
 		this.editable   = editable;                  
     }
     
@@ -70,15 +61,4 @@ public class AmiRequestCreatedEvent {
 		return hasBeenSavedAndSubmittedToRadiologist;
 	}
 
-	public DateTime getInterpretationInProgress() {
-		return interpretationInProgress;
-	}
-
-	public DateTime getInterpretationReadyForReview() {
-		return interpretationReadyForReview;
-	}
-
-	public DateTime getInterpretationReadyComplete() {
-		return interpretationReadyComplete;
-	}
 }
