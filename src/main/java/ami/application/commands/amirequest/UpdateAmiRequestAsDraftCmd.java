@@ -18,7 +18,7 @@ public class UpdateAmiRequestAsDraftCmd {
 //   	private DateTime interpretationInProgress;
 //   	private DateTime interpretationReadyForReview;
 //   	private DateTime interpretationReadyComplete;
-   	private boolean editable;
+//   	private boolean editable;
    	private DateTime dateTime;
 
 
@@ -29,7 +29,7 @@ public class UpdateAmiRequestAsDraftCmd {
 //    		DateTime interpretationInProgress,              
 //    		DateTime interpretationReadyForReview,          
 //    		DateTime interpretationReadyComplete,           
-    		boolean editable,
+//    		boolean editable,
     		DateTime dateTime ) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
@@ -42,7 +42,7 @@ public class UpdateAmiRequestAsDraftCmd {
 //   		this.interpretationInProgress = interpretationInProgress ;              
 //   		this.interpretationReadyForReview = interpretationReadyForReview;          
 //   		this.interpretationReadyComplete = interpretationReadyComplete;           
-   		this.editable   = editable;       
+//   		this.editable   = editable;       
     }
 
     public String getUserName() {
@@ -66,9 +66,9 @@ public class UpdateAmiRequestAsDraftCmd {
 	}
 
 
-	public boolean isEditable() {
-		return editable;
-	}
+//	public boolean isEditable() {
+//		return editable;
+//	}
 
 	public DateTime getDateTime() {
 		return dateTime;

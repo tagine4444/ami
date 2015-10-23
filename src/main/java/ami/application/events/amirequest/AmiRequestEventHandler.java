@@ -25,7 +25,7 @@ public class AmiRequestEventHandler {
     			event.getHospitalName(), event.getHospitalId(), 
     			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
     			null,null,
-    			event.isEditable(),
+//    			event.isEditable(),
     			time);
     	
 //    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
@@ -42,7 +42,7 @@ public class AmiRequestEventHandler {
     	
     	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
-    			null, null,null,null,event.isEditable(),
+    			null, null,null,null,
     			time);
     	
     	
@@ -54,7 +54,7 @@ public class AmiRequestEventHandler {
     	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null,null,null,null, 
-    			event.isEditable(),
+    			true,
     			time);
     }
     
@@ -64,7 +64,7 @@ public class AmiRequestEventHandler {
     	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			event.getHasBeenSavedAndSubmittedToRadiologist(),null,null,null, 
-    			event.isEditable(),
+    			true,
     			time);
     }
     

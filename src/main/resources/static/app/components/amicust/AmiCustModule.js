@@ -119,10 +119,23 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest) {
 			
 			$scope.page = 'newRequest';
 			
+			// this is a hack the files uploads should be in imagesAndDocuments
+			var isUpdate = new Boolean(myAmiRequest.amiRequest);
+			$scope.isEditable = true;
+			
+			if(isUpdate==true){
+				$scope.newRequest = myAmiRequest.amiRequest;
+				$scope.fileUploads = myAmiRequest.fileUploads;
+				$scope.isEditable = new Boolean(myAmiRequest.editable);
+			}else{
+				$scope.newRequest = myAmiRequest;
+				$scope.fileUploads = {};
+			}
+		
 			$scope.saveAction = '';
 			
 			var Years  = 'Years';
@@ -130,10 +143,12 @@
 			var ZeroYears = '0 year';
 			var ZeroMonths = '0 months';
 			
+			// ----- End of Set the species -----
 			for (var i in animals) {
 			
 			  var anAnimal = animals[i];
-			  var aSpecies = anAnimal.id;
+			  var aSpecies = anAnimal.name;
+			  
 			  var anAnimalBreed = anAnimal.breeds;
 				
 			  if(aSpecies== 'Canine'){
@@ -151,9 +166,39 @@
 			  }
 			  
 			}
-			
 			$scope.speciesList = species;
 			$scope.speciesList.splice (0,0, 'Select Species');
+			// ----- End of Set the species -----
+			
+			
+			// ----- Set the breeds -----
+			var speciesValue        = $scope.newRequest.patientInfo.species;
+			
+			$scope.disableBreedList = false;
+			var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
+			var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
+			var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
+			var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
+			var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
+			
+			if(isCanine){
+				$scope.breedsList  = $scope.breedsCanine;
+			}else if( isFeline){
+				$scope.breedsList  = $scope.breedsFeline;
+			}else if(isBovine){
+				$scope.breedsList  = $scope.breedsBovine;
+			}else if(isBirds){
+				$scope.breedsList  = $scope.breedsBirds;
+			}
+			else if(isOthers){
+				$scope.breedsList  = $scope.breedsOthers;
+			}
+			else{
+				$scope.breedsList  = ['Select Breed'];
+				$scope.disableBreedList = true;
+			}
+			// ----- End of Set the breeds -----
+			
 			
 			var promise = amiService.getAmiUser();
 			
@@ -169,9 +214,10 @@
 				alert( response.data.message);
 			});
 			
-			$scope.animalWeightUomList = ['LB', 'KG'];
+			$scope.animalWeightUomList  = ['LB', 'KG'];
 			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
-			$scope.breedsList 			= ['Select Breed'];
+//			$scope.breedsList 			= ['Select Breed'];
+//			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalAgeYearsList 	= [Years ];
 			$scope.animalAgeMonthsList =  [Months];
@@ -252,63 +298,6 @@
 				'Ultrasound'             :ultrasound
 			};
 			
-			var hospitalAndClientInfo = { };
-			hospitalAndClientInfo.vet			  = '';
-			hospitalAndClientInfo.clientFirstName = '';
-			hospitalAndClientInfo.clientLastName  = '';
-			hospitalAndClientInfo.clientId		  = '';
-			hospitalAndClientInfo.isEmployee	  = false;
-			
-			var patientInfo = { };
-			patientInfo.animalName 		= '';
-			patientInfo.animalSex		='';
-			patientInfo.animalWeight 	= '';
-			patientInfo.animalWeightUom = '';
-			patientInfo.animalAgeYears 	= '';
-			patientInfo.animalAgeMonths = '';
-			patientInfo.ageLabel		= '';
-			patientInfo.species 		= '';
-			patientInfo.breeds 			= '';
-			
-			var requestedServices = {};
-			requestedServices.isInterpretationOnly = true;
-			requestedServices.isStat = false;
-			requestedServices.selectedServices = [];
-			
-			
-			var vetObservation = {};
-			vetObservation.anesthetized =false;
-			vetObservation.sedated		=false;
-			vetObservation.fasted		=false;
-			vetObservation.enema		=false;
-			vetObservation.painful		=false;
-			vetObservation.fractious	=false;
-			vetObservation.shocky		=false;
-			vetObservation.dyspneic		=false;
-			vetObservation.died			=false;
-			vetObservation.euthanized	=false;
-			vetObservation.exam ='';
-			vetObservation.tentativeDiagnosis = '';
-			
-			var imagesAndDocuments = {};
-			imagesAndDocuments.labs 			  = '';
-			imagesAndDocuments.labAccount 	  = '';
-			imagesAndDocuments.hasDocumentDeliveredByUpload  = false;
-			imagesAndDocuments.hasDocumentDeliveredByCarrier = false;
-			imagesAndDocuments.notes = '';
-			imagesAndDocuments.uploadedFiles = [];
-			 
-			var newRequest = {
-					'requestNumber'         :'',
-					'hospitalAndClientInfo'	: hospitalAndClientInfo,
-					'patientInfo'			: patientInfo,
-					'requestedServices'     : requestedServices,
-					'vetObservation'		: vetObservation,
-					'imagesAndDocuments'    : imagesAndDocuments
-			};
-			
-			$scope.newRequest = newRequest;
-			
 			$scope.updateServicesListByCategory = function(){
 			
 				var selectedSvcCategory = $scope.serviceCategory;
@@ -335,10 +324,9 @@
 				}
 				
 			}
-			
-			$scope.disableBreedList = true;
+			//$scope.disableBreedList = true;
 			$scope.updateBreedListBox = function(){
-				var speciesValue        = newRequest.patientInfo.species;
+				var speciesValue        = $scope.newRequest.patientInfo.species;
 				
 				$scope.disableBreedList = false;
 				var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
@@ -400,19 +388,19 @@
 			
 			$scope.isEmployee =function(isEmployee){
 				if(isEmployee){
-					hospitalAndClientInfo.isEmployee	  = true;
+					$scope.newRequest.hospitalAndClientInfo.isEmployee	  = true;
 				}else{
-					hospitalAndClientInfo.isEmployee	  = false;
+					$scope.newRequest.hospitalAndClientInfo.isEmployee	  = false;
 				}
 				
 			}
 			
 			$scope.isInterpretationOnly =function(isInterpretationOnly){
 				if(isInterpretationOnly){
-					requestedServices.isInterpretationOnly	  = true;
-					requestedServices.selectedServices = [];
+					$scope.newRequest.requestedServices.isInterpretationOnly	  = true;
+					$scope.newRequest.requestedServices.selectedServices = [];
 				}else{
-					requestedServices.isInterpretationOnly	  = false;
+					$scope.newRequest.requestedServices.isInterpretationOnly	  = false;
 				}
 				
 			}
@@ -423,17 +411,14 @@
 				var serviceToAdd = aServiceType +" - "+aService.name;
 				
 				var serviceAlredayAdded = false;
-				for(var i = 0; i < requestedServices.selectedServices.length; i++) {
-				    if (requestedServices.selectedServices[i] == serviceToAdd) {
+				for(var i = 0; i < $scope.newRequest.requestedServices.selectedServices.length; i++) {
+				    if ($scope.newRequest.requestedServices.selectedServices[i] == serviceToAdd) {
 				    	serviceAlredayAdded = true;
 				    	return;
 				    }
 				}
-//				if(serviceAlredayAdded){
-//					return;
-//				}
 				
-				requestedServices.selectedServices.push(serviceToAdd);
+				$scope.newRequest.requestedServices.selectedServices.push(serviceToAdd);
 			}
 			
 			
@@ -538,7 +523,7 @@
 					    var promise = animalService.getUploadedFiles(myRequestNumber);
 						
 						promise.then(function(result) {
-							$scope.newRequest.imagesAndDocuments.uploadedFiles  = result.data;
+							$scope.fileUploads  = result.data;
 							$scope.$apply();
 						}, 
 						function(response) {
@@ -569,9 +554,8 @@
 		    	var data = {requestNumber: $scope.newRequest.requestNumber , fileName: fileName};
 				
 				var res = $http.post('/ami/upload/delete',data).then(function(response) {
-					var uploadedFileRes =  response.data;
 					
-					$scope.newRequest.imagesAndDocuments.uploadedFiles = uploadedFileRes;
+					$scope.fileUploads = response.data;
 				},
 				function(response) {
 					var uploadedFileRes =  response.data.uploadedFiles;
@@ -606,51 +590,62 @@
 		
 		
 		// ============ SearchRequest ===============
-		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests) {
+		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests, draftRequests, amiRequestFactory) {
 			$scope.page = 'searchRequests';
-			$scope.searchType = 'pending';
-			
-			
+			$scope.searchType = 'all';
 			$scope.pendingRequests = pendingRequests;
+			$scope.draftRequests = draftRequests;
 			
+			$scope.searchBy = '';
+			$scope.searchByPlaceHolder1 = 'Enter Criteria';
+			$scope.searchByPlaceHolder2 = '';
+			$scope.isDateSelected = false;
+			$scope.searchResults = [];
 			
-			
-
-			for (var i in pendingRequests) {
-			  var aPendingRequests = pendingRequests[i];
-			  
-			  var myDate = aPendingRequests.creationDate;
-			  console.log('=====================> year '+myDate.millis	);
-			  console.log('=====================> year '+myDate.year	);
-			  console.log('=====================> month '+myDate.monthOfYear	);
-			  console.log('=====================> day '+myDate.dayOfMonth	);
-			  console.log('=====================> hour '+myDate.hourOfDay	);
-			  console.log('=====================> min '+myDate.minuteOfHour	);
-			  console.log('=====================> sec '+myDate.secondOfMinute	);
-			  console.log('=====================> milli '+myDate.millisOfSecond	);
-			  console.log('=========================='	);
-			  console.log('=========================='	);
-			  console.log('=========================='	);
-			  
-			  
-			  
-			 // new Date(year, month, day, hours, minutes, seconds, milliseconds)
-			  
+			$scope.updateSearchInputDisplay =  function(){
+				
+				if($scope.searchBy.indexOf("Date") !=-1){
+					$scope.isDateSelected = true;
+					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yy';
+					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yy';
+				}else{
+					$scope.isDateSelected = false;
+					$scope.searchByPlaceHolder1 = 'Enter Criteria';
+					$scope.searchByPlaceHolder2 = '';
+				}
 			}
 			
+			$scope.doSearch =  function(){
+				$scope.searchResults = [];
+				var requestNumber = $scope.searchByInput1;
+				var result =  amiRequestFactory.getAmiRequest(requestNumber).then(
+             			function(result){
+             				var myResult = result.data;
+             				$scope.searchResults.push(myResult);
+             				return myResult;
+             			}	
+             		);
+				
+				
+			}
+			
+				
 			
 		});
 		// ============ SearchRequest ===============
 		app.controller('EditRequestCtrl', function ($scope, $http, $window,$location, $routeParams, amiRequest) {
-			$scope.page = 'EditRequest';
+
+// Not used anymore, as the Edit is handled by NewRequestCtrl. Same as create... as long as request is draft
 			
-			var myAmiRequest = {};
-			var amiRequest1 =	angular.fromJson(amiRequest);
-			angular.copy(amiRequest1, myAmiRequest);
-			
-			$scope.requestNumber = $routeParams.requestNumber;
-			//$scope.animalName = myAmiRequest.patientInfo.animalName;
-			$scope.amiRequest = myAmiRequest.amiRequest;
+//			$scope.page = 'EditRequest';
+//			
+//			var myAmiRequest = {};
+//			var amiRequest1 =	angular.fromJson(amiRequest);
+//			angular.copy(amiRequest1, myAmiRequest);
+//			
+//			$scope.requestNumber = $routeParams.requestNumber;
+//			//$scope.animalName = myAmiRequest.patientInfo.animalName;
+//			$scope.amiRequest = myAmiRequest.amiRequest;
 			
 			
 			

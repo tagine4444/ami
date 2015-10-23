@@ -1,5 +1,5 @@
 
-var chidra = angular.module('chidra',['flow','ngRoute','mgcrea.ngStrap','AmiCustModule']);
+var chidra = angular.module('chidra',['flow','ngRoute','mgcrea.ngStrap','angularMoment', 'AmiCustModule']);
 
 //chidra.factory("animalService", function($q, $h){
 //	   return {
@@ -28,6 +28,86 @@ chidra.filter('jsonDate', ['$filter', function ($filter) {
         return myDate;
     };
 }]);
+
+
+chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
+	getNewAmiRequest: function(){ 
+		 
+		var hospitalAndClientInfo = { };
+		hospitalAndClientInfo.vet			  = '';
+		hospitalAndClientInfo.clientFirstName = '';
+		hospitalAndClientInfo.clientLastName  = '';
+		hospitalAndClientInfo.clientId		  = '';
+		hospitalAndClientInfo.isEmployee	  = false;
+		
+		var patientInfo = { };
+		patientInfo.animalName 		= '';
+		patientInfo.animalSex		= 'Sex';
+		patientInfo.animalWeight 	= '';
+		patientInfo.animalWeightUom = '';
+		patientInfo.animalAgeYears 	= '';
+		patientInfo.animalAgeMonths = '';
+		patientInfo.ageLabel		= '';
+		patientInfo.species 		= 'Select Species';
+		patientInfo.breeds 			= '';
+		
+		var requestedServices = {};
+		requestedServices.isInterpretationOnly = true;
+		requestedServices.isStat = false;
+		requestedServices.selectedServices = [];
+		
+		
+		var vetObservation = {};
+		vetObservation.anesthetized =false;
+		vetObservation.sedated		=false;
+		vetObservation.fasted		=false;
+		vetObservation.enema		=false;
+		vetObservation.painful		=false;
+		vetObservation.fractious	=false;
+		vetObservation.shocky		=false;
+		vetObservation.dyspneic		=false;
+		vetObservation.died			=false;
+		vetObservation.euthanized	=false;
+		vetObservation.exam ='';
+		vetObservation.tentativeDiagnosis = '';
+		
+		var imagesAndDocuments = {};
+		imagesAndDocuments.labs 			  = 'Select Lab';
+		imagesAndDocuments.labAccount 	  = '';
+		imagesAndDocuments.hasDocumentDeliveredByUpload  = false;
+		imagesAndDocuments.hasDocumentDeliveredByCarrier = false;
+		imagesAndDocuments.notes = '';
+		imagesAndDocuments.fileUploads = [];
+		 
+		var newRequest = {
+				'requestNumber'         :'',
+				'hospitalAndClientInfo'	: hospitalAndClientInfo,
+				'patientInfo'			: patientInfo,
+				'requestedServices'     : requestedServices,
+				'vetObservation'		: vetObservation,
+				'imagesAndDocuments'    : imagesAndDocuments
+		};
+		
+		
+		return newRequest;
+	 },
+	 
+	 getAmiRequest: function(requestNumber){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest?requestNumber='+requestNumber);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AMI Services');
+			});	
+
+			return res;
+	 }
+}});
+
 
 chidra.factory('animalService', function($http,$q, $routeParams){return {
 	
@@ -77,21 +157,21 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 			return res;
 	 },
 	 
-	 getAmiRequest: function(requestNumber){
-		 
-		 //var myRequestNumber = $route.current.requestNumber;
-		 var deferred = $q.defer();
-		 var res = $http.get('/ami/amicusthome/amirequest?requestNumber='+requestNumber);
-		 
-		 res.success(function(data, status, headers, config) {
-				deferred.resolve();
-			});
-			res.error(function(data, status, headers, config) {
-				deferred.reject('failure to get AMI Services');
-			});	
-
-			return res;
-	 },
+//	 getAmiRequest: function(requestNumber){
+//		 
+//		 //var myRequestNumber = $route.current.requestNumber;
+//		 var deferred = $q.defer();
+//		 var res = $http.get('/ami/amicusthome/amirequest?requestNumber='+requestNumber);
+//		 
+//		 res.success(function(data, status, headers, config) {
+//				deferred.resolve();
+//			});
+//			res.error(function(data, status, headers, config) {
+//				deferred.reject('failure to get AMI Services');
+//			});	
+//
+//			return res;
+//	 },
 	 
 	 getUploadedFiles: function(requestNumber){
 		 
@@ -118,10 +198,25 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 				deferred.resolve();
 			});
 			res.error(function(data, status, headers, config) {
-				deferred.reject('failure to get AMI Services');
+				deferred.reject('failure to get Pending Ami Requests');
 			});	
 
 			return res;
+	 },
+	 getDraftAmiRequest: function(){
+		 
+		 //var myRequestNumber = $route.current.requestNumber;
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/draft');
+		 
+		 res.success(function(data, status, headers, config) {
+			 deferred.resolve();
+		 });
+		 res.error(function(data, status, headers, config) {
+			 deferred.reject('failure to get draft Ami Requests');
+		 });	
+		 
+		 return res;
 	 }
 	 
 	 
@@ -137,6 +232,10 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                             controller: "NewRequestCtrl",
                             
                             resolve: {
+                            	
+                                 myAmiRequest: ['amiRequestFactory','$route', function (amiRequestFactory, $route) {
+                                	 return amiRequestFactory.getNewAmiRequest();
+                                 }],
                             	
                             	animals: ['animalService', function (animalService) {
                             		return animalService.getAnimals().then(
@@ -163,19 +262,47 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                             }
                         }).
                         when('/editRequest/:requestNumber', {
-                        	templateUrl: '/app/components/amicust/editrequest.html',
-                        	controller: 'EditRequestCtrl',
+//                        	templateUrl: '/app/components/amicust/editrequest.html',
+//                        	controller: 'EditRequestCtrl',
+                        	templateUrl: "/app/components/amicust/newrequest.html",
+                            controller: "NewRequestCtrl",
                         	 resolve: {
                              	
-                             	amiRequest: ['animalService','$route', function (animalService, $route) {
+                             	myAmiRequest: ['amiRequestFactory','$route', function (amiRequestFactory, $route) {
                              		var requestNumber = $route.current.params.requestNumber;
-                             		return animalService.getAmiRequest(requestNumber).then(
+                             		return amiRequestFactory.getAmiRequest(requestNumber).then(
                              			function(result){
-                             				return result.data;
+                             				var myResult = result.data;
+                             				return myResult;
                              			}	
                              		);
-                                 }]
-                        }
+                                 }],
+                                 
+                                 
+                              	animals: ['animalService', function (animalService) {
+                            		return animalService.getAnimals().then(
+                            			function(result){
+                            				return result.data;
+                            			}	
+                            		);
+                                }],
+                                species: ['animalService', function (animalService) {
+                            		return animalService.getSpecies().then(
+                            			function(result){
+                            				return result.data;
+                            			}	
+                            		);
+                                }],
+                                amiServices:  ['animalService', function (animalService) {
+                            		return animalService.getAmiServices().then(
+                                			function(result){
+                                				return result.data;
+                                			}	
+                                		);
+                                    }],
+                        	 
+                        	 
+                        	 }// resolve
                         }).
                         when('/searchRequest', {
                         	templateUrl: '/app/components/amicust/searchrequests.html',
@@ -188,7 +315,15 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                             				return result.data;
                             			}	
                             		);
+                                }],
+                                draftRequests: ['animalService', function (animalService) {
+                            		return animalService.getDraftAmiRequest().then(
+                            			function(result){
+                            				return result.data;
+                            			}	
+                            		);
                                 }]
+                        
                             }
                         }).
                         when('/profile', {

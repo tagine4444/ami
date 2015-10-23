@@ -69,6 +69,16 @@ public class AmiRequestController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/amirequest/draft", method = RequestMethod.GET)
+	@ResponseBody
+	public String findDraftAmiRequests() throws JsonProcessingException {
+		
+		List<AmiRequestView> amiRequestView = amiRequestService.findDraftAmiRequest();
+		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+		return amiRequestViewString;
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/uploadedfiles", method = RequestMethod.GET)
 	@ResponseBody
 	public String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException {
@@ -79,8 +89,6 @@ public class AmiRequestController {
 		String fileUploadsString = objectMapper.writeValueAsString(fileUploads);
 		return fileUploadsString;
 	}
-	
-	
 	
 	
 	

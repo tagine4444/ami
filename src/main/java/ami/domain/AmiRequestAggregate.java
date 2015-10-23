@@ -36,7 +36,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	private String hospitalName;
 	private List<FileUploadInfo> fileUploads = new ArrayList<FileUploadInfo>();
 	
-	private boolean editable;
+//	private boolean editable;
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
@@ -54,8 +54,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 				command.getAmiRequestJson() , command.getUserName(), 
 				command.getHospitalName(),
 				command.getHospitalId(),
-				command.getHasBeenSavedAndSubmittedToRadiologist(),
-				command.isEditable()));
+				command.getHasBeenSavedAndSubmittedToRadiologist()));
 	}
 	
 	// ----------------- Save as Draft  (for the 1st time) ----------------- 
@@ -67,8 +66,9 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		}
 		apply(new AmiRequestSavedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
-				 command.getHospitalId(),
-				 command.isEditable()) );
+				 command.getHospitalId()
+//				 ,command.isEditable()
+				 ) );
 	}
 	
 	
@@ -99,8 +99,9 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		
 		apply(new AmiRequestUpdatedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
-				 command.getHospitalId(),
-				 command.isEditable() , command.getDateTime()) );
+				 command.getHospitalId()
+//				 ,command.isEditable() 
+				 , command.getDateTime()) );
     }
 	
 	@CommandHandler
@@ -134,7 +135,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
 		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist();
-		this.editable   = event.isEditable();    
+		//this.editable   = event.isEditable();    
 	}
 	
 	@EventSourcingHandler
@@ -143,7 +144,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		this.editable   = event.isEditable();    
+//		this.editable   = event.isEditable();    
 	}
 	
 	
@@ -153,7 +154,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		this.editable   = event.isEditable(); 
+//		this.editable   = event.isEditable(); 
 	}
 	
 	@EventSourcingHandler
@@ -162,7 +163,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		this.editable   = event.isEditable(); 
+//		this.editable   = event.isEditable(); 
 		
 	}
 	
@@ -172,7 +173,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-		this.editable   = event.isEditable(); 
+//		this.editable   = event.isEditable(); 
 	}
 	
 	

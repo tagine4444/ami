@@ -18,16 +18,17 @@ public class SaveAmiRequestAsDraftCmd {
 //   	private DateTime interpretationInProgress;
 //   	private DateTime interpretationReadyForReview;
 //   	private DateTime interpretationReadyComplete;
-   	private boolean editable;
+//   	private boolean editable;
 
 
     public SaveAmiRequestAsDraftCmd(String id, AmiRequest amiRequestJson, String userName,   
-    		String hospitalName, String hospitalId,
+    		String hospitalName, String hospitalId
 //    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
 //    		DateTime interpretationInProgress,              
 //    		DateTime interpretationReadyForReview,          
 //    		DateTime interpretationReadyComplete,           
-    		boolean editable) {
+//    		,boolean editable
+    		) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
@@ -38,7 +39,7 @@ public class SaveAmiRequestAsDraftCmd {
 //   		this.interpretationInProgress = interpretationInProgress ;              
 //   		this.interpretationReadyForReview = interpretationReadyForReview;          
 //   		this.interpretationReadyComplete = interpretationReadyComplete;           
-   		this.editable   = editable;       
+//   		this.editable   = editable;       
     }
 
     public String getUserName() {
@@ -62,9 +63,9 @@ public class SaveAmiRequestAsDraftCmd {
 	}
 
 
-	public boolean isEditable() {
-		return editable;
-	}
+//	public boolean isEditable() {
+//		return editable;
+//	}
 
 //	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
 //		return hasBeenSavedAndSubmittedToRadiologist;

@@ -2,13 +2,13 @@
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
 		<ul class="nav nav-tabs">
-		  <li role="presentation" ng-class="{'active' : searchType=='last30Days'}"><a href="#/searchRequest" ng-click="searchType = 'last30Days'">Draft Requests <span class="badge">42</span></a></li>
-		  <li role="presentation" ng-class="{'active' : searchType=='pending'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pending'" >Pending Requests <span class="badge">16</span></a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='draftRequests'}"><a href="#/searchRequest" ng-click="searchType = 'draftRequests'">Draft Requests <span class="badge">{{draftRequests.length}}</span></a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='pendingRequests'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pendingRequests'" >Pending Requests <span class="badge">{{pendingRequests.length}}</span></a></li>
 		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">Search Requests</a></li>
 		</ul>  
 		
 		<br/>         	  
-		<div class="panel panel-default" ng-show="searchType=='pending'">
+		<div class="panel panel-default" ng-show="searchType=='pendingRequests'">
 		  <!-- Default panel contents -->
 		  <div class="panel-heading">Pending Requests are submitted requests that have not yet been processed. Pending Requests can still be modified. </div>
 		  <div class="panel-body">
@@ -27,12 +27,12 @@
 				  </thead>
 				  <tbody>
 				   <tr ng-repeat="aPendingRequest in pendingRequests">
-				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">{{aPendingRequest.amiRequest.requestNumber}}</a></td>
+				   	<td><a href="#/editRequest/{{aPendingRequest.amiRequest.requestNumber}}"  ng-click="tab = 4">{{aPendingRequest.amiRequest.requestNumber}}</a></td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aPendingRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-				   	<td>{{ aPendingRequest.creationDate }} </td>
+				   	<td>{{ aPendingRequest.creationDate  | amDateFormat: 'ddd MMM YY, h:mm A		' }} </td>
 				   </tr>
 				   </tbody>
 			</table>
@@ -44,56 +44,58 @@
 		  </table>
 		</div>
 		
-		<div class="panel panel-default" ng-show="searchType=='last30Days'">
+		<div class="panel panel-default" ng-show="searchType=='draftRequests'">
 		  <!-- Default panel contents -->
 		  <div class="panel-heading">Draft Requests are requests that have been saved as draft. They won't be processed until they are submitted to the radiologist.</div>
-		  <div class="panel-body">
-		    <p>...</p>
-		  </div>
 		
 		  <!-- Table -->
 		  <table class="table">
-		    
-		  </table>
+		     <thead>
+			   <tr>
+			   	<th>Request Number</th>
+			   	<th>Veterinarian</th>
+			   	<th>Animal</th>
+			   	<th>Species</th>
+			   	<th>Owner</th>
+			   	<th>Date</th>
+			   </tr>
+			  </thead>
+			  <tbody>
+			   <tr ng-repeat="aDraftRequest in draftRequests">
+			   	<td><a href="#/editRequest/{{aDraftRequest.amiRequest.requestNumber}}"  ng-click="tab = 4">{{aDraftRequest.amiRequest.requestNumber}}</a></td>
+			   	<td>{{aDraftRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
+			   	<td>{{aDraftRequest.amiRequest.patientInfo.animalName}}</td>
+			   	<td>{{aDraftRequest.amiRequest.patientInfo.species}} - {{aDraftRequest.amiRequest.patientInfo.breeds}}</td>
+			   	<td>{{aDraftRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aDraftRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
+			   	<td>{{ aDraftRequest.creationDate  | amDateFormat: 'ddd MMM YY, h:mm A		' }} </td>
+			   </tr>
+			   </tbody>
+		</table>
 		</div>
 		
 		
 		<div class="panel panel-default" ng-show="searchType=='all'">
 		  <!-- Default panel contents -->
-		  <div class="panel-heading">All Requests</div>
+		  <div class="panel-heading">Search for requests by criteria</div>
 		  <div class="panel-body">
-		  
-			<div class="row">
-			  <form class="navbar-form navbar-left" role="search">
-				  <div class="form-group">
-				    <input type="text" class="form-control" placeholder="Begining">
-				  </div>
-				  <div class="form-group">
-				    <input type="text" class="form-control" placeholder="End">
-				  </div>
-				  <button type="submit" class="btn btn-default">Search By Date</button>
-				</form>
-			</div>	
-					  
-			<div class="row">
-			  <div class="col-lg-5">
-			    <div class="input-group">
-			      <div class="input-group-btn">
-			        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search By <span class="caret"></span></button>
-			        <ul class="dropdown-menu">
-			          <li><a href="#">Request Number</a></li>
-			          <li><a href="#">Animal Name</a></li>
-			          <li><a href="#">Client Name</a></li>
-			          <li role="separator" class="divider"></li>
-			          <li><a href="#">Separated link</a></li>
-			        </ul>
-			      </div><!-- /btn-group -->
-			      <input type="text" class="form-control" aria-label="...">
-			    </div><!-- /input-group -->
-			  </div><!-- /.col-lg-6 -->
-			 
-			</div><!-- /.row -->
-
+		  <div class="navbar-form navbar-left" role="search">
+			  <div class="form-group">
+			    <select class="form-control" ng-model="searchBy" ng-change="updateSearchInputDisplay()"> 
+				          <option ng-selected="true">Search By</option>
+				          <option>Request Number</option>
+				          <option>Request Submitted Date</option>
+				          <option>Report Ready Date</option>
+				          <option>Animal Name</option>
+				          <option>Client Last Name</option>
+				          <option>Last 20 Completed Reports</option>
+ 					   </select>
+ 					   
+ 					   <input type="text" class="form-control" ng-model="searchByInput1"  placeholder="{{searchByPlaceHolder1}}">
+ 					   <input type="text" class="form-control" ng-model="searchByInput2"  placeholder="{{searchByPlaceHolder2}}" ng-show ="isDateSelected">
+			  </div>
+			  
+			  <button type="submit" class="btn btn-default" ng-click="doSearch()">Search</button>
+		   </div>
 		  </div>
 		
 		  <!-- Table -->
@@ -111,8 +113,8 @@
 				   </tr>
 				  </thead>
 				  <tbody>
-				   <tr ng-repeat="aPendingRequest in pendingRequests">
-				   	<td><a href="#/editRequest/22"  ng-click="tab = 4">{{aPendingRequest.amiRequest.requestNumber}}</a></td>
+				   <tr ng-repeat="aPendingRequest in searchResults">
+				   	<td><a href="#/editRequest/{{aPendingRequest.amiRequest.requestNumber}}"  ng-click="tab = 4">{{aPendingRequest.amiRequest.requestNumber}}</a></td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>

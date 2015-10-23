@@ -13,14 +13,15 @@ public class NewAmiRequestSubmittedEvent {
 	private final String hospitalId;
 	
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
-	private boolean editable;
+//	private boolean editable;
  
     public NewAmiRequestSubmittedEvent(String id, AmiRequest amiRequestJson, 
     		String userName, 
     		String hospitalName, 
     		String hospitalId,
-    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		boolean editable ) {
+    		DateTime hasBeenSavedAndSubmittedToRadiologist
+//    		,boolean editable 
+    		) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
@@ -28,7 +29,7 @@ public class NewAmiRequestSubmittedEvent {
         this.hospitalId  = hospitalId;
         
         this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-		this.editable   = editable;                  
+//		this.editable   = editable;                  
     }
     
     public String getUserName() {
@@ -53,9 +54,9 @@ public class NewAmiRequestSubmittedEvent {
 
 	
 
-	public boolean isEditable() {
-		return editable;
-	}
+//	public boolean isEditable() {
+//		return editable;
+//	}
 
 	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
 		return hasBeenSavedAndSubmittedToRadiologist;

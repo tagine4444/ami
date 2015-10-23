@@ -16,21 +16,22 @@ public class AmiRequestUpdatedAsDraftEvent {
 //	private DateTime interpretationInProgress;
 //	private DateTime interpretationReadyForReview;
 //	private DateTime interpretationReadyComplete;
-	private boolean editable;
+//	private boolean editable;
     private DateTime dateTime;
     
         
        
 
     public AmiRequestUpdatedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,
-    		boolean editable,DateTime dateTime ) {
+//    		boolean editable,
+    		DateTime dateTime ) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId   = hospitalId;
         
-		this.editable   = editable;    
+//		this.editable   = editable;    
 		this.dateTime = dateTime;
     }
     
@@ -54,9 +55,9 @@ public class AmiRequestUpdatedAsDraftEvent {
 		return hospitalId;
 	}
 
-	public boolean isEditable() {
-		return editable;
-	}
+//	public boolean isEditable() {
+//		return editable;
+//	}
 
 	public DateTime getDateTime() {
 		return dateTime;

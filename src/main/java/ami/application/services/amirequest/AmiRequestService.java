@@ -14,11 +14,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public interface AmiRequestService {
 	
 	
-	
-	
-	
-	
 	AmiRequestView findAmiRequest(String requestNumber);
+	List<AmiRequestView> findPendingAmiRequest();
+	List<AmiRequestView> findDraftAmiRequest();
 	
 	
 	
@@ -27,19 +25,16 @@ public interface AmiRequestService {
     		DateTime interpretationInProgress,              
     		DateTime interpretationReadyForReview,          
     		DateTime interpretationReadyComplete,           
-    		boolean editable, DateTime time) throws JsonProcessingException;
+//    		boolean editable, 
+    		DateTime time) throws JsonProcessingException;
 
 	void submitAmiRequestToRadiologist(AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId);
 	
 	String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime);
 
-	List<AmiRequestView> findPendingAmiRequest();
-
-
-
+	
 	void updateUploadedFileList(FileUploadInfo fileUploadInfo, DateTime time)
 			throws JsonProcessingException;
-
 
 
 	AmiRequestView updateAmiRequestView(AmiRequest amiRequestJson, String userName,
@@ -58,8 +53,5 @@ public interface AmiRequestService {
 
 	void deleteUploadedFile(String fileName, String requestNumber, DateTime time)
 			throws JsonProcessingException;
-
-	
-	
 
 }

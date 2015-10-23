@@ -16,8 +16,11 @@
    		</div>
    	</div>
    	<br/>
-   	<p ng-show="hasBeenSaved()" >Your Request has been saved {{newRequest.requestNumber}} - {{newRequest.id}} </p>
+   	<p ng-show="hasBeenSaved()" >Your Request Number is {{newRequest.requestNumber}} </p>
+   	<p ng-show="isEditable==false"> <span class="label label-danger">**Read Only Request**</span>  This request can no longer be saved as it has been submitted to the radiologist</p>
    	
+   
+   
    
 	<div class="panel panel-default">
 	  <div class="panel-heading"><strong>{{hospitalName}} &amp; Client Section</strong></div>
@@ -95,8 +98,8 @@
 			    </div>
 			    
 			     <div class="col-sm-1">
-				       <select class="form-control" ng-model="newRequest.patientInfo.animalSex">
-						  <option ng-selected="$index==0" ng-repeat="animalSex in animalSexList"> {{animalSex}}</option>
+				       <select class="form-control" ng-model="newRequest.patientInfo.animalSex" ng-selected="newRequest.patientInfo.animalSex">
+						  <option  ng-repeat="animalSex in animalSexList">{{animalSex}}</option>
 						</select>
 				 </div>
 				 
@@ -138,13 +141,13 @@
 								    
 							    <div class="input-group">
 							      <select id="ageLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeYears" ng-change="updateAnimalYearsLabel()">
-									  <option ng-selected="$index==0"  ng-repeat="animalYears in animalAgeYearsList"> {{animalYears}}</option>
+									  <option ng-repeat="animalYears in animalAgeYearsList">{{animalYears}}</option>
 									</select>
 							    </div>
 								    
 							    <div class="input-group">
 							       <select  id="monghLabId" class="form-control" ng-model="newRequest.patientInfo.animalAgeMonths" ng-change="updateAnimalYearsLabel()">
-									  <option ng-selected="$index==0"  ng-repeat="animalMonths in animalAgeMonthsList"> {{animalMonths}}</option>
+									  <option ng-repeat="animalMonths in animalAgeMonthsList">{{animalMonths}}</option>
 									</select>
 							    </div>
 								{{ newRequest.patientInfo.ageLabel }} 
@@ -158,13 +161,13 @@
 			<div class="row">
 			     <div class="col-sm-4">
 				    <select class="form-control" ng-model="newRequest.patientInfo.species" ng-change="updateBreedListBox()">
-						 <option ng-selected="$index==0"  ng-repeat="aSpecies in speciesList"> {{aSpecies}}</option>
+						 <option  ng-repeat="aSpecies in speciesList">{{aSpecies}}</option>
 					</select>
 			    </div>
 			    
 			    <div class="col-sm-4">
 				      <select class="form-control" ng-model="newRequest.patientInfo.breeds" ng-disabled ="disableBreedList" >
-						   <option ng-selected="$index==0"  ng-repeat="aBreed in breedsList"> {{aBreed}}</option>
+						   <option ng-repeat="aBreed in breedsList">{{aBreed}}</option>
 						</select>
 			    </div>
 			</div>
@@ -211,7 +214,7 @@
 		  		 
 		  		<div class="col-sm-1">
 					<label class="checkbox-inline">
-					  <input type="checkbox" id="statCheckbox" ng-model="newRequest.requestedServices.isStat" ng-true-value="'true'" ng-false-value="'false'"> <span class="label label-danger">STAT</span>
+					  <input type="checkbox" id="statCheckbox" ng-model="newRequest.requestedServices.isStat" ng-true-value="true" ng-false-value="false"> <span class="label label-danger">STAT</span>
 					</label>
 				</div>
 				
@@ -345,8 +348,8 @@
 								  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.imagesAndDocuments.labAccount" placeholder="Lab Account">
 								  </div>
 								  <div class="input-group">
-										<select class="form-control" ng-model="newRequest.imagesAndDocuments.labs">
-											<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option>
+										<select class="form-control" ng-model="newRequest.imagesAndDocuments.labs" ng-selected="newRequest.imagesAndDocuments.labs">
+											<option ng-repeat="lab in labsList">{{lab}}</option>
 									    </select>
 								 </div> 
 						  </div>
@@ -366,6 +369,7 @@
 		    	
 		    	<div class="col-sm-10">
 			        <button 
+			        	ng-show="isEditable==true"
 			        	ng-click="setAction('transfer')" 
 			        	data-toggle="modal" 
 				        data-target="#uploadModal" class="btn btn-default" 
@@ -373,11 +377,11 @@
 				        ng-disabled="!hasBeenSaved()">
 				        Add images to this request</button>
 				        
-   					<button ng-click="setAction('draft')" type="submit" class="btn btn-primary">Save As Draft</button>
+   					<button ng-show="isEditable==true" ng-click="setAction('draft')" type="submit" class="btn btn-primary">Save As Draft</button>
 		    	</div>
 		    	
 		    	<div class="col-sm-2">
-		    		<button ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
+		    		<button ng-show="isEditable==true" ng-click="setAction('submit')" type="submit" class="btn btn-danger"  >Submit To Radiologist</button>
 		    	</div>
 		    	<div class="col-sm-12">
 		    	<p style="color:red;" ng-show="showTransferFileMsg()">To Add images to this request, you must <strong>first push the &quot;Save As Draft&quot; Button.</strong> </p>
@@ -395,7 +399,7 @@
 			  			<th></th>
 			  		</tr>
 			  	</thead>
-			  	<tbody ng-repeat="aFileUpload in newRequest.imagesAndDocuments.uploadedFiles">
+			  	<tbody ng-repeat="aFileUpload in fileUploads">
 		        		
 		        		<tr> 
 		        			<td>{{$index +1 }}</td>

@@ -26,6 +26,7 @@ import ami.application.services.security.AmiUserService;
 import ami.application.services.utils.MongoSequenceService;
 import ami.application.views.AmiRequestView;
 import ami.application.views.AmiUserView;
+import ami.converters.DateTimeToStringConverter;
 import ami.domain.amirequest.AmiRequest;
 import ami.domain.amirequest.FileUploadInfo;
 
@@ -36,7 +37,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 	public final static String AMIREQUEST_VIEW = "viewAmirequest";
 	public final static String DATE_FORMAT     = "yyyy-MM-dd HH:mm:ss";
-	public final DateTimeFormatter AMI_DATE_FOMRATTER = DateTimeFormat.forPattern(DATE_FORMAT); 
+	//public final DateTimeFormatter AMI_DATE_FOMRATTER = DateTimeFormat.forPattern(DATE_FORMAT); 
 
 	@Autowired
 	private CommandGateway commandGateway;
@@ -59,19 +60,23 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	public void submitAmiRequestToRadiologist(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
 		
 		DateTime hasBeenSavedAndSubmittedToRadiologist = new DateTime();
-		boolean editable = true;
+		
 		
 		
 		String requestNumber = amiRequestJson.getRequestNumber();
 		if( !amiRequestJson.hasRequestNumber()){
+//			boolean editable = false;
 			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
 			amiRequestJson.setRequestNumber(requestNumber);
 			
 			commandGateway.sendAndWait(new SubmitNewAmiRequestCmd(requestNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
-					hasBeenSavedAndSubmittedToRadiologist, editable));
+					hasBeenSavedAndSubmittedToRadiologist
+					//, editable
+					));
 		}else{
 			
+			boolean editable = true;
 			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(requestNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
 					hasBeenSavedAndSubmittedToRadiologist, editable, new DateTime()));
@@ -96,22 +101,24 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		final boolean isUpdate = amiRequestJson.hasRequestNumber();
 		
 		
-		DateTime hasBeenSavedAndSubmittedToRadiologist= null;
-		DateTime interpretationInProgress= null;
-		DateTime interpretationReadyForReview= null;
-		DateTime interpretationReadyComplete= null;
-		boolean editable= true;
+//		DateTime hasBeenSavedAndSubmittedToRadiologist= null;
+//		DateTime interpretationInProgress= null;
+//		DateTime interpretationReadyForReview= null;
+//		DateTime interpretationReadyComplete= null;
+//		boolean editable= true;
 		
 		if( !isUpdate){
 			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
 			amiRequestJson.setRequestNumber(requestNumber);
 			
-			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId,
-					editable));
+			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId
+//					,editable
+					));
 		}else{
 			
-			commandGateway.sendAndWait(new UpdateAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId,
-					editable, new DateTime()));
+			commandGateway.sendAndWait(new UpdateAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId
+//					,editable
+					, new DateTime()));
 		}
 		
 		return requestNumber;
@@ -125,12 +132,14 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 			DateTime interpretationInProgress,              
 			DateTime interpretationReadyForReview,          
 			DateTime interpretationReadyComplete,           
-    		boolean editable,
+//    		boolean editable,
 			DateTime time) throws JsonProcessingException {
 		
-	    String creationDate = AMI_DATE_FOMRATTER.print(time);
+		
+		String creationDate = new DateTimeToStringConverter().convert(time);
+	    //String creationDate = AMI_DATE_FOMRATTER.print(time);
 	    
-	    
+		boolean editable = hasBeenSavedAndSubmittedToRadiologist==null;
 		
 		AmiRequestView  view = new AmiRequestView( amiRequestJson,  userName, hospitalName, 
 				hospitalid,
@@ -161,9 +170,12 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		
 		
 		  
-	    String updateDateString = AMI_DATE_FOMRATTER.print(updateDate);
+//	    String updateDateString = AMI_DATE_FOMRATTER.print(updateDate);
+	    String updateDateString = new DateTimeToStringConverter().convert(updateDate);
 	    final String requestNumberJson = "amiRequest.requestNumber";
 		
+	    
+	    
 		Query query = new Query(Criteria.where(requestNumberJson).is(amiRequest.getRequestNumber()));
 		Update update = new Update() ;
 		update.set("amiRequest", amiRequest);
@@ -219,12 +231,29 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	   String hospitalId = userView.getHospitalId();
 		
 	   Query query =Query.query( Criteria.where("hospitalId").is(hospitalId)
-			      .andOperator(Criteria.where("editable").is(Boolean.TRUE)) );
+			      .andOperator(Criteria.where("editable").is(Boolean.FALSE)) 
+			   );
 	   
 	   query.with(new Sort(Sort.Direction.DESC, "time"));
 	
 	   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		return amiRequestView;
+	}
+	
+	@Override
+	public List<AmiRequestView> findDraftAmiRequest() {
+		 String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		   AmiUserView userView = amiUserService.findAmiUser(userName);
+		   String hospitalId = userView.getHospitalId();
+			
+		   Query query =Query.query( Criteria.where("hospitalId").is(hospitalId)
+				      .andOperator(Criteria.where("editable").is(Boolean.TRUE)) 
+				   );
+		   
+		   query.with(new Sort(Sort.Direction.DESC, "time"));
+		
+		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
+			return amiRequestView;
 	}
 
 	@Override
@@ -234,6 +263,5 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		return amiRequestView.getFileUploads();
 	}
 
-	
 
 }

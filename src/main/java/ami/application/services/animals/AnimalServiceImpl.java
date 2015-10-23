@@ -38,7 +38,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 		List<String> species = new ArrayList<String>(animals.size());
 		for (Animals animals2 : animals) {
-			species.add(animals2.getId());
+			species.add(animals2.getName());
 		}
 		return species;
 	}

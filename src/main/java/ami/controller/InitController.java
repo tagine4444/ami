@@ -137,42 +137,41 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@ResponseBody
 	public String addAnimals(Model model) {
 		
+		int index = 0;
 		List<Animals> animalList = new ArrayList<Animals>();
 		
 		String canines       = (String) env.getProperty("Canine");
 		String[] canineArray = canines.split(",");
 		List<String> canineBreedList  =  Arrays.asList(canineArray);
-		Animals canine = new Animals("Canine", canineBreedList);
+		Animals canine = new Animals(String.valueOf(index++), "Canine", canineBreedList);
 		animalService.addAnimals(canine);
 		animalList.add(canine);
-		
-		
 		
 		String felines       = (String)env.getProperty("Feline");
 		String[] felineArray = felines.split(",");
 		List<String> felineBreedList  =  Arrays.asList(felineArray);
-		Animals feline = new Animals("Feline", felineBreedList);
+		Animals feline = new Animals(String.valueOf(index++), "Feline", felineBreedList);
 		animalService.addAnimals(feline);
 		animalList.add(feline);
 		
 		String bovines       = (String)env.getProperty("Bovine");
 		String[] bovineArray = bovines.split(",");
 		List<String> bovineBreedList  =  Arrays.asList(bovineArray);
-		Animals bovine = new Animals("Bovine", bovineBreedList);
+		Animals bovine = new Animals(String.valueOf(index++), "Bovine", bovineBreedList);
 		animalService.addAnimals(bovine);
 		animalList.add(bovine);
 		
 		String birds       = (String)env.getProperty("Birds");
 		String[] birdArray = birds.split(",");
 		List<String> birdBreedList  =  Arrays.asList(birdArray);
-		Animals bird = new Animals("Birds", birdBreedList);
+		Animals bird = new Animals(String.valueOf(index++), "Birds", birdBreedList);
 		animalService.addAnimals(bird);
 		animalList.add(bird);
 		
 		String others       = (String)env.getProperty("Others");
 		String[] othersArray = others.split(",");
 		List<String> othersArrayBreedList  =  Arrays.asList(othersArray);
-		Animals other = new Animals("Others", othersArrayBreedList);
+		Animals other = new Animals(String.valueOf(index++), "Others", othersArrayBreedList);
 		animalService.addAnimals(other);
 		animalList.add(other);
 		
