@@ -596,37 +596,110 @@
 			$scope.pendingRequests = pendingRequests;
 			$scope.draftRequests = draftRequests;
 			
-			$scope.searchBy = '';
+			$scope.searchBy = 'Search By';
 			$scope.searchByPlaceHolder1 = 'Enter Criteria';
 			$scope.searchByPlaceHolder2 = '';
-			$scope.isDateSelected = false;
+			$scope.searchByInput1Visible = true;
+			$scope.searchByInput2Visible = false;
+			$scope.isSearchAllowed = false;
 			$scope.searchResults = [];
+			
+			$scope.isSearchBySearchBy = false;
+			$scope.isSearchByRequestNumber = false;
+			$scope.isSearchByAnimalName = false;
+			
 			
 			$scope.updateSearchInputDisplay =  function(){
 				
 				if($scope.searchBy.indexOf("Date") !=-1){
-					$scope.isDateSelected = true;
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.searchByInput1Visible = true;
+					$scope.searchByInput2Visible = true;
+					$scope.isSearchAllowed = true;
 					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yy';
 					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yy';
-				}else{
-					$scope.isDateSelected = false;
+				}
+				else if($scope.searchBy.indexOf("Last 20") !=-1){
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.isSearchAllowed = true;
+					$scope.searchByInput1Visible = false;
+					$scope.searchByInput2Visible = false;
+					$scope.searchByPlaceHolder1 = 'Select a Search';
+					$scope.searchByPlaceHolder2 = '';
+				}
+				else if($scope.searchBy.indexOf("Search By") !=-1){
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.isSearchAllowed = false;
+					$scope.searchByInput1Visible = true;
+					$scope.searchByInput2Visible = false;
+					$scope.searchByPlaceHolder1 = 'Select a Search';
+					$scope.searchByPlaceHolder2 = '';
+				}
+				else{
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.isSearchAllowed = true;
+					$scope.searchByInput1Visible = true;
+					$scope.searchByInput2Visible = false;
 					$scope.searchByPlaceHolder1 = 'Enter Criteria';
 					$scope.searchByPlaceHolder2 = '';
 				}
 			}
 			
+			
 			$scope.doSearch =  function(){
 				$scope.searchResults = [];
 				var requestNumber = $scope.searchByInput1;
-				var result =  amiRequestFactory.getAmiRequest(requestNumber).then(
-             			function(result){
-             				var myResult = result.data;
-             				$scope.searchResults.push(myResult);
-             				return myResult;
-             			}	
-             		);
+				
+				$scope.whichSearch();
+				
+				if( $scope.isSearchByRequestNumber){
+					amiRequestFactory.getAmiRequest(requestNumber).then(
+	             			function(result){
+	             				var myResult = result.data;
+	             				$scope.searchResults.push(myResult);
+	             			}	
+	             		);
+				}
 				
 				
+				
+			}
+			
+			$scope.whichSearch = function(){
+				
+				$scope.isSearchBySearchBy = false;
+				$scope.isSearchByRequestNumber = false;
+				$scope.isSearchByAnimalName = false;
+				$scope.isSearchByRequestSubmittedDate = false;
+				$scope.isSearchByReportReadyDate = false;
+				$scope.isSearchByClientLastName = false;
+				$scope.isSearchByLast20CompletedReports = false;
+				
+				if($scope.searchBy.indexOf("Search By") !=-1){
+					$scope.isSearchBySearchBy = true;
+				}
+				else if($scope.searchBy.indexOf("Request Number") !=-1){
+					$scope.isSearchByRequestNumber = true;
+				}
+				else if($scope.searchBy.indexOf("Animal Name") !=-1){
+					$scope.isSearchByAnimalName = true;
+				}
+				else if($scope.searchBy.indexOf("Request Submitted Date") !=-1){
+					$scope.isSearchByRequestSubmittedDate = true;
+				}
+				else if($scope.searchBy.indexOf("Report Ready Date") !=-1){
+					$scope.isSearchByReportReadyDate = true;
+				}
+				else if($scope.searchBy.indexOf("Client Last Name") !=-1){
+					$scope.isSearchByClientLastName = true;
+				}
+				else if($scope.searchBy.indexOf("Last 20 Completed Reports") !=-1){
+					$scope.isSearchByLast20CompletedReports = true;
+				}
 			}
 			
 				

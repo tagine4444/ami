@@ -90,11 +90,11 @@
 				          <option>Last 20 Completed Reports</option>
  					   </select>
  					   
- 					   <input type="text" class="form-control" ng-model="searchByInput1"  placeholder="{{searchByPlaceHolder1}}">
- 					   <input type="text" class="form-control" ng-model="searchByInput2"  placeholder="{{searchByPlaceHolder2}}" ng-show ="isDateSelected">
+ 					   <input ng-disabled="!isSearchAllowed" type="text" class="form-control" ng-model="searchByInput1"  placeholder="{{searchByPlaceHolder1}}" ng-show ="searchByInput1Visible">
+ 					   <input type="text" class="form-control" ng-model="searchByInput2"  placeholder="{{searchByPlaceHolder2}}" ng-show ="searchByInput2Visible">
 			  </div>
 			  
-			  <button type="submit" class="btn btn-default" ng-click="doSearch()">Search</button>
+			  <button ng-disabled="!isSearchAllowed" type="submit" class="btn btn-default" ng-click="doSearch()">Search</button>
 		   </div>
 		  </div>
 		
