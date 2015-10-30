@@ -57,6 +57,58 @@ public class AmiRequestController {
 		return amiRequestViewString;
 	}
 	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/amirequest/byanimals", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestByAnimalName(@RequestParam String animalName) throws JsonProcessingException {
+		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByAnimalName(animalName);
+		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+		return amiRequestViewString;
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/amirequest/byclientlastname", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestByClientLastName(@RequestParam String clientlastname) throws JsonProcessingException {
+		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByClientLastName(clientlastname);
+		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+		return amiRequestViewString;
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/amirequest/byreqdaterange", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
+//		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByClientLastName(clientlastname);
+		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestBySubmittedDateRange( date1,  date2);
+		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+		return amiRequestViewString;
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/amirequest/bylastnrecords", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestByLast50Records() throws JsonProcessingException {
+		final String nRecords = "50";
+		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByLastNRecords( nRecords);
+		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+		return amiRequestViewString;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	///ami/amicusthome/amirequest?animalName=
+	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/pending", method = RequestMethod.GET)

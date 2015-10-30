@@ -101,11 +101,68 @@ chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 				deferred.resolve();
 			});
 			res.error(function(data, status, headers, config) {
-				deferred.reject('failure to get AMI Services');
+				deferred.reject('failure to get AmiRequests By request number');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestByAnimalName: function(animalName){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/byanimals?animalName='+animalName);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By animal names');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestByClientLastName: function(clientlastname){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/byclientlastname?clientlastname='+clientlastname);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By client last names');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestBySubmittedDateRange: function(date1, date2){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/byreqdaterange?date1='+date1 +'&date2='+date2);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By submitted date range');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestByLast50Records: function(){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/bylastnrecords');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By last n records');
 			});	
 
 			return res;
 	 }
+	 
 }});
 
 

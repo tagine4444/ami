@@ -21,7 +21,7 @@
 				   	<th>Veterinarian</th>
 				   	<th>Animal</th>
 				   	<th>Species</th>
-				   	<th>Owner</th>
+				   	<th>Client</th>
 				   	<th>Date</th>
 				   </tr>
 				  </thead>
@@ -56,7 +56,7 @@
 			   	<th>Veterinarian</th>
 			   	<th>Animal</th>
 			   	<th>Species</th>
-			   	<th>Owner</th>
+			   	<th>Client</th>
 			   	<th>Date</th>
 			   </tr>
 			  </thead>
@@ -67,7 +67,7 @@
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.animalName}}</td>
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.species}} - {{aDraftRequest.amiRequest.patientInfo.breeds}}</td>
 			   	<td>{{aDraftRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aDraftRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-			   	<td>{{ aDraftRequest.creationDate  | amDateFormat: 'ddd MMM YY, h:mm A' }} </td>
+			   	<td>{{ aDraftRequest.creationDate  | amDateFormat: 'ddd MMM d YY, h:mm A' }} </td>
 			   </tr>
 			   </tbody>
 		</table>
@@ -83,11 +83,10 @@
 			    <select class="form-control" ng-model="searchBy" ng-change="updateSearchInputDisplay()"> 
 				          <option ng-selected="true">Search By</option>
 				          <option>Request Number</option>
-				          <option>Request Submitted Date</option>
-				          <option>Report Ready Date</option>
 				          <option>Animal Name</option>
 				          <option>Client Last Name</option>
-				          <option>Last 20 Completed Reports</option>
+				          <option>Request Submitted Date</option>
+				          <option>Last 50 Requests</option>
  					   </select>
  					   
  					   <input ng-disabled="!isSearchAllowed" type="text" class="form-control" ng-model="searchByInput1"  placeholder="{{searchByPlaceHolder1}}" ng-show ="searchByInput1Visible">
@@ -108,7 +107,7 @@
 				   	<th>Veterinarian</th>
 				   	<th>Animal</th>
 				   	<th>Species</th>
-				   	<th>Owner</th>
+				   	<th>Client</th>
 				   	<th>Date</th>
 				   </tr>
 				  </thead>

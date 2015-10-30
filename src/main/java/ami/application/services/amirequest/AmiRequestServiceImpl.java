@@ -3,12 +3,11 @@ package ami.application.services.amirequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -76,7 +75,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 					));
 		}else{
 			
-			boolean editable = true;
+			boolean editable = false;
 			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(requestNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
 					hasBeenSavedAndSubmittedToRadiologist, editable, new DateTime()));
@@ -165,7 +164,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 			DateTime hasBeenSavedAndSubmittedToRadiologist,
 			DateTime interpretationInProgress,
 			DateTime interpretationReadyForReview,
-			DateTime interpretationReadyComplete, boolean editable,
+			DateTime interpretationReadyComplete, boolean editableOld,
 			DateTime updateDate) throws JsonProcessingException {
 		
 		
@@ -174,7 +173,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	    String updateDateString = new DateTimeToStringConverter().convert(updateDate);
 	    final String requestNumberJson = "amiRequest.requestNumber";
 		
-	    
+	    boolean editable = hasBeenSavedAndSubmittedToRadiologist ==null;
 	    
 		Query query = new Query(Criteria.where(requestNumberJson).is(amiRequest.getRequestNumber()));
 		Update update = new Update() ;
@@ -182,6 +181,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		update.set("updateDateString", updateDateString);
 		update.set("updateDate", updateDate);
 		update.set("updateUser", userName);
+		update.set("editable", editable);
 		
 		AmiRequestView updatedView = mongo.findAndModify(query, update, AmiRequestView.class, AMIREQUEST_VIEW); 
 
@@ -193,6 +193,47 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		
 		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("amiRequest.requestNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestView;
+	}
+	
+	
+	@Override
+	public List<AmiRequestView> findAmiRequestByAnimalName(String animalName) {
+		
+		List<AmiRequestView> amiRequestViews = mongo.find(Query.query(Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))), AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestViews;
+	}
+	
+	@Override
+	public List<AmiRequestView> findAmiRequestByClientLastName(String clientLastName) {
+		
+		List<AmiRequestView>  amiRequestViews = mongo.find(Query.query(Criteria.where("amiRequest.hospitalAndClientInfo.clientLastName").regex(Pattern.compile(clientLastName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))), AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestViews;
+	}
+	
+	@Override
+	public List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1, String date2) {
+		Query query = new Query();
+		query.addCriteria(
+				Criteria.where("hasBeenSavedAndSubmittedToRadiologist").exists(true)
+				.andOperator(
+					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gt(date1),
+			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lt(date2)
+				)
+			);
+		
+		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestViews;
+	}
+	
+	
+	@Override
+	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords) {
+		Query query = new Query();
+		query.limit(Integer.parseInt(nRecords));
+		query.with(new Sort(Sort.Direction.DESC, "creationDate"));
+		
+		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestViews;
 	}
 	
 	 @Override

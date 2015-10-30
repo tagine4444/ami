@@ -620,7 +620,7 @@
 					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yy';
 					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yy';
 				}
-				else if($scope.searchBy.indexOf("Last 20") !=-1){
+				else if($scope.searchBy.indexOf("Last 50") !=-1){
 					$scope.searchByInput1 = '';
 					$scope.searchByInput2 = '';
 					$scope.isSearchAllowed = true;
@@ -653,20 +653,50 @@
 			$scope.doSearch =  function(){
 				$scope.searchResults = [];
 				var requestNumber = $scope.searchByInput1;
+				var date2 = $scope.searchByInput2;
 				
 				$scope.whichSearch();
 				
-				if( $scope.isSearchByRequestNumber){
+				if( $scope.isSearchByRequestNumber ){
 					amiRequestFactory.getAmiRequest(requestNumber).then(
 	             			function(result){
 	             				var myResult = result.data;
 	             				$scope.searchResults.push(myResult);
 	             			}	
-	             		);
+	             	);
 				}
-				
-				
-				
+				else if( $scope.isSearchByAnimalName ){
+					
+					amiRequestFactory.getAmiRequestByAnimalName(requestNumber).then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
+				else if($scope.isSearchByClientLastName){
+					
+					amiRequestFactory.getAmiRequestByClientLastName(requestNumber).then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
+				else if($scope.isSearchByRequestSubmittedDate){
+					
+					amiRequestFactory.getAmiRequestBySubmittedDateRange(requestNumber,date2).then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
+				else if($scope.isSearchByLast50Requests){
+					
+					amiRequestFactory.getAmiRequestByLast50Records().then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
 			}
 			
 			$scope.whichSearch = function(){
@@ -675,9 +705,8 @@
 				$scope.isSearchByRequestNumber = false;
 				$scope.isSearchByAnimalName = false;
 				$scope.isSearchByRequestSubmittedDate = false;
-				$scope.isSearchByReportReadyDate = false;
 				$scope.isSearchByClientLastName = false;
-				$scope.isSearchByLast20CompletedReports = false;
+				$scope.isSearchByLast50Requests = false;
 				
 				if($scope.searchBy.indexOf("Search By") !=-1){
 					$scope.isSearchBySearchBy = true;
@@ -691,14 +720,12 @@
 				else if($scope.searchBy.indexOf("Request Submitted Date") !=-1){
 					$scope.isSearchByRequestSubmittedDate = true;
 				}
-				else if($scope.searchBy.indexOf("Report Ready Date") !=-1){
-					$scope.isSearchByReportReadyDate = true;
-				}
+				
 				else if($scope.searchBy.indexOf("Client Last Name") !=-1){
 					$scope.isSearchByClientLastName = true;
 				}
-				else if($scope.searchBy.indexOf("Last 20 Completed Reports") !=-1){
-					$scope.isSearchByLast20CompletedReports = true;
+				else if($scope.searchBy.indexOf("Last 50 Request") !=-1){
+					$scope.isSearchByLast50Requests = true;
 				}
 			}
 			

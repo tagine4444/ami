@@ -15,8 +15,11 @@ public interface AmiRequestService {
 	
 	
 	AmiRequestView findAmiRequest(String requestNumber);
+	List<AmiRequestView> findAmiRequestByAnimalName(String animalName);
+	List<AmiRequestView> findAmiRequestByClientLastName(String clientLastName);
 	List<AmiRequestView> findPendingAmiRequest();
 	List<AmiRequestView> findDraftAmiRequest();
+	List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords);
 	
 	
 	
@@ -53,5 +56,9 @@ public interface AmiRequestService {
 
 	void deleteUploadedFile(String fileName, String requestNumber, DateTime time)
 			throws JsonProcessingException;
+	List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1,
+			String date2);
+	
+	
 
 }
