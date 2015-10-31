@@ -9,6 +9,7 @@ import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import org.joda.time.DateTime;
+import org.springframework.security.core.GrantedAuthority;
 
 import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.commands.security.CreateHospitalCmd;
@@ -20,6 +21,7 @@ import ami.application.events.security.HospitaDeactivatedEvent;
 import ami.application.events.security.HospitalCreatedEvent;
 import ami.domain.amiusers.AmiUser;
 import ami.domain.hospitals.Hospital;
+import ami.domain.security.AmiAuthtorities;
 
 public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 
@@ -28,10 +30,12 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		
 		private Hospital hospital;
 		private List<AmiUser> amiUsers = new ArrayList<AmiUser>();
-		private  DateTime hospitalActivationDate;
-		private  DateTime hospitalDeactivationDate;
-		private  String hospitalDeactivatedBy;
-		private  String hospitalDeactivationReason;
+//		private List<AmiUser> masterUsers = new ArrayList<AmiUser>();
+		private boolean hasMasterUser;
+		private DateTime hospitalActivationDate;
+		private DateTime hospitalDeactivationDate;
+		private String hospitalDeactivatedBy;
+		private String hospitalDeactivationReason;
 
 	
 		// No-arg constructor, required by Axon
@@ -45,10 +49,19 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 										   command.getHospitalActivationDate()));
 		}
 		
+		
+
 		@CommandHandler
 		public void createUser(CreateAmiUserCmd command) {
 			if( !this.hospital.getId().equals(command.getHospitalId()) ){
 				throw new IllegalArgumentException("Cannot Create User '"+command.getAmiUser().getUser()+"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			final AmiUser amiUser = command.getAmiUser();
+			
+			
+			if(!this.hasMasterUser && !amiUser.isMasterUser()){
+				throw new IllegalArgumentException("Cannot Create User '"+command.getAmiUser().getUser()+"' No Master Users exist for this hospital: '"+this.hospital.getId()+"' " );
 			}
 			
 			boolean userAlreadyExists = userAlreadyExists(command.getAmiUser());
@@ -91,7 +104,9 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		@EventSourcingHandler
 		public void on(AmiUserCreatedEvent event) {
 			this.amiUsers.add(event.getAmiUser());
+			this.hasMasterUser  = hasMasterUser();
 		}
+		
 
 		@EventSourcingHandler
 		public void on(AmiUserDeactivatedEvent event) {
@@ -133,6 +148,27 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 				}
 			}
 			return false;
+		}
+		
+		public boolean hasMasterUser(){
+			
+			boolean foundMasterRole =false;
+			for (AmiUser anAmiUser : this.amiUsers) {
+				
+				List<? extends GrantedAuthority> role = anAmiUser.getRole();
+				for (GrantedAuthority grantedAuthority : role) {
+					if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
+						foundMasterRole = true;
+						break;
+					}
+				}
+				
+				if( foundMasterRole){
+					break;
+				}
+			}
+			
+			return foundMasterRole;
 		}
 		
 }

@@ -32,7 +32,7 @@
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aPendingRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-				   	<td>{{ aPendingRequest.creationDate  | amDateFormat: 'ddd MMM YY, h:mm A' }} </td>
+				   	<td>{{ aPendingRequest.creationDate  | amDateFormat: 'ddd MMM d YYYY, h:mm A' }} </td>
 				   </tr>
 				   </tbody>
 			</table>
@@ -67,7 +67,7 @@
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.animalName}}</td>
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.species}} - {{aDraftRequest.amiRequest.patientInfo.breeds}}</td>
 			   	<td>{{aDraftRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aDraftRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-			   	<td>{{ aDraftRequest.creationDate  | amDateFormat: 'ddd MMM d YY, h:mm A' }} </td>
+			   	<td>{{ aDraftRequest.creationDate  | amDateFormat: 'ddd MMM d YYYY, h:mm A' }} </td>
 			   </tr>
 			   </tbody>
 		</table>
@@ -118,7 +118,7 @@
 				   	<td>{{aSearchResult.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.species}} - {{aSearchResult.amiRequest.patientInfo.breeds}}</td>
 				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aSearchResult.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-				   	<td>{{ aSearchResult.creationDate | amDateFormat: 'ddd MMM YY, h:mm A' }} </td>
+				   	<td>{{ aSearchResult.creationDate | amDateFormat: 'ddd MMM d YYYY, h:mm A' }} </td>
 				   </tr>
 				   </tbody>
 			</table>

@@ -21,8 +21,8 @@ public class AmiUserEventHandler {
     @EventHandler
     public void handle(AmiUserCreatedEvent event) throws JsonProcessingException  {
     	amiUserService.createAmiUserView(event.getHospitalId(), event.getHospitalName(), event.getAmiUser());
-    
     	hospitalService.addUser(event.getHospitalId(), event.getAmiUser());
     }
-
+    
+    
 }

@@ -15,13 +15,14 @@ public class SubmitDraftAmiRequestCmd {
     private final String hospitalId;
     
     private DateTime hasBeenSavedAndSubmittedToRadiologist;
-	private boolean editable;
+//	private boolean editable;
 	private DateTime dateTime;
 
     public SubmitDraftAmiRequestCmd(String id, AmiRequest amiRequestJson, String userName,   
     		String hospitalName, String hospitalId,
     		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		boolean editable,DateTime dateTime
+//    		boolean editable,
+    		DateTime dateTime
     		) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
@@ -30,7 +31,7 @@ public class SubmitDraftAmiRequestCmd {
         this.hospitalId = hospitalId;
         
         this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-		this.editable   = editable;    
+//		this.editable   = editable;    
 		this.dateTime = dateTime;
     }
 
@@ -56,9 +57,9 @@ public class SubmitDraftAmiRequestCmd {
 
 	
 
-	public boolean isEditable() {
-		return editable;
-	}
+//	public boolean isEditable() {
+//		return editable;
+//	}
 
 	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
 		return hasBeenSavedAndSubmittedToRadiologist;

@@ -11,13 +11,15 @@ public class AmiUserView {
 	private String hospitalId;
 	private String hospitalName;
 	private DateTime time ;
+	public boolean masterUser;
 	
-	public AmiUserView(AmiUser amiUser,String hospitalId, String hospitalName, @Timestamp DateTime time ) {
+	public AmiUserView(AmiUser amiUser,String hospitalId, String hospitalName, @Timestamp DateTime time , boolean masterUser) {
 		
 		this.amiUser    = amiUser;  
 		this.hospitalId = hospitalId;
 		this.hospitalName = hospitalName;
 		this.time = time;
+		this.masterUser = masterUser;
 	}
 
 	public AmiUser getAmiUser() {
@@ -34,6 +36,10 @@ public class AmiUserView {
 
 	public String getHospitalName() {
 		return hospitalName;
+	}
+
+	public boolean isMasterUser() {
+		return masterUser;
 	}
 	
 }

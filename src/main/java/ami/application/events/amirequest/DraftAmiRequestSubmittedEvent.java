@@ -21,7 +21,7 @@ public class DraftAmiRequestSubmittedEvent {
     		String hospitalName, 
     		String hospitalId,
     		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-    		boolean editable,
+//    		boolean editable,
     		DateTime dateTime) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;

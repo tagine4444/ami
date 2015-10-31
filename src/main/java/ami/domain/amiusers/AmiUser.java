@@ -6,6 +6,8 @@ import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
+import ami.domain.security.AmiAuthtorities;
+
 @Document
 public class AmiUser {
 
@@ -17,7 +19,7 @@ public class AmiUser {
 	private  String createdBy;
 	private  DateTime deactivationDate;
 	private  String deactivatedBy;
-	private String deactivationReason;
+	private  String deactivationReason;
 	
 	private List<? extends GrantedAuthority> role;
 	
@@ -75,6 +77,19 @@ public class AmiUser {
 	}
 	public String getDeactivationReason() {
 		return deactivationReason;
+	}
+	
+	public boolean isMasterUser(){
+		
+		boolean foundMasterRole =false;
+		for (GrantedAuthority grantedAuthority : this.role) {
+			if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
+				foundMasterRole = true;
+				break;
+			}
+		}
+		
+		return foundMasterRole;
 	}
 	
 }

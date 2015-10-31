@@ -84,7 +84,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 				command.getHospitalName(),
 				command.getHospitalId(),
 				command.getHasBeenSavedAndSubmittedToRadiologist(),
-				command.isEditable(), 
+//				command.isEditable(), 
 				command.getDateTime()));
 	}
 	

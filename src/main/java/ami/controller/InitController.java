@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ import ami.domain.referencedata.Animals;
 import ami.domain.referencedata.amiservices.AmiServiceCategory;
 import ami.domain.referencedata.amiservices.Services;
 import ami.domain.security.AmiAdminAuthority;
+import ami.domain.security.AmiMasterAuthority;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -102,9 +104,12 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			Hospital savedHospital = hospitalService.findHospitalbyName(hospitalName);
 			
 			// create user
-			List<AmiAdminAuthority> adminList =  new ArrayList<AmiAdminAuthority>();
-			AmiAdminAuthority admin = new AmiAdminAuthority();
+			List<GrantedAuthority> adminList =  new ArrayList<GrantedAuthority>();
+			GrantedAuthority master = new AmiMasterAuthority();
+			GrantedAuthority admin  = new AmiAdminAuthority();
+			adminList.add(master);
 			adminList.add(admin);
+			
 			AmiUser chuck = new AmiUser("chuck", "chuck",hospitalName,savedHospital.getId(), now,  adminList);
 			amiUserService.createAmiUser(savedHospital.getId(), savedHospital.getName(), chuck);
 			
@@ -116,6 +121,16 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			hospitalService.createHospital(petClinicHospital, now);
 			Hospital savedHospital2 = hospitalService.findHospitalbyName(hospitalName2);
 			
+			
+			// create user
+			List<GrantedAuthority> authoritiesWithMaster =  new ArrayList<GrantedAuthority>();
+			GrantedAuthority amiUserAuth = new AmiUserAuthority();
+			GrantedAuthority masterAuth  = new AmiMasterAuthority();
+			authoritiesWithMaster.add(masterAuth);
+			authoritiesWithMaster.add(amiUserAuth);
+			AmiUser vetMaster = new AmiUser("vetmaster", "vetmaster",hospitalName2, savedHospital2.getId(), now, authoritiesWithMaster);
+			amiUserService.createAmiUser(savedHospital2.getId(), savedHospital2.getName(), vetMaster);
+						
 			// create user
 			List<AmiUserAuthority> userList =  new ArrayList<AmiUserAuthority>();
 			AmiUserAuthority user = new AmiUserAuthority();

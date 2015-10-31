@@ -78,7 +78,9 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 			boolean editable = false;
 			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(requestNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
-					hasBeenSavedAndSubmittedToRadiologist, editable, new DateTime()));
+					hasBeenSavedAndSubmittedToRadiologist, 
+//					editable, 
+					new DateTime()));
 			
 		}
 		                              
