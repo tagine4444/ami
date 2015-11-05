@@ -45,7 +45,7 @@ public class AmiUserServiceImpl implements AmiUserService{
 	public void createAmiUserView(String hospitalId, String hospitalName, AmiUser amiUser) throws JsonProcessingException {
 		
 		AmiUserView  view =
-				new AmiUserView( amiUser,hospitalId,  hospitalName , new DateTime(), amiUser.isMasterUser());
+				new AmiUserView( amiUser,hospitalId,  hospitalName , new DateTime());
 		
 		mongo.save(view, AMI_USER_VIEW);
 		

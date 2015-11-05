@@ -44,10 +44,10 @@ public class HospitalServiceImpl implements HospitalService{
 		mongo.save(view, AMI_HOSPITAL_VIEW);
 	}
 	@Override
-	public Hospital findHospital(String hospitalId) {
+	public HospitalView findHospital(String hospitalId) {
 		
 		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital._id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
-		return view.getHospital();
+		return view;
 		
 	}
 	@Override

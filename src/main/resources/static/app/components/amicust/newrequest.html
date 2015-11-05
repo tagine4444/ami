@@ -4,8 +4,10 @@
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
 	
-	
+   
 	<form name="newRequestForm" ng-submit="saveNewRequest()"   >
+	
+	
    	<div class="row">
    		<div class="col-sm-8">
    			
@@ -17,11 +19,8 @@
    	</div>
    	<br/>
    	<p ng-show="hasBeenSaved()" >Your Request Number is {{newRequest.requestNumber}} </p>
-   	<p ng-show="isEditable==false"> <span class="label label-danger">**Read Only Request**</span>  This request can no longer be saved as it has been submitted to the radiologist</p>
+   	<p ng-show="isEditable==false"> <span class="label label-danger">**Read Only Request**</span>  This request can no longer be edited as it has been submitted to the radiologist</p>
    	
-   
-   
-   
 	<div class="panel panel-default">
 	  <div class="panel-heading"><strong>{{hospitalName}} &amp; Client Section</strong></div>
 	  <div class="panel-body">
@@ -35,21 +34,6 @@
 				  <input aria-describedby="vetRequiredIcon" type="text" name="vetId" class="form-control" id="vet" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
 				</div>
 		    </div>
-		   
-<!-- 		   <div class="col-sm-6">	     -->
-<!-- 				<div class="form-inline"> -->
-<!-- 				  <div class="form-group"> -->
-<!-- 						  <div class="input-group"> -->
-<!-- 						  	<input type="text" class="form-control" id="labActId" ng-model="newRequest.hospitalAndClientInfo.labAccount" placeholder="Lab Account"> -->
-<!-- 						  </div> -->
-<!-- 						  <div class="input-group"> -->
-<!-- 								<select class="form-control" ng-model="newRequest.hospitalAndClientInfo.labs"> -->
-<!-- 									<option ng-selected="$index==0" ng-repeat="lab in labsList">{{lab}}</option> -->
-<!-- 							    </select> -->
-<!-- 						 </div>  -->
-<!-- 				  </div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 		</div>
 		<br/>
 		<!--  Clients  Row -->

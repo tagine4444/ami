@@ -169,6 +169,21 @@ chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 chidra.factory('animalService', function($http,$q, $routeParams){return {
 	
 	
+	getHospital: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/hospital');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get hospital');
+			});	
+
+			return res;
+	 },
+	 
 	 getAnimals: function(){ 
 		 
 		 var deferred = $q.defer();
@@ -213,22 +228,6 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 
 			return res;
 	 },
-	 
-//	 getAmiRequest: function(requestNumber){
-//		 
-//		 //var myRequestNumber = $route.current.requestNumber;
-//		 var deferred = $q.defer();
-//		 var res = $http.get('/ami/amicusthome/amirequest?requestNumber='+requestNumber);
-//		 
-//		 res.success(function(data, status, headers, config) {
-//				deferred.resolve();
-//			});
-//			res.error(function(data, status, headers, config) {
-//				deferred.reject('failure to get AMI Services');
-//			});	
-//
-//			return res;
-//	 },
 	 
 	 getUploadedFiles: function(requestNumber){
 		 
@@ -385,7 +384,22 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                         }).
                         when('/profile', {
                         	templateUrl: '/app/components/amicust/profile.html',
-                        	controller: 'ProfileCtrl'
+                        	controller: 'ProfileCtrl',
+                        	resolve: {
+                        		myHospital: ['animalService', function (animalService) {
+                            		return animalService.getHospital().then(
+                            			function(result){
+                            				return result.data;
+                            			}	
+                            		);
+                                }]
+                        	 
+                        	 
+                        	 }// resolve
+                        }).
+                        when('/newUser', {
+                        	templateUrl: '/app/components/amicust/newuser.html',
+                        	controller: 'NewUserCtrl',
                         }).
                         when('/help', {
                         	templateUrl: '/app/components/amicust/help.html',

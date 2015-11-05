@@ -88,6 +88,7 @@
 						var user =  response.data.user;
 						var hospitalName =  response.data.hospitalName;
 						var hospitalId =  response.data.hospitalId;
+						var masterUser =  response.data.masterUser;
 
 						var amiUser = {
 							getUserName: function(){
@@ -98,6 +99,9 @@
 							},
 							getHospitalId: function(){
 								return hospitalId;
+							},
+							getMasterUser: function(){
+								return masterUser;
 							}
 						};
 						
@@ -751,14 +755,55 @@
 			
 		});
 		
-		
-		
-		
-	
-		
 		// ============ Profile ===============
-		app.controller('ProfileCtrl', function ($scope, $window,$location) {
+		app.controller('ProfileCtrl', function ($scope, $window,$location, myHospital, amiService) {
 			$scope.page = 'profile';
+			
+			var promise = amiService.getAmiUser();
+			
+			promise.then(function(amiUser) {
+				$scope.userName     = amiUser.getUserName();
+				$scope.hospitalName = amiUser.getHospitalName();
+				$scope.hospitalId = amiUser.getHospitalId();
+				$scope.masterUser = amiUser.getMasterUser();
+			}, 
+			function(response) {
+			  alert( response.data.message);
+			}, 
+			function(update) {
+				alert( response.data.message);
+			});
+			
+			$scope.hospital = myHospital;
+
+		});
+		
+		// ============ Help ===============
+		app.controller('NewUserCtrl', function ($scope, $window,$location) {
+			$scope.page = 'New User';
+			
+			var newUser ={
+				'userName'  : '',
+				'pwd'       : '',
+				'firstName' : '',
+				'lastName'  : '',
+				'occupation': '',
+				'isVet'     : false
+			};
+			
+			$scope.newUser = newUser;
+			
+			$scope.isUserAVet =function(isUserAVet){
+				if(isUserAVet){
+					$scope.newUser.isVet = true;
+				}else{
+					$scope.newUser.isVet = false;
+				}
+				
+			}
+			
+			
+			
 
 		});
 		

@@ -1,8 +1,5 @@
 package ami.controller;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.application.services.security.AmiUserService;
+import ami.application.services.security.HospitalService;
+import ami.application.views.HospitalView;
 import ami.domain.amiusers.AmiUser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +29,9 @@ public class UserController {
 	
 	@Autowired
 	private AmiUserService amiUserService;
+	
+	@Autowired
+	private HospitalService hospitalService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -54,5 +56,18 @@ public class UserController {
 		
 		return amiUserString;
 			
+	}
+	
+	@RequestMapping(value = "/ami/hospital", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String getHospital() throws JsonProcessingException {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUser amiUser = amiUserService.findAmiUser(userName).getAmiUser();
+		String hospitalId = amiUser.getHospitalId();
+		HospitalView hospital = hospitalService.findHospital(hospitalId);
+		String hospitalString = objectMapper.writeValueAsString(hospital);
+		log.debug("Found "+hospitalString);
+		return hospitalString;
+		
 	}
 }

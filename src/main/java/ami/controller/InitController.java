@@ -110,7 +110,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			adminList.add(master);
 			adminList.add(admin);
 			
-			AmiUser chuck = new AmiUser("chuck", "chuck",hospitalName,savedHospital.getId(), now,  adminList);
+			AmiUser chuck = new AmiUser("chuck", "chuck","Charles", "Root",hospitalName,savedHospital.getId(), now,  adminList);
 			amiUserService.createAmiUser(savedHospital.getId(), savedHospital.getName(), chuck);
 			
 			
@@ -128,14 +128,14 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			GrantedAuthority masterAuth  = new AmiMasterAuthority();
 			authoritiesWithMaster.add(masterAuth);
 			authoritiesWithMaster.add(amiUserAuth);
-			AmiUser vetMaster = new AmiUser("vetmaster", "vetmaster",hospitalName2, savedHospital2.getId(), now, authoritiesWithMaster);
+			AmiUser vetMaster = new AmiUser("vetmaster", "vetmaster","Peter", "Gabriel", hospitalName2, savedHospital2.getId(), now, authoritiesWithMaster);
 			amiUserService.createAmiUser(savedHospital2.getId(), savedHospital2.getName(), vetMaster);
 						
 			// create user
 			List<AmiUserAuthority> userList =  new ArrayList<AmiUserAuthority>();
 			AmiUserAuthority user = new AmiUserAuthority();
 			userList.add(user);
-			AmiUser vet = new AmiUser("vet", "vet",hospitalName2, savedHospital2.getId(), now, userList);
+			AmiUser vet = new AmiUser("vet", "vet", "Johny", "Cash", hospitalName2, savedHospital2.getId(), now, userList);
 			amiUserService.createAmiUser(savedHospital2.getId(), savedHospital2.getName(), vet);
 			
 		} catch (JsonProcessingException e) {

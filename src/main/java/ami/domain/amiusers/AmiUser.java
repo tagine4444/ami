@@ -13,6 +13,8 @@ public class AmiUser {
 
 	private String user;
 	private String pwd;
+	private String firstName;
+	private String lastName;
 	private String hospitalName;
 	private String hospitalId;
 	private  DateTime creationDate;
@@ -20,19 +22,34 @@ public class AmiUser {
 	private  DateTime deactivationDate;
 	private  String deactivatedBy;
 	private  String deactivationReason;
+	private boolean masterUser;
 	
 	private List<? extends GrantedAuthority> role;
 	
 	public AmiUser(){
 		
 	}
-	public AmiUser(String user,String pwd, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
+	public AmiUser(String user,String pwd, String firstName, String lastName, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
 		this.user = user;
 		this.pwd = pwd;
+		this.firstName =firstName;
+		this.lastName = lastName;
 		this.hospitalName = hospitalName;
 		this.hospitalId = hospitalId;
 		this.creationDate =creationDate;
 		this.role = role;
+		
+		this.masterUser =false;
+		
+		if(this.role!=null && this.role.size()>0 ){
+		
+			for (GrantedAuthority grantedAuthority : this.role) {
+				if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
+					this.masterUser = true;
+					break;
+				}
+			}
+		}
 	}
 	
 	public String getHospitalName() {
@@ -79,17 +96,31 @@ public class AmiUser {
 		return deactivationReason;
 	}
 	
-	public boolean isMasterUser(){
-		
-		boolean foundMasterRole =false;
-		for (GrantedAuthority grantedAuthority : this.role) {
-			if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
-				foundMasterRole = true;
-				break;
-			}
-		}
-		
-		return foundMasterRole;
+	public String getFirstName() {
+		return firstName;
 	}
+	public String getLastName() {
+		return lastName;
+	}
+	
+	public boolean isMasterUser() {
+		return masterUser;
+	}
+	
+//	public boolean isMasterUser(){
+//		
+//		boolean foundMasterRole =false;
+//		for (GrantedAuthority grantedAuthority : this.role) {
+//			if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
+//				foundMasterRole = true;
+//				break;
+//			}
+//		}
+//		
+//		return foundMasterRole;
+//	}
+	
+	
+	
 	
 }
