@@ -1,0 +1,76 @@
+<div class="row">
+	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	
+	<form name="newUserForm" ng-submit="saveNewRequest()"   >
+	<div class="panel panel-default">
+	  <div class="panel-heading"><strong>New User Information</strong></div>
+	  <div class="panel-body">
+	  
+	  	<div class="row">
+	  		<div class="col-sm-2">
+			    <div class="form-group" ng-class="{ 'has-error' : newUserForm.userName.$invalid && !newUserForm.userName.$pristine }">
+				    <input type="text" name="userName" class="form-control" ng-model="newUser.userName" placeholder="User Name"   >
+				    <p ng-show="newUserForm.userName.$invalid && !newUserForm.userName.$pristine" class="help-block">required field</p>
+				</div>
+		    </div>
+	  		<div class="col-sm-2">
+			    <div class="form-group" ng-class="{ 'has-error' : newUserForm.pwd.$invalid && !newUserForm.pwd.$pristine }">
+				    <input type="text" name="pwd" class="form-control" ng-model="newUser.pwd" placeholder="Password"   >
+				    <p ng-show="newUserForm.pwd.$invalid && !newUserForm.pwd.$pristine" class="help-block">required field</p>
+				</div>
+		    </div>
+	  		<div class="col-sm-2">
+			    <div class="form-group" ng-class="{ 'has-error' : newUserForm.confirmPwd.$invalid && !newUserForm.confirmPwd.$pristine }">
+				    <input type="text" name="confirmPwd" class="form-control" ng-model="newUser.confirmPwd" placeholder="Confirm Password"   >
+				    <p ng-show="newUserForm.confirmPwd.$invalid && !newUserForm.confirmPwd.$pristine" class="help-block">required field</p>
+				</div>
+		    </div>
+		    <div class="col-sm-4">
+			    <span >Is veterinarian? </span> &nbsp;
+			    <label class="radio-inline">
+				  <input type="radio"  id="vetRadio2"  ng-click="isUserAVet(false)"  ng-checked="!newUser.isVet">No
+				</label>
+			    <label class="radio-inline">
+				  <input  type="radio"  id="vetRadio1" ng-click="isUserAVet(true)" ng-checked="newUser.isVet" ng-model="newUser.isVet"  >Yes
+				</label>
+			</div>
+	  	</div>
+		<div class="row">
+			
+		    <div class="col-sm-2">
+			    <div class="form-group" ng-class="{ 'has-error' : newUserForm.firstName.$invalid && !newUserForm.firstName.$pristine }">
+				    <input type="text" name="firstName" class="form-control" ng-model="newUser.firstName" placeholder="First Name"   >
+				    <p ng-show="newUserForm.firstName.$invalid && !newUserForm.firstName.$pristine" class="help-block">required field</p>
+				</div>
+		    </div>
+		    <div class="col-sm-2">
+		    	<div class="form-group" ng-class="{ 'has-error' : newUserForm.lastName.$invalid && !newUserForm.lastName.$pristine }">
+				    <input type="text" name="lastName" class="form-control" ng-model="newUser.lastName" placeholder="Last Name" >
+				    <p ng-show="newUserForm.lastName.$invalid && !newUserForm.lastName.$pristine" class="help-block">required field</p>
+				</div>
+		    </div>
+		    
+		    <div class="col-sm-2">
+			    <div class="form-group" ng-class="{ 'has-error' : newUserForm.occupation.$invalid && !newUserForm.occupation.$pristine }">
+				    <input ng-disabled="	newUser.isVet" type="text" name="occupation" class="form-control" ng-model="newUser.occupation" placeholder="Occupation"   >
+				    <p ng-show="newUserForm.occupation.$invalid && !newUserForm.occupation.$pristine" class="help-block">required field</p>
+				</div>
+		    </div>
+		    
+	    
+		</div>
+		<div class="row">
+			<div class="col-sm-1">
+	    		<button  type="submit" class="btn btn-default" >Cancel</button>
+	    	</div>
+			<div class="col-sm-1">
+	    		<button  type="submit" class="btn btn-danger" >Save</button>
+	    	</div>
+		</div>
+		
+	  </div>
+	</div> 
+	</form>
+	
+	
+</div>
