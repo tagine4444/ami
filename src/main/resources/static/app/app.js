@@ -30,6 +30,41 @@ chidra.filter('jsonDate', ['$filter', function ($filter) {
 }]);
 
 
+//chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
+//	
+//	getNewUser: function(){
+//		var newUser ={
+//				'userName'  : 'chq-joe',
+//				'pwd'       : 'totopwd',
+//				'pwd'       : 'totopwd',
+//				'firstName' : 'joe',
+//				'lastName'  : 'blow',
+//				'occupation': 'tech',
+//				'email'		: 'toto@hotmail.com',
+//				'isVet'     : false
+//			};
+//	}
+//}
+//	
+//}
+
+
+chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
+		getNewUser: function(){ 
+			var newUser ={
+					'userName'  : '',
+					'pwd'       : '',
+					'pwd'       : '',
+					'firstName' : '',
+					'lastName'  : '',
+					'occupation': '',
+					'email'		: '',
+					'isVet'     : false
+				};
+			return newUser;
+		}
+	}
+});
 chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 	getNewAmiRequest: function(){ 
 		 

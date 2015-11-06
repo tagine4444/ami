@@ -779,19 +779,23 @@
 		});
 		
 		// ============ Help ===============
-		app.controller('NewUserCtrl', function ($scope, $window,$location) {
+		app.controller('NewUserCtrl', function ($scope, $window,$location, newUserFactory) {
 			$scope.page = 'New User';
+			$scope.submitted = false;
 			
-			var newUser ={
-				'userName'  : '',
-				'pwd'       : '',
-				'firstName' : '',
-				'lastName'  : '',
-				'occupation': '',
-				'isVet'     : false
-			};
+//			var newUser ={
+//				'userName'  : 'chq-joe',
+//				'pwd'       : 'totopwd',
+//				'pwd'       : 'totopwd',
+//				'firstName' : 'joe',
+//				'lastName'  : 'blow',
+//				'occupation': 'tech',
+//				'email'		: 'toto@hotmail.com',
+//				'isVet'     : false
+//			};
 			
-			$scope.newUser = newUser;
+//			$scope.newUser = newUser;
+			$scope.newUser = newUserFactory.getNewUser();
 			
 			$scope.isUserAVet =function(isUserAVet){
 				if(isUserAVet){
@@ -801,6 +805,38 @@
 				}
 				
 			}
+			
+			$scope.cancel = function(){
+				$scope.submitted = false;
+				$scope.newUser = newUserFactory.getNewUser();
+			}
+			
+			$scope.saveNewUser = function(){
+				
+				
+				if ($scope.newUserForm.$valid) {
+				
+//					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+//					
+//					var res = $http.post('amicusthome/amirequest',data);
+//					res.success(function(data, status, headers, config) {
+//						$scope.newRequest.requestNumber = data.requestNumber;
+//						$location.path('/searchRequest');
+//					});
+//					res.error(function(data, status, headers, config) {
+//						alert( "failure message: " + JSON.stringify({data: data}));
+//					});	
+					
+				}else{
+					
+					console.log("========> found error in saving new users");
+				}
+				
+			
+			   
+			}
+			
+			
 			
 			
 			
