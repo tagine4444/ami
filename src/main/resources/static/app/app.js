@@ -54,12 +54,11 @@ chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
 			var newUser ={
 					'userName'  : '',
 					'pwd'       : '',
-					'pwd'       : '',
 					'firstName' : '',
 					'lastName'  : '',
-					'occupation': '',
-					'email'		: '',
-					'isVet'     : false
+					'occupation': 'Occupation',
+					'occupationOther': '',
+					'email'		: ''
 				};
 			return newUser;
 		}

@@ -15,25 +15,18 @@
 		    </div>
 	  		<div class="col-sm-2">
 			    <div class="form-group" ng-class="{ 'has-error' : submitted && newUserForm.pwd.$invalid  }">
-				    <input type="text" id="pwd" name="pwd" class="form-control" ng-model="newUser.pwd" placeholder="Password" required="required">
+				    <input type="password" id="pwd" name="pwd" class="form-control" ng-model="newUser.pwd" placeholder="Password" required="required" ng-minlength="3" >
 				    <p ng-show="submitted && newUserForm.pwd.$error.required" class="help-block">Required</p>
+				    <p ng-show="submitted &&  newUserForm.pwd.$error.minlength" class="help-block">Must contain at least 5 characters</p>
 				</div>
 		    </div>
 	  		<div class="col-sm-2">
 			    <div class="form-group" ng-class="{ 'has-error' : submitted && newUserForm.confirmPwd.$error.required }">
-				    <input type="text" id="confirmPwd" name="confirmPwd" class="form-control" ng-model="newUser.confirmPwd" placeholder="Confirm Password" required  >
+				    <input type="password" id="confirmPwd" name="confirmPwd" class="form-control" ng-model="confirmPwd" placeholder="Confirm Password" required  >
 				    <p ng-show="submitted && newUserForm.confirmPwd.$error.required" class="help-block">Required</p>
 				</div>
 		    </div>
-		    <div class="col-sm-4">
-			    <span >Is veterinarian? </span> &nbsp;
-			    <label class="radio-inline">
-				  <input type="radio"  id="vetRadio2"  ng-click="isUserAVet(false)"  ng-checked="!newUser.isVet">No
-				</label>
-			    <label class="radio-inline">
-				  <input  type="radio"  id="vetRadio1" ng-click="isUserAVet(true)" ng-checked="newUser.isVet" ng-model="newUser.isVet"  >Yes
-				</label>
-			</div>
+		   
 	  	</div>
 		<div class="row">
 			
@@ -57,15 +50,27 @@
 				</div>
 		    </div>
 		    
-		    <div class="col-sm-2">
-			    <div class="form-group" ng-class="{ 'has-error' : newUserForm.occupation.$invalid && !newUserForm.occupation.$pristine }">
-				    <input ng-disabled="newUser.isVet" type="text" name="occupation" class="form-control" ng-model="newUser.occupation" placeholder="Occupation"   >
-				    <p ng-show="newUserForm.occupation.$invalid && !newUserForm.occupation.$pristine" class="help-block">required field</p>
+		    
+		</div>
+		
+		<div class="row">
+			 <div class="col-sm-2">
+			    <select class="form-control" ng-model="newUser.occupation" ng-change="updateOccupationOtherVisible()"> 
+				          <option ng-selected="true">Occupation</option>
+				          <option>Veterinarian</option>
+				          <option>Technician</option>
+				          <option>Admin clerk</option>
+				          <option>Others</option>
+ 					   </select>
+			</div>
+		  	<div class="col-sm-2" >
+			    <div  class="form-group" ng-class="{ 'has-error' : newUserForm.occupationOther.$invalid && !newUserForm.occupationOther.$pristine }">
+				    <input ng-disabled ="!occupationOtherVisible" type="text" name="occupationOther" class="form-control" ng-model="newUser.occupationOther" placeholder="Other Occupation"   >
+				    <p ng-show="newUserForm.occupation.$invalid" class="help-block">required field</p>
 				</div>
 		    </div>
-		    
-	    
 		</div>
+		
 		<div class="row">
 			<div class="col-sm-1">
 	    		<button ng-click="cancel()" type="submit" class="btn btn-default" >Cancel</button>

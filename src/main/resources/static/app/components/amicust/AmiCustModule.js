@@ -779,32 +779,12 @@
 		});
 		
 		// ============ Help ===============
-		app.controller('NewUserCtrl', function ($scope, $window,$location, newUserFactory) {
+		app.controller('NewUserCtrl', function ($scope, $window,$location,$http, newUserFactory) {
 			$scope.page = 'New User';
 			$scope.submitted = false;
-			
-//			var newUser ={
-//				'userName'  : 'chq-joe',
-//				'pwd'       : 'totopwd',
-//				'pwd'       : 'totopwd',
-//				'firstName' : 'joe',
-//				'lastName'  : 'blow',
-//				'occupation': 'tech',
-//				'email'		: 'toto@hotmail.com',
-//				'isVet'     : false
-//			};
-			
-//			$scope.newUser = newUser;
 			$scope.newUser = newUserFactory.getNewUser();
-			
-			$scope.isUserAVet =function(isUserAVet){
-				if(isUserAVet){
-					$scope.newUser.isVet = true;
-				}else{
-					$scope.newUser.isVet = false;
-				}
-				
-			}
+			$scope.occupationOtherVisible =false;
+			$scope.confirmPwd = '';
 			
 			$scope.cancel = function(){
 				$scope.submitted = false;
@@ -815,28 +795,39 @@
 				
 				
 				if ($scope.newUserForm.$valid) {
-				
-//					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
-//					
-//					var res = $http.post('amicusthome/amirequest',data);
-//					res.success(function(data, status, headers, config) {
-//						$scope.newRequest.requestNumber = data.requestNumber;
-//						$location.path('/searchRequest');
-//					});
-//					res.error(function(data, status, headers, config) {
-//						alert( "failure message: " + JSON.stringify({data: data}));
-//					});	
+					
+//					$scope.newUser.pwd   
+//					$scope.newUser.firstName
+//					$scope.newUser.lastName
+//					$scope.newUser.occupation
+//					$scope.newUser.occupationOther
+//					$scope.newUser.email
+					
+					
+					var data = {newUser: $scope.newUser};
+					
+					var res = $http.post('/ami/amicusthome/newuser',data);
+					res.success(function(data, status, headers, config) {
+						$location.path('/profile');
+					});
+					res.error(function(data, status, headers, config) {
+						alert( "failure message: " + JSON.stringify({data: data}));
+					});	
 					
 				}else{
 					
 					console.log("========> found error in saving new users");
 				}
-				
-			
-			   
 			}
 			
-			
+			$scope.updateOccupationOtherVisible =  function(){
+				$scope.newUser.occupationOther = '';
+				if($scope.newUser.occupation.indexOf("Other") !=-1){
+					$scope.occupationOtherVisible = true;
+				}else{
+					$scope.occupationOtherVisible = false;
+				}
+			}
 			
 			
 			

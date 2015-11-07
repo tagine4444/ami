@@ -29,6 +29,13 @@ public class AmiUser {
 	public AmiUser(){
 		
 	}
+	
+	public AmiUser(NewUser newUser, String hospitalName, String hospitalId ,List<? extends GrantedAuthority> role){
+		this(newUser.getUserName(), newUser.getPwd(), newUser.getFirstName(),
+				newUser.getLastName(), hospitalName, hospitalId, new DateTime(), 
+				role);
+	}
+	
 	public AmiUser(String user,String pwd, String firstName, String lastName, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
 		this.user = user;
 		this.pwd = pwd;
@@ -38,7 +45,6 @@ public class AmiUser {
 		this.hospitalId = hospitalId;
 		this.creationDate =creationDate;
 		this.role = role;
-		
 		this.masterUser =false;
 		
 		if(this.role!=null && this.role.size()>0 ){
