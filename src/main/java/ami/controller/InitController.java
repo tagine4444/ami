@@ -65,32 +65,6 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	@RequestMapping(value = "/ami/init/user", method = RequestMethod.GET)
 	public String addUsers(Model model) {
-/*	
-		List<AmiAdminAuthority> adminList =  new ArrayList<AmiAdminAuthority>();
-		AmiAdminAuthority admin = new AmiAdminAuthority();
-		adminList.add(admin);
-		
-		List<AmiUserAuthority> userList =  new ArrayList<AmiUserAuthority>();
-		AmiUserAuthority user = new AmiUserAuthority();
-		userList.add(user);
-		
-		DateTime now = new DateTime();
-		
-		AmiUser vet = new AmiUser("vet", "vet","Pet Hospital", 11, now, userList);
-		mongo.insert(vet,"amiuser1");
-		
-		AmiUser chuck = new AmiUser("chuck", "chuck","Animal Medical Imaging",12, now,  adminList);
-		mongo.insert(chuck,"amiuser1");
-		
-		vet = mongo.findById(vet.getId(), AmiUser.class,"amiuser1");
-		chuck = mongo.findById(chuck.getId(), AmiUser.class,"amiuser1");
-		log.debug("Found "+vet);
-		log.debug("Found "+chuck);
-		
-*/	
-		
-		
-		
 		
 		try {
 			
@@ -112,8 +86,6 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			
 			AmiUser chuck = new AmiUser("chuck", "chuck","Charles", "Root",hospitalName,savedHospital.getId(), now,  adminList);
 			amiUserService.createAmiUser(savedHospital.getId(), savedHospital.getName(), chuck);
-			
-			
 			
 			// create hospital
 			final String hospitalName2 = "Pet Clinic";
@@ -204,13 +176,6 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@RequestMapping(value = "/ami/init/services", method = RequestMethod.GET)
 	@ResponseBody
 	public String addServices(Model model) {
-		
-//		contrastRadiography
-//		computedTomography
-//		radiographyFluoroscopy
-//		ultrasound
-		
-		
 		
 		List<Services> amiServiceList = new ArrayList<Services>();
 		

@@ -787,22 +787,15 @@
 			$scope.confirmPwd = '';
 			
 			$scope.cancel = function(){
-				$scope.submitted = false;
-				$scope.newUser = newUserFactory.getNewUser();
+//				$scope.submitted = false;
+//				$scope.newUser = newUserFactory.getNewUser();
+				$location.path('/profile');
 			}
 			
 			$scope.saveNewUser = function(){
 				
 				
 				if ($scope.newUserForm.$valid) {
-					
-//					$scope.newUser.pwd   
-//					$scope.newUser.firstName
-//					$scope.newUser.lastName
-//					$scope.newUser.occupation
-//					$scope.newUser.occupationOther
-//					$scope.newUser.email
-					
 					
 					var data = {newUser: $scope.newUser};
 					
