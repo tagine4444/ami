@@ -11,6 +11,7 @@ public class Hospital {
 	private String mainFax;
 	private String fax2;
 	private List<Phone> phones;
+	private List<String> emails;// default emails where the reports are sent
 	
 	public Hospital(String id,
 					String name,
@@ -18,7 +19,8 @@ public class Hospital {
 					String mainPhone,
 					String mainFax,
 					String fax2,
-					List<Phone> phones) {
+					List<Phone> phones,
+					List<String>emails) {
 		
 		this.id       = id       ;
 		this.name     = name     ;
@@ -27,6 +29,7 @@ public class Hospital {
 		this.mainFax  = mainFax  ;
 		this.fax2     = fax2     ;
 		this.phones   = phones   ;
+		this.emails   = emails;
 	}
 
 	public String getId() {
@@ -55,6 +58,10 @@ public class Hospital {
 
 	public List<Phone> getPhones() {
 		return phones;
+	}
+
+	public List<String> getEmails() {
+		return emails;
 	}
 	
 }

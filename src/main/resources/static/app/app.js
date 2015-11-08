@@ -1,23 +1,6 @@
 
 var chidra = angular.module('chidra',['flow','ngRoute','mgcrea.ngStrap','angularMoment', 'AmiCustModule']);
 
-//chidra.factory("animalService", function($q, $h){
-//	   return {
-//	       getAnimals: function(){
-//	    	   var res = $http.get('/ami/animals');
-//	    	   
-//	    	   res.success(function(data, status, headers, config) {
-//					deferred.resolve();
-//				});
-//				res.error(function(data, status, headers, config) {
-//					deferred.reject('failure to get user name');
-//				});	
-//
-//				return res;
-//	       }
-//	   }
-//});
-
 
 chidra.filter('jsonDate', ['$filter', function ($filter) {
     return function (input, format) {
@@ -28,25 +11,6 @@ chidra.filter('jsonDate', ['$filter', function ($filter) {
         return myDate;
     };
 }]);
-
-
-//chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
-//	
-//	getNewUser: function(){
-//		var newUser ={
-//				'userName'  : 'chq-joe',
-//				'pwd'       : 'totopwd',
-//				'pwd'       : 'totopwd',
-//				'firstName' : 'joe',
-//				'lastName'  : 'blow',
-//				'occupation': 'tech',
-//				'email'		: 'toto@hotmail.com',
-//				'isVet'     : false
-//			};
-//	}
-//}
-//	
-//}
 
 
 chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
@@ -72,7 +36,8 @@ chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 		hospitalAndClientInfo.clientFirstName = '';
 		hospitalAndClientInfo.clientLastName  = '';
 		hospitalAndClientInfo.clientId		  = '';
-		hospitalAndClientInfo.isEmployee	  = false;
+		hospitalAndClientInfo.isEmployee	  = false,
+		hospitalAndClientInfo.isRequestSentToPersonalEmail	  = true;
 		
 		var patientInfo = { };
 		patientInfo.animalName 		= '';
@@ -348,12 +313,18 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                                 			}	
                                 		);
                                     }],
+                                
+                                myHospital: ['animalService', function (animalService) {
+                             		return animalService.getHospital().then(
+                             			function(result){
+                             				return result.data;
+                             			}	
+                             		);
+                                 }]  
                             
                             }
                         }).
                         when('/editRequest/:requestNumber', {
-//                        	templateUrl: '/app/components/amicust/editrequest.html',
-//                        	controller: 'EditRequestCtrl',
                         	templateUrl: "/app/components/amicust/newrequest.html",
                             controller: "NewRequestCtrl",
                         	 resolve: {
@@ -389,8 +360,7 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                                 				return result.data;
                                 			}	
                                 		);
-                                    }],
-                        	 
+                                 }]
                         	 
                         	 }// resolve
                         }).

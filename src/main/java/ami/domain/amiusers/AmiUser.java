@@ -15,6 +15,7 @@ public class AmiUser {
 	private String pwd;
 	private String firstName;
 	private String lastName;
+	private String email;
 	private String hospitalName;
 	private String hospitalId;
 	private  DateTime creationDate;
@@ -32,15 +33,16 @@ public class AmiUser {
 	
 	public AmiUser(NewUser newUser, String hospitalName, String hospitalId ,List<? extends GrantedAuthority> role){
 		this(newUser.getUserName(), newUser.getPwd(), newUser.getFirstName(),
-				newUser.getLastName(), hospitalName, hospitalId, new DateTime(), 
+				newUser.getLastName(),newUser.getEmail(), hospitalName, hospitalId, new DateTime(), 
 				role);
 	}
 	
-	public AmiUser(String user,String pwd, String firstName, String lastName, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
+	public AmiUser(String user,String pwd, String firstName, String lastName, String email, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
 		this.user = user;
 		this.pwd = pwd;
 		this.firstName =firstName;
 		this.lastName = lastName;
+		this.email = email;
 		this.hospitalName = hospitalName;
 		this.hospitalId = hospitalId;
 		this.creationDate =creationDate;
@@ -112,20 +114,10 @@ public class AmiUser {
 	public boolean isMasterUser() {
 		return masterUser;
 	}
-	
-//	public boolean isMasterUser(){
-//		
-//		boolean foundMasterRole =false;
-//		for (GrantedAuthority grantedAuthority : this.role) {
-//			if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
-//				foundMasterRole = true;
-//				break;
-//			}
-//		}
-//		
-//		return foundMasterRole;
-//	}
-	
+
+	public String getEmail() {
+		return email;
+	}
 	
 	
 	

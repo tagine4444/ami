@@ -3,50 +3,52 @@
 	
 	<form name="newUserForm" ng-submit="saveNewUser()"   >
 	<div class="panel panel-default">
-	  <div class="panel-heading"><strong>New User Information</strong></div>
+	  <div class="panel-heading"><strong>Add New User</strong></div>
 	  <div class="panel-body">
 	  
 	  	<div class="row">
-	  		<div class="col-sm-2">
-			    <div class="form-group" ng-class="{ 'has-error' : submitted && newUserForm.userName.$error.required }">
-				    <input type="text" name="userName" name="userName" class="form-control" ng-model="newUser.userName" placeholder="User Name" required="required" >
-				    <p ng-show="submitted && newUserForm.userName.$error.required" class="help-block">Required</p>
+	  		<div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : (newUserForm.userName.$touched || submitted ) && newUserForm.userName.$invalid }">
+				    <input type="text" name="userName" name="userName" class="form-control" ng-model="newUser.userName" placeholder="User Name" ng-minlength="5" required="required" >
+				    <p ng-show="(newUserForm.userName.$touched || submitted ) && newUserForm.userName.$error.required" class="help-block">Must be at least 5 characters</p>
+				    <p ng-show="(newUserForm.userName.$touched || submitted ) && newUserForm.userName.$error.minlength" class="help-block">Must be at least 5 characters</p>
 				</div>
 		    </div>
-	  		<div class="col-sm-2">
-			    <div class="form-group" ng-class="{ 'has-error' : submitted && newUserForm.pwd.$invalid  }">
-				    <input type="password" id="pwd" name="pwd" class="form-control" ng-model="newUser.pwd" placeholder="Password" required="required" ng-minlength="3" >
-				    <p ng-show="submitted && newUserForm.pwd.$error.required" class="help-block">Required</p>
-				    <p ng-show="submitted &&  newUserForm.pwd.$error.minlength" class="help-block">Must contain at least 5 characters</p>
+	  		<div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : (newUserForm.pwd.$touched || submitted ) && newUserForm.pwd.$invalid  }">
+				    <input type="password" id="pwd" name="pwd" class="form-control" ng-model="newUser.pwd" placeholder="Password" required="required" ng-minlength="5" >
+				    <p ng-show="(newUserForm.pwd.$touched || submitted ) && newUserForm.pwd.$error.required" class="help-block">Must be at least 5 characters</p>
+				    <p ng-show="(newUserForm.pwd.$touched || submitted ) &&  newUserForm.pwd.$error.minlength" class="help-block">Must be at least 5 characters</p>
 				</div>
 		    </div>
-	  		<div class="col-sm-2">
-			    <div class="form-group" ng-class="{ 'has-error' : submitted && newUserForm.confirmPwd.$error.required }">
+	  		<div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : doesntMatchPwd() && (newUserForm.confirmPwd.$touched || submitted ) }">
 				    <input type="password" id="confirmPwd" name="confirmPwd" class="form-control" ng-model="confirmPwd" placeholder="Confirm Password" required  >
-				    <p ng-show="submitted && newUserForm.confirmPwd.$error.required" class="help-block">Required</p>
+				    <p ng-show="doesntMatchPwd() && (newUserForm.confirmPwd.$touched || submitted )" class="help-block">Must match the password</p>
 				</div>
 		    </div>
 		   
 	  	</div>
 		<div class="row">
 			
-		    <div class="col-sm-2">
-			    <div class="form-group" ng-class="{ 'has-error' : submitted &&  newUserForm.firstName.$invalid }">
+		    <div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : (newUserForm.firstName.$touched || submitted ) &&  newUserForm.firstName.$invalid }">
 				    <input type="text" name="firstName" class="form-control" ng-model="newUser.firstName" placeholder="First Name" required  >
-				    <p ng-show="submitted && newUserForm.firstName.$error.required" class="help-block">required field</p>
+				    <p ng-show="(newUserForm.firstName.$touched || submitted ) && newUserForm.firstName.$error.required" class="help-block">required field</p>
 				</div>
 		    </div>
-		    <div class="col-sm-2">
-		    	<div class="form-group" ng-class="{ 'has-error' : submitted &&  newUserForm.lastName.$invalid }">
+		    <div class="col-sm-3">
+		    	<div class="form-group" ng-class="{ 'has-error' : (newUserForm.lastName.$touched || submitted ) &&  newUserForm.lastName.$invalid }">
 				    <input type="text" name="lastName" class="form-control" ng-model="newUser.lastName" placeholder="Last Name" required >
-				    <p ng-show="submitted && newUserForm.lastName.$error.required" class="help-block">required field</p>
+				    <p ng-show="(newUserForm.lastName.$touched || submitted ) && newUserForm.lastName.$error.required" class="help-block">required field</p>
 				</div>
 		    </div>
 		    
 		    <div class="col-sm-4">
-		    	<div class="form-group" ng-class="{ 'has-error' : submitted &&  newUserForm.email.$invalid }">
+				
+				<div class="form-group" ng-class="{ 'has-error' : (newUserForm.email.$touched || submitted ) &&  newUserForm.email.$invalid }">
 				    <input type="text" name="email" class="form-control" ng-model="newUser.email" placeholder="Email" required >
-				    <p ng-show="submitted && newUserForm.email.$error.required" class="help-block">required field</p>
+				    <p ng-show="(newUserForm.email.$touched || submitted ) && newUserForm.email.$error.required" class="help-block">required field</p>
 				</div>
 		    </div>
 		    
@@ -54,7 +56,7 @@
 		</div>
 		
 		<div class="row">
-			 <div class="col-sm-2">
+			 <div class="col-sm-3">
 			    <select class="form-control" ng-model="newUser.occupation" ng-change="updateOccupationOtherVisible()"> 
 				          <option ng-selected="true">Occupation</option>
 				          <option>Veterinarian</option>
@@ -63,7 +65,7 @@
 				          <option>Others</option>
  					   </select>
 			</div>
-		  	<div class="col-sm-2" >
+		  	<div class="col-sm-3" >
 			    <div  class="form-group" ng-class="{ 'has-error' : newUserForm.occupationOther.$invalid && !newUserForm.occupationOther.$pristine }">
 				    <input ng-disabled ="!occupationOtherVisible" type="text" name="occupationOther" class="form-control" ng-model="newUser.occupationOther" placeholder="Other Occupation"   >
 				    <p ng-show="newUserForm.occupation.$invalid" class="help-block">required field</p>

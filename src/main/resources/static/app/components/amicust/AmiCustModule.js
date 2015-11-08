@@ -89,6 +89,7 @@
 						var hospitalName =  response.data.hospitalName;
 						var hospitalId =  response.data.hospitalId;
 						var masterUser =  response.data.masterUser;
+						var userEmail =  response.data.email;
 
 						var amiUser = {
 							getUserName: function(){
@@ -102,6 +103,9 @@
 							},
 							getMasterUser: function(){
 								return masterUser;
+							},
+							getUserEmail: function(){
+								return userEmail;
 							}
 						};
 						
@@ -123,7 +127,7 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest) {
+		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest, myHospital) {
 			
 			$scope.page = 'newRequest';
 			
@@ -204,12 +208,26 @@
 			// ----- End of Set the breeds -----
 			
 			
+			
+			$scope.hospitalEmails = myHospital.hospital.emails;
+			$scope.userEmailIsHospitalEmail = false;
+			
 			var promise = amiService.getAmiUser();
 			
 			promise.then(function(amiUser) {
 				$scope.userName     = amiUser.getUserName();
 				$scope.hospitalName = amiUser.getHospitalName();
 				$scope.hospitalId = amiUser.getHospitalId();
+				$scope.userEmail =  amiUser.getUserEmail();
+				
+				
+				for(var i = 0; i < $scope.hospitalEmails.length; i++) {
+				    if ($scope.hospitalEmails[i] == $scope.userEmail) {
+				    	$scope.userEmailIsHospitalEmail = true;
+				    	return;
+				    }
+				}
+				
 			}, 
 			function(response) {
 			  alert( response.data.message);
@@ -220,8 +238,6 @@
 			
 			$scope.animalWeightUomList  = ['LB', 'KG'];
 			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
-//			$scope.breedsList 			= ['Select Breed'];
-//			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
 			$scope.animalAgeYearsList 	= [Years ];
 			$scope.animalAgeMonthsList =  [Months];
@@ -328,7 +344,6 @@
 				}
 				
 			}
-			//$scope.disableBreedList = true;
 			$scope.updateBreedListBox = function(){
 				var speciesValue        = $scope.newRequest.patientInfo.species;
 				
@@ -390,6 +405,14 @@
 			}
 			
 			
+			$scope.sendRequestToPersonalEmail =function(isSendRequestToPersonalEmail){
+				if(isSendRequestToPersonalEmail){
+					$scope.newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail = true;
+				}else{
+					$scope.newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail = false;
+				}
+				
+			}
 			$scope.isEmployee =function(isEmployee){
 				if(isEmployee){
 					$scope.newRequest.hospitalAndClientInfo.isEmployee	  = true;
@@ -398,6 +421,7 @@
 				}
 				
 			}
+			
 			
 			$scope.isInterpretationOnly =function(isInterpretationOnly){
 				if(isInterpretationOnly){
@@ -787,10 +811,9 @@
 			$scope.confirmPwd = '';
 			
 			$scope.cancel = function(){
-//				$scope.submitted = false;
-//				$scope.newUser = newUserFactory.getNewUser();
 				$location.path('/profile');
 			}
+			
 			
 			$scope.saveNewUser = function(){
 				
@@ -819,6 +842,19 @@
 					$scope.occupationOtherVisible = true;
 				}else{
 					$scope.occupationOtherVisible = false;
+				}
+			}
+			
+			$scope.doesntMatchPwd = function(){
+				
+				console.log("pwd        " + $scope.newUser.pwd );
+				console.log("confirmPwd " + $scope.confirmPwd );
+				if($scope.newUser.pwd  == $scope.confirmPwd ){
+					console.log(" match" );
+					return false;
+				}else{
+					console.log("doesn't match" );
+					return true;
 				}
 			}
 			

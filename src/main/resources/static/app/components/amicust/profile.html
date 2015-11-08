@@ -32,6 +32,14 @@
 				    <p id="hospitalAddressId"  >{{hospital.hospital.address}}</p>
 				</div>
 		    </div>
+		     <div class="col-sm-4">
+		    	<label for="hospitalAddressId">Default Emails (used to email reports) </label>
+			    <div class="form-group">
+				     <ul ng-repeat="anEmail in hospital.hospital.emails">
+						   	<li>{{anEmail}}</td>
+					</ul>
+				</div>
+		    </div>
 		    
 		      <div class="col-sm-12">
 			    <div class="form-group">
@@ -46,6 +54,7 @@
 						   	<th>User Name</th>
 						   	<th>First Name</th>
 						   	<th>Last Name</th>
+						   	<th>Email</th>
 						   	<th></th>
 						   </tr>
 						  </thead>
@@ -54,6 +63,7 @@
 						   	<td>{{anAmiUser.user}}</td>
 						   	<td>{{anAmiUser.firstName}}</td>
 						   	<td>{{anAmiUser.lastName}}</td>
+						   	<td>{{anAmiUser.email}}</td>
 						   	<td><a ng-show="masterUser" href="#/profile" >Edit User</a></td>
 						   </tr>
 						   </tbody>

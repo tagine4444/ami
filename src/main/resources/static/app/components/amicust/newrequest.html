@@ -28,12 +28,28 @@
 	    <div class="row">
 	    
 	    	
-		    <div class="col-sm-3">
+		    <div class="col-sm-4">
 		    	<div class="input-group input-group-sm" ng-class="{ 'has-error' : newRequestForm.vetId.$invalid }">
 				   <span class="input-group-addon" id="vetRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" id="vetRequiredIconSpan"></span></span>
 				  <input aria-describedby="vetRequiredIcon" type="text" name="vetId" class="form-control" id="vet" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
 				</div>
 		    </div>
+		    
+		     <div class="col-sm-4" ng-show="!userEmailIsHospitalEmail">
+			    <span >Send the report to your own email? </span> &nbsp;
+			    
+			    <label class="radio-inline">
+				  <input  type="radio"  id="emailRadio1" ng-click='sendRequestToPersonalEmail(true)' ng-model="newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail" ng-checked="newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail" >Yes
+				</label>
+				<label class="radio-inline">
+				  <input type="radio"  id="emailRadio2"  ng-click='sendRequestToPersonalEmail(false)' ng-checked="!newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail" >No
+				</label>
+			</div>
+			
+			<div class="col-sm-3" >
+				<a href =""  data-toggle="modal" data-target="#myEmailModal" >See who this report is emailed to</a>
+			</div>
+			
 		</div>
 		<br/>
 		<!--  Clients  Row -->
@@ -398,6 +414,34 @@
 </form>	    
 	   
 	   
+	 <!-- Modal -->
+	<div class="modal fade bs-example-modal-lg" id="myEmailModal" tabindex="-1" role="dialog" aria-labelledby="myEmailModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myEmailModalLabel">Report Email Notification</h4>
+	      </div>
+	      <div class="modal-body">
+				<div class="row">
+		          <div class="col-md-12">
+		          		<p>When the report is ready, a notification will be send to the following email(s).</p>
+		         		<ul ng-repeat="aHospitalEmail in hospitalEmails">
+		         			<li><strong>{{aHospitalEmail}}</strong></li>
+		         		</ul>
+		          </div>
+		          
+		          <div class="col-md-12" ng-show="!userEmailIsHospitalEmail">
+		          	<p>Check <strong>Yes</strong> to <strong>Send the report to your own email?</strong>, and a notification will also be sent to your email: <strong>{{userEmail}}</strong></p>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	   
    <!-- Modal -->
 	<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -421,13 +465,6 @@
 			  		</tr>
 			  	</thead>
 			  	<tbody ng-repeat="aService in servicesListByCategory">
-	<!-- 			        		<tr ng-repeat="aValue in value track by $index">  -->
-	<!-- 					  			<td>{{key}}</td> -->
-	<!-- 					  			<td>{{aValue}}</td> -->
-	<!-- 					  			<td> -->
-	<!-- 					  			 	<button  type="button" class="btn btn-primary btn-sm" data-dismiss="modal" ng-click="selectThisService(key,aValue)">Add</button> -->
-	<!-- 					  			</td> -->
-	<!-- 				  			</tr> -->
 		        		<tr> 
 				  			<td>{{aService.name}}</td>
 				  			<td>
