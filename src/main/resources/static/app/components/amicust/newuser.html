@@ -9,7 +9,7 @@
 	  	<div class="row">
 	  		<div class="col-sm-3">
 			    <div class="form-group" ng-class="{ 'has-error' : (newUserForm.userName.$touched || submitted ) && newUserForm.userName.$invalid }">
-				    <input type="text" name="userName" name="userName" class="form-control" ng-model="newUser.userName" placeholder="User Name" ng-minlength="5" required="required" >
+				    <input type="text" id="userName" name="userName" class="form-control" ng-model="newUser.userName" placeholder="User Name" ng-minlength="5" required="required" >
 				    <p ng-show="(newUserForm.userName.$touched || submitted ) && newUserForm.userName.$error.required" class="help-block">Must be at least 5 characters</p>
 				    <p ng-show="(newUserForm.userName.$touched || submitted ) && newUserForm.userName.$error.minlength" class="help-block">Must be at least 5 characters</p>
 				</div>

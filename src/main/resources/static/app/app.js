@@ -360,7 +360,14 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                                 				return result.data;
                                 			}	
                                 		);
-                                 }]
+                                 }],
+                                 myHospital: ['animalService', function (animalService) {
+                              		return animalService.getHospital().then(
+                              			function(result){
+                              				return result.data;
+                              			}	
+                              		);
+                                  }]  
                         	 
                         	 }// resolve
                         }).
