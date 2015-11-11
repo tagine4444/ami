@@ -127,12 +127,16 @@
 		
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest, myHospital) {
+		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest, myHospital) {
 			
 			$scope.page = 'newRequest';
 			
+		
+			$scope.caseNumber =  $route.current.params.requestNumber;;
+			
 			// this is a hack the files uploads should be in imagesAndDocuments
-			var isUpdate = new Boolean(myAmiRequest.amiRequest);
+//			var isUpdate = new Boolean(myAmiRequest.amiRequest);
+			var isUpdate = new Boolean($scope.caseNumber);
 			$scope.isEditable = true;
 			
 			if(isUpdate==true){
@@ -488,12 +492,13 @@
 					
 					$scope.saveAction == '';
 						
-					var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+					var data = {caseNumber: $scope.caseNumber, amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
 					
 					var res = $http.post('amicusthome/amidraftrequest',data);
 					res.success(function(data, status, headers, config) {
 //					$scope.newRequest.id = data.id;
-						$scope.newRequest.requestNumber = data.requestNumber;
+//						$scope.newRequest.requestNumber = data.requestNumber;
+						$scope.caseNumber = data.requestNumber;
 						//$location.path('/searchRequest');
 					});
 					res.error(function(data, status, headers, config) {
@@ -507,11 +512,12 @@
 					
 					if ($scope.newRequestForm.$valid) {
 					
-						var data = {amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+						var data = {caseNumber: $scope.caseNumber,amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
 						
 						var res = $http.post('amicusthome/amirequest',data);
 						res.success(function(data, status, headers, config) {
-							$scope.newRequest.requestNumber = data.requestNumber;
+//							$scope.newRequest.requestNumber = data.requestNumber;
+							$scope.caseNumber = data.requestNumber;
 							$location.path('/searchRequest');
 						});
 						res.error(function(data, status, headers, config) {
@@ -539,7 +545,8 @@
 				
 					fileSubmitted: function ($flow, $file, $message) {
 						 
-						var reqNumber = $scope.newRequest.requestNumber;
+						//var reqNumber = $scope.newRequest.requestNumber;
+						var reqNumber = $scope.caseNumber;
 						$flow.opts.query = { requestNumber: reqNumber };
 					    //$file.msg = $message;// Just display message for a convenience
 
@@ -547,8 +554,9 @@
 					
 					fileCompleted: function ($flow, $file, $message) {
 					    
-					    var myRequestNumber = $scope.newRequest.requestNumber;
-					    var promise = animalService.getUploadedFiles(myRequestNumber);
+//					    var myRequestNumber = $scope.newRequest.requestNumber;
+//					    var myRequestNumber = $scope.caseNumber;
+					    var promise = animalService.getUploadedFiles($scope.caseNumber);
 						
 						promise.then(function(result) {
 							$scope.fileUploads  = result.data;
@@ -579,7 +587,7 @@
 		    
 		    $scope.deleteUploadedFile = function (fileName) {
 		    	
-		    	var data = {requestNumber: $scope.newRequest.requestNumber , fileName: fileName};
+		    	var data = {requestNumber: $scope.caseNumber , fileName: fileName};
 				
 				var res = $http.post('/ami/upload/delete',data).then(function(response) {
 					
@@ -593,12 +601,14 @@
 		    }
 		    
 		    $scope.hasBeenSaved = function(){
-				var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
+//				var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
+				var hasBeenSaved = Boolean( $scope.caseNumber );
 				return hasBeenSaved;
 			}
 		    
 		    $scope.showTransferFileMsg = function(){
-				var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
+				//var hasBeenSaved = Boolean( $scope.newRequest.requestNumber );
+				var hasBeenSaved = Boolean( $scope.caseNumber );
 				var uploadSelected = $scope.newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload
 				return !hasBeenSaved && uploadSelected;
 			}

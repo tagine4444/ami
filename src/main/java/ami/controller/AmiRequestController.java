@@ -97,19 +97,6 @@ public class AmiRequestController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	///ami/amicusthome/amirequest?animalName=
-	
-	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/pending", method = RequestMethod.GET)
 	@ResponseBody
@@ -156,10 +143,10 @@ public class AmiRequestController {
 		final String userName = (String) dbObject.get("userName");
 		final String hospitalName = (String) dbObject.get("hospitalName");
 		final String hospitalId = (String) dbObject.get("hospitalId");
-		
+		final String caseNumber = (String) dbObject.get("caseNumber");
 		AmiRequest amiRequest1 = objectMapper.readValue(amiRequest.toString(), AmiRequest.class);
 		
-		amiRequestService.submitAmiRequestToRadiologist(amiRequest1 ,userName , hospitalName,hospitalId);
+		amiRequestService.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId);
 		
 		return "{}";
 	}
@@ -168,7 +155,7 @@ public class AmiRequestController {
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amidraftrequest", method = RequestMethod.POST)
 	@ResponseBody
-	public String amiRequestSaveAsDraft(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
+	public String createCaseAsDraft(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		
 		DBObject dbObject = (DBObject)JSON.parse(data);
 		final BasicDBObject amiRequest = (BasicDBObject) dbObject.get("amiRequest");
@@ -177,13 +164,15 @@ public class AmiRequestController {
 		System.out.println(jsonString);
 		AmiRequest req = objectMapper.readValue(jsonString, AmiRequest.class);
 		
-		
+		final String caseNumber = (String) dbObject.get("caseNumber");
 		final String userName = (String) dbObject.get("userName");
 		final String hospitalName = (String) dbObject.get("hospitalName");
 		final String hospitalId = (String) dbObject.get("hospitalId");
 		
-		String requestNumber = amiRequestService.saveAmiRequestAsDraft(req ,userName , hospitalName, hospitalId ,new DateTime());
+		String requestNumber = amiRequestService.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime());
 		
 		return "{\"requestNumber\": \""+requestNumber+"\"}";
 	}
+	
+	
 }

@@ -23,7 +23,9 @@ public interface AmiRequestService {
 	
 	
 	
-	void createAmiRequestView(AmiRequest amiRequestJson, String userName,   String hospitalName , String hospitalid, 
+	void createAmiRequestView(
+			String caseNumber, 
+			AmiRequest amiRequestJson, String userName,   String hospitalName , String hospitalid, 
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
     		DateTime interpretationInProgress,              
     		DateTime interpretationReadyForReview,          
@@ -31,16 +33,16 @@ public interface AmiRequestService {
 //    		boolean editable, 
     		DateTime time) throws JsonProcessingException;
 
-	void submitAmiRequestToRadiologist(AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId);
+	void submitAmiRequestToRadiologist(String caseNumber,AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId);
 	
-	String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime);
+	String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime);
 
 	
 	void updateUploadedFileList(FileUploadInfo fileUploadInfo, DateTime time)
 			throws JsonProcessingException;
 
 
-	AmiRequestView updateAmiRequestView(AmiRequest amiRequestJson, String userName,
+	AmiRequestView updateAmiRequestView(String caseNumber, AmiRequest amiRequestJson, String userName,
 			String hospitalName, String hospitalId,
 			DateTime hasBeenSavedAndSubmittedToRadiologist,
 			DateTime interpretationInProgress,

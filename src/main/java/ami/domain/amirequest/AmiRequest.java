@@ -1,8 +1,5 @@
 package ami.domain.amirequest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class AmiRequest {
 	
-	private String requestNumber;
+//	private String requestNumber;
 	private HospitalAndClientInfo hospitalAndClientInfo;
 	private PatientInfo patientInfo;
 	private RequestedServices requestedServices;
@@ -25,7 +22,7 @@ public class AmiRequest {
 			PatientInfo patientInfo, RequestedServices requestedServices,        
 			VetObservation vetObservation,ImagesAndDocuments imagesAndDocuments ) {
 		
-		this.requestNumber        =  requestNumber;                  
+//		this.requestNumber        =  requestNumber;                  
 		this.hospitalAndClientInfo = hospitalAndClientInfo;
 		this.patientInfo           = patientInfo;               
 		this.requestedServices     = requestedServices;      
@@ -33,9 +30,9 @@ public class AmiRequest {
 		this.imagesAndDocuments    = imagesAndDocuments;
 	}
 	
-	public String getRequestNumber() {
-		return requestNumber;
-	}
+//	public String getRequestNumber() {
+//		return requestNumber;
+//	}
 	public HospitalAndClientInfo getHospitalAndClientInfo() {
 		return hospitalAndClientInfo;
 	}
@@ -52,14 +49,14 @@ public class AmiRequest {
 		return imagesAndDocuments;
 	}
 	
-	public boolean hasRequestNumber(){
-		return ! StringUtils.isEmpty(this.requestNumber);
-		
-	}
-
-	public void setRequestNumber(String requestNumber) {
-		this.requestNumber = requestNumber;
-		
-	}
+//	public boolean hasRequestNumber(){
+//		return ! StringUtils.isEmpty(this.requestNumber);
+//		
+//	}
+//
+//	public void setRequestNumber(String requestNumber) {
+//		this.requestNumber = requestNumber;
+//		
+//	}
 
 }

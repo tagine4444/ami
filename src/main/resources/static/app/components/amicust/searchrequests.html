@@ -27,7 +27,7 @@
 				  </thead>
 				  <tbody>
 				   <tr ng-repeat="aPendingRequest in pendingRequests">
-				   	<td><a href="#/editRequest/{{aPendingRequest.amiRequest.requestNumber}}"  ng-click="tab = 4">View Request {{aPendingRequest.amiRequest.requestNumber}}</a></td>
+				   	<td><a href="#/editRequest/{{aPendingRequest.caseNumber}}"  ng-click="tab = 4">View Request {{aPendingRequest.caseNumber}}</a></td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
@@ -62,7 +62,7 @@
 			  </thead>
 			  <tbody>
 			   <tr ng-repeat="aDraftRequest in draftRequests">
-			   	<td><a href="#/editRequest/{{aDraftRequest.amiRequest.requestNumber}}"  ng-click="tab = 4">Edit Request {{aDraftRequest.amiRequest.requestNumber}}</a></td>
+			   	<td><a href="#/editRequest/{{aDraftRequest.caseNumber}}"  ng-click="tab = 4">Edit Request {{aDraftRequest.caseNumber}}</a></td>
 			   	<td>{{aDraftRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.animalName}}</td>
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.species}} - {{aDraftRequest.amiRequest.patientInfo.breeds}}</td>
@@ -113,7 +113,7 @@
 				  </thead>
 				  <tbody>
 				   <tr ng-repeat="aSearchResult in searchResults">
-				   	<td><a href="#/editRequest/{{aSearchResult.amiRequest.requestNumber}}"  ng-click="tab = 4">{{aSearchResult.amiRequest.requestNumber}}</a></td>
+				   	<td><a href="#/editRequest/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">{{aSearchResult.caseNumber}}</a></td>
 				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.species}} - {{aSearchResult.amiRequest.patientInfo.breeds}}</td>

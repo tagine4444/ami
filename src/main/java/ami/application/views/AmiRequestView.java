@@ -10,7 +10,7 @@ import ami.domain.amirequest.FileUploadInfo;
 public class AmiRequestView {
 	
 //	@JsonRawValue
-//	private String amiRequest;
+	private String caseNumber;
 	private AmiRequest amiRequest;
 	private String userName;
 	private String hospitalName;
@@ -30,7 +30,7 @@ public class AmiRequestView {
 	private List<FileUploadInfo> fileUploads ;
 	
 	
-	public AmiRequestView( AmiRequest amiRequest, String userName,
+	public AmiRequestView( String caseNumber, AmiRequest amiRequest, String userName,
 			String hospitalName,
 			String hospitalId,
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
@@ -45,6 +45,7 @@ public class AmiRequestView {
 			String updateDateString,
 			DateTime updateDate) {
 		
+		this.caseNumber = caseNumber;
 		this.amiRequest    = amiRequest;   
 		this.userName      = userName;     
 		this.hospitalId    = hospitalId;
@@ -149,6 +150,11 @@ public class AmiRequestView {
 
 	public DateTime getUpdateDate() {
 		return updateDate;
+	}
+
+
+	public String getCaseNumber() {
+		return caseNumber;
 	}
 
 }

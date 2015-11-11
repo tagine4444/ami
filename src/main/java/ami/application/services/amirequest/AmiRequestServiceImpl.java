@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
@@ -56,27 +57,30 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 	
 	@Override
-	public void submitAmiRequestToRadiologist(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
+	public void submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
 		
 		DateTime hasBeenSavedAndSubmittedToRadiologist = new DateTime();
 		
 		
+//		String requestNumber = amiRequestJson.getRequestNumber();
+//		String requestNumber = caseNumber;
 		
-		String requestNumber = amiRequestJson.getRequestNumber();
-		if( !amiRequestJson.hasRequestNumber()){
+		final boolean isCreate = StringUtils.isEmpty(caseNumber);
+		
+		
+		if( isCreate ){
 //			boolean editable = false;
-			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
-			amiRequestJson.setRequestNumber(requestNumber);
+			caseNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
+//			amiRequestJson.setRequestNumber(requestNumber);
 			
-			commandGateway.sendAndWait(new SubmitNewAmiRequestCmd(requestNumber,amiRequestJson, userName, 
+			commandGateway.sendAndWait(new SubmitNewAmiRequestCmd(caseNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
 					hasBeenSavedAndSubmittedToRadiologist
 					//, editable
 					));
 		}else{
 			
-			boolean editable = false;
-			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(requestNumber,amiRequestJson, userName, 
+			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(caseNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
 					hasBeenSavedAndSubmittedToRadiologist, 
 //					editable, 
@@ -88,46 +92,32 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	}
 	
 	@Override 
-	public String saveAmiRequestAsDraft(AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId, DateTime dateTime) {
+	public String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId, DateTime dateTime) {
 		
-//		DBObject dbObject = (DBObject) JSON.parse(amiRequestJson);
-//		String requestNumber =  (String)dbObject.get("requestNumber");
-//		
-//		if( StringUtils.isEmpty(requestNumber)){
-//			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
-//			dbObject.put("requestNumber", requestNumber);
-//		}
+		String myCaseNumber = caseNumber;
 		
-		String requestNumber = amiRequestJson.getRequestNumber();
-		final boolean isUpdate = amiRequestJson.hasRequestNumber();
+		final boolean isCreate = StringUtils.isEmpty(caseNumber);
 		
-		
-//		DateTime hasBeenSavedAndSubmittedToRadiologist= null;
-//		DateTime interpretationInProgress= null;
-//		DateTime interpretationReadyForReview= null;
-//		DateTime interpretationReadyComplete= null;
-//		boolean editable= true;
-		
-		if( !isUpdate){
-			requestNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
-			amiRequestJson.setRequestNumber(requestNumber);
+		if( isCreate){
+			myCaseNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
+//			amiRequestJson.setRequestNumber(myCaseNumber);
 			
-			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId
+			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(myCaseNumber, amiRequestJson, userName, hospitalName,  hospitalId
 //					,editable
 					));
 		}else{
 			
-			commandGateway.sendAndWait(new UpdateAmiRequestAsDraftCmd(requestNumber, amiRequestJson, userName, hospitalName,  hospitalId
+			commandGateway.sendAndWait(new UpdateAmiRequestAsDraftCmd(myCaseNumber, amiRequestJson, userName, hospitalName,  hospitalId
 //					,editable
 					, new DateTime()));
 		}
 		
-		return requestNumber;
+		return myCaseNumber;
 	}
 
 
 	@Override
-	public void createAmiRequestView(AmiRequest amiRequestJson, String userName,
+	public void createAmiRequestView(String caseNumber, AmiRequest amiRequestJson, String userName,
 			String hospitalName, String hospitalid, 
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
 			DateTime interpretationInProgress,              
@@ -142,7 +132,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	    
 		boolean editable = hasBeenSavedAndSubmittedToRadiologist==null;
 		
-		AmiRequestView  view = new AmiRequestView( amiRequestJson,  userName, hospitalName, 
+		AmiRequestView  view = new AmiRequestView( caseNumber, amiRequestJson,  userName, hospitalName, 
 				hospitalid,
 				hasBeenSavedAndSubmittedToRadiologist,  
 				interpretationInProgress,
@@ -161,7 +151,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 	
 	@Override
-	public AmiRequestView updateAmiRequestView(AmiRequest amiRequest,
+	public AmiRequestView updateAmiRequestView(String caseNumber ,AmiRequest amiRequest,
 			String userName, String hospitalName, String hospitalId,
 			DateTime hasBeenSavedAndSubmittedToRadiologist,
 			DateTime interpretationInProgress,
@@ -173,11 +163,11 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		  
 //	    String updateDateString = AMI_DATE_FOMRATTER.print(updateDate);
 	    String updateDateString = new DateTimeToStringConverter().convert(updateDate);
-	    final String requestNumberJson = "amiRequest.requestNumber";
+	    final String requestNumberJson = "caseNumber";
 		
 	    boolean editable = hasBeenSavedAndSubmittedToRadiologist ==null;
 	    
-		Query query = new Query(Criteria.where(requestNumberJson).is(amiRequest.getRequestNumber()));
+		Query query = new Query(Criteria.where(requestNumberJson).is(caseNumber));
 		Update update = new Update() ;
 		update.set("amiRequest", amiRequest);
 		update.set("updateDateString", updateDateString);
@@ -193,7 +183,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	@Override
 	public AmiRequestView findAmiRequest(String requestNumber) {
 		
-		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("amiRequest.requestNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
+		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("caseNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestView;
 	}
 	
@@ -241,7 +231,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	 @Override
 	 public void updateUploadedFileList(FileUploadInfo info, @Timestamp DateTime time) throws JsonProcessingException {
 	    
-		final String requestNumberJson = "amiRequest.requestNumber";
+		final String requestNumberJson = "caseNumber";
 		final String requestNumber = info.getRequestNumber();
 		 
 		Query query1 = new Query(Criteria.where(requestNumberJson).is(requestNumber));
@@ -254,7 +244,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	 @Override
 	 public void deleteUploadedFile( String fileName, String requestNumber, @Timestamp DateTime time) throws JsonProcessingException {
 		 
-		 final String requestNumberJson = "amiRequest.requestNumber";
+		 final String requestNumberJson = "caseNumber";
 		 
 		 Query query1 = new Query(Criteria.where(requestNumberJson).is(requestNumber));
 		 Update update = new Update() ;
@@ -302,7 +292,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	@Override
 	public List<FileUploadInfo> getUploadedFile(String requestNumber) {
 		
-		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("amiRequest.requestNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
+		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("caseNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestView.getFileUploads();
 	}
 

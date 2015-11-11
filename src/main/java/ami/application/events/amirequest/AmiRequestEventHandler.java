@@ -21,7 +21,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(NewAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
        
-    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(), 
+    	amiServiceRequestSvc.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(), 
     			event.getHospitalName(), event.getHospitalId(), 
     			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
     			null,null,
@@ -40,7 +40,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestSavedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.createAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
+    	amiServiceRequestSvc.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null, null,null,null,
     			time);
@@ -51,7 +51,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestUpdatedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
+    	amiServiceRequestSvc.updateAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null,null,null,null, 
     			true,
@@ -61,7 +61,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(DraftAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.updateAmiRequestView(event.getAmiRequestJson(), event.getUserName(),
+    	amiServiceRequestSvc.updateAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			event.getHasBeenSavedAndSubmittedToRadiologist(),null,null,null, 
     			true,
