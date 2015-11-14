@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.application.services.amirequest.AmiRequestService;
 import ami.application.views.AmiRequestView;
 import ami.domain.model.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.security.AmiAuthtorities;
 
@@ -41,7 +41,7 @@ public class AmiRequestController {
 	public static final String UPLOAD_DIR = "uploads";
 	
 	@Autowired
-	private AmiRequestService amiRequestService;
+	private AmiRequestRepository amiRequestService;
 	
 	
 	@Autowired

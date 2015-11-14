@@ -6,8 +6,8 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ami.application.services.amirequest.AmiRequestService;
 import ami.domain.model.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class AmiRequestEventHandler {
 
 	@Autowired
-	private AmiRequestService amiServiceRequestSvc;
+	private AmiRequestRepository amiServiceRequestSvc;
 
     @EventHandler
     public void handle(NewAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {

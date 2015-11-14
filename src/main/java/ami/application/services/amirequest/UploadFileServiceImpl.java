@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.UploadFileCommand;
+import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.web.HttpUtils;
 import ami.web.ResumableInfo;
@@ -31,7 +32,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 	private CommandGateway commandGateway;
 	
 	@Autowired
-	private AmiRequestService amiRequestService;
+	private AmiRequestRepository amiRequestService;
 	
 	
 	@Override

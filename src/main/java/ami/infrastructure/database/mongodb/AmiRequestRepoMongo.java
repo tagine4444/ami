@@ -1,4 +1,4 @@
-package ami.application.services.amirequest;
+package ami.infrastructure.database.mongodb;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,13 +27,14 @@ import ami.application.services.utils.MongoSequenceService;
 import ami.application.views.AmiRequestView;
 import ami.application.views.AmiUserView;
 import ami.domain.model.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.web.converters.DateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
-public class AmiRequestServiceImpl implements AmiRequestService {
+public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
 	public final static String AMIREQUEST_VIEW = "viewAmirequest";
 	public final static String DATE_FORMAT     = "yyyy-MM-dd HH:mm:ss";

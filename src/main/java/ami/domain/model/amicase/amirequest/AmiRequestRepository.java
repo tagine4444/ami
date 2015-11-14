@@ -1,17 +1,15 @@
-package ami.application.services.amirequest;
+package ami.domain.model.amicase.amirequest;
 
 import java.util.List;
 
 import org.joda.time.DateTime;
 
 import ami.application.views.AmiRequestView;
-import ami.domain.model.amicase.amirequest.AmiRequest;
-import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
-public interface AmiRequestService {
+public interface AmiRequestRepository {
 	
 	
 	AmiRequestView findAmiRequest(String requestNumber);
