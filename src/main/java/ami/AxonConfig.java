@@ -8,7 +8,6 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventhandling.annotation.AnnotationEventListenerAdapter;
 import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.eventstore.EventStore;
@@ -21,8 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import ami.axon.annotated.ToDoEventHandler;
-import ami.axon.annotated.ToDoItem;
 import ami.domain.SecurityAggregate;
 import ami.domain.amicase.AmiCase;
 
@@ -102,21 +99,7 @@ public class AxonConfig {
    }
    
    
-   // ==================================== TodoItem ====================================
-   @Bean(name = "todoItemRepository")
-   public Repository<ToDoItem> todoItemRepository() {
-	   
-	   EventSourcingRepository<ToDoItem> repository = new EventSourcingRepository<ToDoItem>(ToDoItem.class, eventStore());
-	   repository.setEventBus(eventBus());
-	   return repository;
-   }
-   
-   @SuppressWarnings("unchecked")
-   @Bean
-   public AggregateAnnotationCommandHandler<ToDoItem> groupCommandHandler() {
-       AggregateAnnotationCommandHandler<ToDoItem> commandHandler = AggregateAnnotationCommandHandler.subscribe(ToDoItem.class, todoItemRepository(), commandBus());
-       return commandHandler;
-   }
+  
    
    
 //   @Bean
