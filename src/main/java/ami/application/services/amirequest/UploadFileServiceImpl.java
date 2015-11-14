@@ -20,7 +20,7 @@ import ami.application.commands.amirequest.UploadFileCommand;
 import ami.controller.HttpUtils;
 import ami.controller.ResumableInfo;
 import ami.controller.ResumableInfoStorage;
-import ami.domain.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 @Service
 public class UploadFileServiceImpl implements UploadFileService{

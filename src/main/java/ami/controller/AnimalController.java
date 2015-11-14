@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ami.application.services.animals.AnimalService;
-import ami.domain.amicase.Animals;
+import ami.domain.model.amicase.Animals;
 
 @Controller
 public class AnimalController {

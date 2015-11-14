@@ -1,4 +1,4 @@
-package ami.domain.amicase.amirequest;
+package ami.domain.model.amicase.amirequest;
 
 import org.springframework.util.StringUtils;
 

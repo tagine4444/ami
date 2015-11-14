@@ -10,7 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import ami.domain.amicase.Animals;
+import ami.domain.model.amicase.Animals;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {

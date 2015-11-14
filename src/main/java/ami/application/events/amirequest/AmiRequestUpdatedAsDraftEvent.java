@@ -2,7 +2,7 @@ package ami.application.events.amirequest;
 
 import org.joda.time.DateTime;
 
-import ami.domain.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.AmiRequest;
 
 public class AmiRequestUpdatedAsDraftEvent {
 

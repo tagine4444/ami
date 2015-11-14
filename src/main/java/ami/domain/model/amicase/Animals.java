@@ -1,4 +1,4 @@
-package ami.domain.amicase;
+package ami.domain.model.amicase;
 
 import java.util.List;
 

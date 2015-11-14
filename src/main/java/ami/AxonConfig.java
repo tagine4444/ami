@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import ami.domain.SecurityAggregate;
-import ami.domain.amicase.AmiCase;
+import ami.domain.model.amicase.AmiCase;
 
 import com.mongodb.Mongo;
 

@@ -1,4 +1,4 @@
-package ami.domain.amicase;
+package ami.domain.model.amicase;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,8 +22,8 @@ import ami.application.events.amirequest.DraftAmiRequestSubmittedEvent;
 import ami.application.events.amirequest.NewAmiRequestSubmittedEvent;
 import ami.application.events.amirequest.UploadFileRequestedEvent;
 import ami.application.events.amirequest.UploadedFileDeletedEvent;
-import ami.domain.amicase.amirequest.AmiRequest;
-import ami.domain.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 public class AmiCase extends AbstractAnnotatedAggregateRoot {
 

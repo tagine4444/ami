@@ -2,7 +2,7 @@ package ami.application.services.animals;
 
 import java.util.List;
 
-import ami.domain.amicase.Animals;
+import ami.domain.model.amicase.Animals;
 
 
 public interface AnimalService {

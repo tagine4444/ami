@@ -26,9 +26,9 @@ import ami.application.services.security.AmiUserService;
 import ami.application.services.utils.MongoSequenceService;
 import ami.application.views.AmiRequestView;
 import ami.application.views.AmiUserView;
-import ami.converters.DateTimeToStringConverter;
-import ami.domain.amicase.amirequest.AmiRequest;
-import ami.domain.amicase.amirequest.FileUploadInfo;
+import ami.controller.converters.DateTimeToStringConverter;
+import ami.domain.model.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

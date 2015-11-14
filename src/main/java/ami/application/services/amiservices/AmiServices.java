@@ -2,9 +2,9 @@ package ami.application.services.amiservices;
 
 import java.util.List;
 
-import ami.domain.amicase.amiservices.AmiServiceCategory;
-import ami.domain.amicase.amiservices.AmiServiceMap;
-import ami.domain.amicase.amiservices.Services;
+import ami.domain.model.amicase.amiservices.AmiServiceCategory;
+import ami.domain.model.amicase.amiservices.AmiServiceMap;
+import ami.domain.model.amicase.amiservices.Services;
 
 public interface AmiServices {
 

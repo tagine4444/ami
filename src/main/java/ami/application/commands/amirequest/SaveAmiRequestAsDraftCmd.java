@@ -3,7 +3,7 @@ package ami.application.commands.amirequest;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.joda.time.DateTime;
 
-import ami.domain.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.AmiRequest;
 
 public class SaveAmiRequestAsDraftCmd {
 	

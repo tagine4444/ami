@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ami.application.services.amirequest.AmiRequestService;
-import ami.domain.amicase.amirequest.AmiRequest;
-import ami.domain.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

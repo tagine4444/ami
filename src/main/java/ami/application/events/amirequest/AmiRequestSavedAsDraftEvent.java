@@ -1,6 +1,6 @@
 package ami.application.events.amirequest;
 
-import ami.domain.amicase.amirequest.AmiRequest;
+import ami.domain.model.amicase.amirequest.AmiRequest;
 
 public class AmiRequestSavedAsDraftEvent {
 

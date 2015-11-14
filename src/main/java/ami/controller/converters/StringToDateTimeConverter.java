@@ -1,4 +1,4 @@
-package ami.converters;
+package ami.controller.converters;
 
 import org.joda.time.DateTime;
 import org.springframework.core.convert.converter.Converter;
