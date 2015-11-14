@@ -1,4 +1,4 @@
-package ami.domain.referencedata;
+package ami.domain.amicase;
 
 import java.util.List;
 

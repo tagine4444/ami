@@ -1,4 +1,4 @@
-package ami.domain.referencedata.amiservices;
+package ami.domain.amicase.amiservices;
 
 public enum AmiServiceCategory {
 

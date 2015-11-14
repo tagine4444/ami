@@ -22,8 +22,8 @@ import ami.application.events.amirequest.DraftAmiRequestSubmittedEvent;
 import ami.application.events.amirequest.NewAmiRequestSubmittedEvent;
 import ami.application.events.amirequest.UploadFileRequestedEvent;
 import ami.application.events.amirequest.UploadedFileDeletedEvent;
-import ami.domain.amirequest.AmiRequest;
-import ami.domain.amirequest.FileUploadInfo;
+import ami.domain.amicase.amirequest.AmiRequest;
+import ami.domain.amicase.amirequest.FileUploadInfo;
 
 public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 

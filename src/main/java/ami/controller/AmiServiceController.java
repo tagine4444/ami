@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.application.services.amiservices.AmiServices;
-import ami.domain.referencedata.amiservices.AmiServiceMap1;
-import ami.domain.referencedata.amiservices.Services;
+import ami.domain.amicase.amiservices.AmiServiceMap1;
+import ami.domain.amicase.amiservices.Services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

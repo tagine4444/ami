@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.application.services.amirequest.AmiRequestService;
 import ami.application.views.AmiRequestView;
-import ami.domain.amirequest.AmiRequest;
-import ami.domain.amirequest.FileUploadInfo;
+import ami.domain.amicase.amirequest.AmiRequest;
+import ami.domain.amicase.amirequest.FileUploadInfo;
 import ami.domain.security.AmiAuthtorities;
 
 import com.fasterxml.jackson.core.JsonParseException;

@@ -1,4 +1,4 @@
-package ami.domain.amirequest;
+package ami.domain.amicase.amirequest;
 
 import java.util.List;
 

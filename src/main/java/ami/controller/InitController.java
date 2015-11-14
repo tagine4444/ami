@@ -21,13 +21,13 @@ import ami.application.services.amiservices.AmiServices;
 import ami.application.services.animals.AnimalService;
 import ami.application.services.security.AmiUserService;
 import ami.application.services.security.HospitalService;
+import ami.domain.amicase.Animals;
+import ami.domain.amicase.amiservices.AmiServiceCategory;
+import ami.domain.amicase.amiservices.Services;
 import ami.domain.amiusers.AmiUser;
 import ami.domain.amiusers.AmiUserAuthority;
 import ami.domain.hospitals.Hospital;
 import ami.domain.hospitals.Phone;
-import ami.domain.referencedata.Animals;
-import ami.domain.referencedata.amiservices.AmiServiceCategory;
-import ami.domain.referencedata.amiservices.Services;
 import ami.domain.security.AmiAdminAuthority;
 import ami.domain.security.AmiMasterAuthority;
 

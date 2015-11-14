@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import org.joda.time.DateTime;
 import org.springframework.web.multipart.MultipartFile;
 
-import ami.domain.amirequest.FileUploadInfo;
+import ami.domain.amicase.amirequest.FileUploadInfo;
 
 
 public interface UploadFileService {

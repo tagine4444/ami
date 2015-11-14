@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import ami.domain.amirequest.AmiRequest;
-import ami.domain.amirequest.FileUploadInfo;
+import ami.domain.amicase.amirequest.AmiRequest;
+import ami.domain.amicase.amirequest.FileUploadInfo;
 
 public class AmiRequestView {
 	

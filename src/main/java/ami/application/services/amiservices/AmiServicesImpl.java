@@ -7,9 +7,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import ami.domain.referencedata.amiservices.AmiServiceCategory;
-import ami.domain.referencedata.amiservices.AmiServiceMap;
-import ami.domain.referencedata.amiservices.Services;
+import ami.domain.amicase.amiservices.AmiServiceCategory;
+import ami.domain.amicase.amiservices.AmiServiceMap;
+import ami.domain.amicase.amiservices.Services;
 
 @Service
 public class AmiServicesImpl implements AmiServices {

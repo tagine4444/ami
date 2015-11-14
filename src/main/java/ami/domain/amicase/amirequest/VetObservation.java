@@ -1,4 +1,4 @@
-package ami.domain.amirequest;
+package ami.domain.amicase.amirequest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
