@@ -1,4 +1,4 @@
-package ami.application.services.security;
+package ami.infrastructure.database.mongodb.security;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.time.DateTime;
@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.views.AmiUserView;
 import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.amiusers.AmiUserRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 @Service
-public class AmiUserServiceImpl implements AmiUserService{
+public class AmiUserRepoMongo implements AmiUserRepository{
 	
 	private final static String AMI_USER_VIEW = "viewSecAmiuser";
 	

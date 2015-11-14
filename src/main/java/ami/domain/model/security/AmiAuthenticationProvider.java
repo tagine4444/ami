@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import ami.application.services.security.AmiUserService;
 import ami.application.views.AmiUserView;
 import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.amiusers.AmiUserRepository;
 
 @Service
 public class AmiAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
@@ -20,7 +20,7 @@ public class AmiAuthenticationProvider extends AbstractUserDetailsAuthentication
 //	private MongoTemplate mongo;
 	
 	@Autowired
-	private AmiUserService amiUserService;
+	private AmiUserRepository amiUserService;
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails arg0,

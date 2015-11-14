@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ami.application.services.animals.AnimalService;
+import ami.domain.model.amicase.AnimalRepository;
 import ami.domain.model.amicase.Animals;
 
 @Controller
 public class AnimalController {
 
 	@Autowired
-	private AnimalService animalService;
+	private AnimalRepository animalService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;

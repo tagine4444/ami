@@ -22,9 +22,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
-import ami.application.services.amirequest.UploadFileService;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.UploadFileRepository;
 
 @Controller
 public class UploadController {
@@ -33,7 +33,7 @@ public class UploadController {
 	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 	
 	@Autowired
-	private UploadFileService uploadFileService;
+	private UploadFileRepository uploadFileService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;

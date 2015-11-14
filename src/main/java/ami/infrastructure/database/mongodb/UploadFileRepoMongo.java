@@ -1,4 +1,4 @@
-package ami.application.services.amirequest;
+package ami.infrastructure.database.mongodb;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -19,12 +19,13 @@ import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.UploadFileCommand;
 import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.UploadFileRepository;
 import ami.web.HttpUtils;
 import ami.web.ResumableInfo;
 import ami.web.ResumableInfoStorage;
 
 @Service
-public class UploadFileServiceImpl implements UploadFileService{
+public class UploadFileRepoMongo implements UploadFileRepository{
 	
 	public static final String UPLOAD_DIR = "uploads";
 	

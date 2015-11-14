@@ -1,4 +1,4 @@
-package ami.application.services.amiservices;
+package ami.infrastructure.database.mongodb;
 
 import java.util.List;
 
@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 
 import ami.domain.model.amicase.amiservices.AmiServiceCategory;
 import ami.domain.model.amicase.amiservices.AmiServiceMap;
+import ami.domain.model.amicase.amiservices.AmiServicesRepository;
 import ami.domain.model.amicase.amiservices.Services;
 
 @Service
-public class AmiServicesImpl implements AmiServices {
+public class AmiServicesRepoMongo implements AmiServicesRepository {
 	
 	public final static String REFDATA_SERVICES = "refdataServices";
 	

@@ -1,11 +1,10 @@
-package ami.application.services.security;
+package ami.domain.model.security.amiusers;
 
 import ami.application.views.AmiUserView;
-import ami.domain.model.security.amiusers.AmiUser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public interface AmiUserService {
+public interface AmiUserRepository {
 	
 	void createAmiUser(String hospitalId,String hospitalName, AmiUser amiUser) throws JsonProcessingException ;
 	void createAmiUserView(String hospitalId,String hospitalName, AmiUser amiUser)

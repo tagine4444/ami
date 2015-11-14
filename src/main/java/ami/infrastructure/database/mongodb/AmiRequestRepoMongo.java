@@ -22,13 +22,13 @@ import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
-import ami.application.services.security.AmiUserService;
 import ami.application.services.utils.MongoSequenceService;
 import ami.application.views.AmiRequestView;
 import ami.application.views.AmiUserView;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.web.converters.DateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,7 +50,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	private MongoTemplate mongo;
 	 
 	@Autowired
-	private AmiUserService amiUserService;
+	private AmiUserRepository amiUserService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;

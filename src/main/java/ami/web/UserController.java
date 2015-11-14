@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.application.services.security.AmiUserService;
 import ami.application.services.security.HospitalService;
 import ami.application.views.HospitalView;
 import ami.domain.model.security.AmiAuthtorities;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserAuthority;
+import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.amiusers.NewUser;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -43,7 +43,7 @@ public class UserController {
 	private MongoTemplate mongo;
 	
 	@Autowired
-	private AmiUserService amiUserService;
+	private AmiUserRepository amiUserService;
 	
 	@Autowired
 	private HospitalService hospitalService;

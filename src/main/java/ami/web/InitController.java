@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.application.services.amiservices.AmiServices;
-import ami.application.services.animals.AnimalService;
-import ami.application.services.security.AmiUserService;
 import ami.application.services.security.HospitalService;
+import ami.domain.model.amicase.AnimalRepository;
 import ami.domain.model.amicase.Animals;
 import ami.domain.model.amicase.amiservices.AmiServiceCategory;
+import ami.domain.model.amicase.amiservices.AmiServicesRepository;
 import ami.domain.model.amicase.amiservices.Services;
 import ami.domain.model.security.AmiAdminAuthority;
 import ami.domain.model.security.AmiMasterAuthority;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserAuthority;
+import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.Phone;
 
@@ -45,10 +45,10 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	
 	@Autowired
-	private AnimalService animalService;
+	private AnimalRepository animalService;
 	
 	@Autowired
-	private AmiServices amiServices;
+	private AmiServicesRepository amiServices;
 	
 	@Autowired
 	private Environment env;
@@ -59,7 +59,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	private HospitalService hospitalService;
 	
 	@Autowired
-	private AmiUserService amiUserService;
+	private AmiUserRepository amiUserService;
 	
 	
 	

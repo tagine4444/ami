@@ -1,4 +1,4 @@
-package ami.application.services.animals;
+package ami.infrastructure.database.mongodb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +10,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import ami.domain.model.amicase.AnimalRepository;
 import ami.domain.model.amicase.Animals;
 
 @Service
-public class AnimalServiceImpl implements AnimalService {
+public class AnimalRepositoryMongo implements AnimalRepository {
 	
 	public final static String REFDATA_ANIMAL = "refdataAnimals";
 	

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.application.services.amiservices.AmiServices;
 import ami.domain.model.amicase.amiservices.AmiServiceMap1;
+import ami.domain.model.amicase.amiservices.AmiServicesRepository;
 import ami.domain.model.amicase.amiservices.Services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AmiServiceController {
 	
 	@Autowired
-	private AmiServices animalService;
+	private AmiServicesRepository animalService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;

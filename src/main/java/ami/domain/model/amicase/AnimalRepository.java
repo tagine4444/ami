@@ -1,11 +1,9 @@
-package ami.application.services.animals;
+package ami.domain.model.amicase;
 
 import java.util.List;
 
-import ami.domain.model.amicase.Animals;
 
-
-public interface AnimalService {
+public interface AnimalRepository {
 
 	List<Animals> getAnimals() ;
 
