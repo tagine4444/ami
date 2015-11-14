@@ -17,10 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.UploadFileCommand;
-import ami.controller.HttpUtils;
-import ami.controller.ResumableInfo;
-import ami.controller.ResumableInfoStorage;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.web.HttpUtils;
+import ami.web.ResumableInfo;
+import ami.web.ResumableInfoStorage;
 
 @Service
 public class UploadFileServiceImpl implements UploadFileService{

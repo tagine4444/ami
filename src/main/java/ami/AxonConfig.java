@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import ami.domain.SecurityAggregate;
 import ami.domain.model.amicase.AmiCase;
+import ami.domain.model.security.SecurityAggregate;
 
 import com.mongodb.Mongo;
 

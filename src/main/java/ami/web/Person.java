@@ -1,4 +1,4 @@
-package ami.controller;
+package ami.web;
 
 public class Person {
 

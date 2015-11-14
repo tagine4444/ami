@@ -1,4 +1,4 @@
-package ami.domain;
+package ami.domain.model.security;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,7 +19,6 @@ import ami.application.events.security.AmiUserCreatedEvent;
 import ami.application.events.security.AmiUserDeactivatedEvent;
 import ami.application.events.security.HospitaDeactivatedEvent;
 import ami.application.events.security.HospitalCreatedEvent;
-import ami.domain.model.security.AmiAuthtorities;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.hospitals.Hospital;
 

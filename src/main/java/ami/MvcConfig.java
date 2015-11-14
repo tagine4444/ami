@@ -16,8 +16,8 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import ami.controller.converters.DateTimeToStringConverter;
-import ami.controller.converters.StringToDateTimeConverter;
+import ami.web.converters.DateTimeToStringConverter;
+import ami.web.converters.StringToDateTimeConverter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

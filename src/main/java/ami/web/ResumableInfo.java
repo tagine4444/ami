@@ -1,4 +1,4 @@
-package ami.controller;
+package ami.web;
 
 import java.io.File;
 import java.util.HashSet;
