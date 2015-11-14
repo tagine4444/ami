@@ -1,7 +1,7 @@
 package ami.application.services.security;
 
 import ami.application.views.AmiUserView;
-import ami.domain.security.amiusers.AmiUser;
+import ami.domain.model.security.amiusers.AmiUser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

@@ -1,4 +1,4 @@
-package ami.domain.security;
+package ami.domain.model.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ami.application.services.security.AmiUserService;
 import ami.application.views.AmiUserView;
-import ami.domain.security.amiusers.AmiUser;
+import ami.domain.model.security.amiusers.AmiUser;
 
 @Service
 public class AmiAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {

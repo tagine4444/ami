@@ -19,9 +19,9 @@ import ami.application.events.security.AmiUserCreatedEvent;
 import ami.application.events.security.AmiUserDeactivatedEvent;
 import ami.application.events.security.HospitaDeactivatedEvent;
 import ami.application.events.security.HospitalCreatedEvent;
-import ami.domain.security.AmiAuthtorities;
-import ami.domain.security.amiusers.AmiUser;
-import ami.domain.security.hospitals.Hospital;
+import ami.domain.model.security.AmiAuthtorities;
+import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.hospitals.Hospital;
 
 public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 

@@ -20,7 +20,7 @@ import ami.application.services.amirequest.AmiRequestService;
 import ami.application.views.AmiRequestView;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
-import ami.domain.security.AmiAuthtorities;
+import ami.domain.model.security.AmiAuthtorities;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;

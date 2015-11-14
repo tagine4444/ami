@@ -8,9 +8,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
-import ami.domain.security.AmiAdminAuthority;
-import ami.domain.security.AmiAuthenticationProvider;
-import ami.domain.security.AmiAuthtorities;
+import ami.domain.model.security.AmiAdminAuthority;
+import ami.domain.model.security.AmiAuthenticationProvider;
+import ami.domain.model.security.AmiAuthtorities;
 
 @Configuration
 @EnableWebMvcSecurity

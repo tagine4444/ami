@@ -1,4 +1,4 @@
-package ami.domain.security;
+package ami.domain.model.security;
 
 public class AmiAuthtorities {
 

@@ -1,8 +1,8 @@
-package ami.domain.security;
+package ami.domain.model.security;
 
 import org.springframework.security.core.GrantedAuthority;
 
-public class AmiMasterAuthority  implements GrantedAuthority {
+public class AmiAdminAuthority implements GrantedAuthority {
 
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class AmiMasterAuthority  implements GrantedAuthority {
 
 	@Override
 	public String getAuthority() {
-		return AmiAuthtorities.AMI_MASTER_USER;
+		return AmiAuthtorities.AMI_ADMIN;
 	}
 
 }

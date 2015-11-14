@@ -1,4 +1,4 @@
-package ami.domain.security.hospitals;
+package ami.domain.model.security.hospitals;
 
 public class Phone {
 

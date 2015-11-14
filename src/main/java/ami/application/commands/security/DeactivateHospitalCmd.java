@@ -3,7 +3,7 @@ package ami.application.commands.security;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.joda.time.DateTime;
 
-import ami.domain.security.hospitals.Hospital;
+import ami.domain.model.security.hospitals.Hospital;
 
 public class DeactivateHospitalCmd {
 

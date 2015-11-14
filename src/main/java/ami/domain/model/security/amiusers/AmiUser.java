@@ -1,4 +1,4 @@
-package ami.domain.security.amiusers;
+package ami.domain.model.security.amiusers;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
-import ami.domain.security.AmiAuthtorities;
+import ami.domain.model.security.AmiAuthtorities;
 
 @Document
 public class AmiUser {

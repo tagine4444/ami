@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ami.application.services.security.AmiUserService;
 import ami.application.services.security.HospitalService;
 import ami.application.views.HospitalView;
-import ami.domain.security.AmiAuthtorities;
-import ami.domain.security.amiusers.AmiUser;
-import ami.domain.security.amiusers.AmiUserAuthority;
-import ami.domain.security.amiusers.NewUser;
+import ami.domain.model.security.AmiAuthtorities;
+import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.amiusers.AmiUserAuthority;
+import ami.domain.model.security.amiusers.NewUser;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;

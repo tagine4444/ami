@@ -3,8 +3,8 @@ package ami.application.services.security;
 import org.joda.time.DateTime;
 
 import ami.application.views.HospitalView;
-import ami.domain.security.amiusers.AmiUser;
-import ami.domain.security.hospitals.Hospital;
+import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.hospitals.Hospital;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
