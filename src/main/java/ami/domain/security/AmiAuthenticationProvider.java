@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ami.application.services.security.AmiUserService;
 import ami.application.views.AmiUserView;
-import ami.domain.amiusers.AmiUser;
+import ami.domain.security.amiusers.AmiUser;
 
 @Service
 public class AmiAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {

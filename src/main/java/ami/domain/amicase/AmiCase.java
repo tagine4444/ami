@@ -1,4 +1,4 @@
-package ami.domain;
+package ami.domain.amicase;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import ami.application.events.amirequest.UploadedFileDeletedEvent;
 import ami.domain.amicase.amirequest.AmiRequest;
 import ami.domain.amicase.amirequest.FileUploadInfo;
 
-public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
+public class AmiCase extends AbstractAnnotatedAggregateRoot {
 
 	@AggregateIdentifier
 	private String id;
@@ -43,13 +43,13 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	private DateTime interpretationReadyComplete;
 	
 	// No-arg constructor, required by Axon
-	public AmiRequestAggregate() {
+	public AmiCase() {
 	}
 
 	
 	// ----------------- Submit to radiologist (for the 1st time)  ----------------- 
 	@CommandHandler
-	public AmiRequestAggregate(SubmitNewAmiRequestCmd command) {
+	public AmiCase(SubmitNewAmiRequestCmd command) {
 		apply(new NewAmiRequestSubmittedEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), 
 				command.getHospitalName(),
@@ -59,7 +59,7 @@ public class AmiRequestAggregate extends AbstractAnnotatedAggregateRoot {
 	
 	// ----------------- Save as Draft  (for the 1st time) ----------------- 
 	@CommandHandler
-	public AmiRequestAggregate(SaveAmiRequestAsDraftCmd command) {
+	public AmiCase(SaveAmiRequestAsDraftCmd command) {
 		if(hasBeenSavedAndSubmittedToRadiologist()){
 			// should never be here, the UI should disable the save as draft button once the request is saved.
 			throw new RuntimeException("Requests cannot be saved as draft save as draft once they have been submitted to the radiologist.");

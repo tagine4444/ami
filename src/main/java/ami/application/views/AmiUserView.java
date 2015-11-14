@@ -3,7 +3,7 @@ package ami.application.views;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
 
-import ami.domain.amiusers.AmiUser;
+import ami.domain.security.amiusers.AmiUser;
 
 public class AmiUserView {
 	

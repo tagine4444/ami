@@ -2,7 +2,7 @@ package ami.application.events.security;
 
 import org.joda.time.DateTime;
 
-import ami.domain.hospitals.Hospital;
+import ami.domain.security.hospitals.Hospital;
 
 public class AmiUserDeactivatedEvent {
 

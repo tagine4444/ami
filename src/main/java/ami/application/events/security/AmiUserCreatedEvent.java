@@ -1,6 +1,6 @@
 package ami.application.events.security;
 
-import ami.domain.amiusers.AmiUser;
+import ami.domain.security.amiusers.AmiUser;
 
 public class AmiUserCreatedEvent {
 	

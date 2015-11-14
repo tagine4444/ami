@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.views.AmiUserView;
-import ami.application.views.HospitalView;
-import ami.domain.amiusers.AmiUser;
+import ami.domain.security.amiusers.AmiUser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 @Service

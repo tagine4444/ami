@@ -2,7 +2,7 @@ package ami.application.commands.security;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import ami.domain.amiusers.AmiUser;
+import ami.domain.security.amiusers.AmiUser;
 
 public class CreateAmiUserCmd {
 	

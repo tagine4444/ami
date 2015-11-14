@@ -1,4 +1,4 @@
-package ami.domain.amiusers;
+package ami.domain.security.amiusers;
 
 public class NewUser {
 	

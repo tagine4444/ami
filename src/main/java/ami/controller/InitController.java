@@ -24,12 +24,12 @@ import ami.application.services.security.HospitalService;
 import ami.domain.amicase.Animals;
 import ami.domain.amicase.amiservices.AmiServiceCategory;
 import ami.domain.amicase.amiservices.Services;
-import ami.domain.amiusers.AmiUser;
-import ami.domain.amiusers.AmiUserAuthority;
-import ami.domain.hospitals.Hospital;
-import ami.domain.hospitals.Phone;
 import ami.domain.security.AmiAdminAuthority;
 import ami.domain.security.AmiMasterAuthority;
+import ami.domain.security.amiusers.AmiUser;
+import ami.domain.security.amiusers.AmiUserAuthority;
+import ami.domain.security.hospitals.Hospital;
+import ami.domain.security.hospitals.Phone;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

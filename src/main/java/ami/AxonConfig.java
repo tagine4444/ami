@@ -23,8 +23,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import ami.axon.annotated.ToDoEventHandler;
 import ami.axon.annotated.ToDoItem;
-import ami.domain.AmiRequestAggregate;
 import ami.domain.SecurityAggregate;
+import ami.domain.amicase.AmiCase;
 
 import com.mongodb.Mongo;
 
@@ -128,16 +128,16 @@ public class AxonConfig {
    // ==================================== AmiRequestAggregate ====================================
    @SuppressWarnings("unchecked")
    @Bean
-   public AggregateAnnotationCommandHandler<AmiRequestAggregate> AmiRequestCommandHandler() {
-	   AggregateAnnotationCommandHandler<AmiRequestAggregate> commandHandler = AggregateAnnotationCommandHandler.subscribe(AmiRequestAggregate.class, amiRequestAggregateRepository(), commandBus());
+   public AggregateAnnotationCommandHandler<AmiCase> AmiRequestCommandHandler() {
+	   AggregateAnnotationCommandHandler<AmiCase> commandHandler = AggregateAnnotationCommandHandler.subscribe(AmiCase.class, amiRequestAggregateRepository(), commandBus());
 	   return commandHandler;
    }
    
 
    @Bean(name = "amiRequestAggregateRepository")
-   public Repository<AmiRequestAggregate> amiRequestAggregateRepository() {
+   public Repository<AmiCase> amiRequestAggregateRepository() {
 		
-       EventSourcingRepository<AmiRequestAggregate> repository = new EventSourcingRepository<AmiRequestAggregate>(AmiRequestAggregate.class, eventStore());
+       EventSourcingRepository<AmiCase> repository = new EventSourcingRepository<AmiCase>(AmiCase.class, eventStore());
        repository.setEventBus(eventBus());
        return repository;
    }

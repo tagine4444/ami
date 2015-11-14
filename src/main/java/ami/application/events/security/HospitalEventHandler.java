@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ami.application.services.security.HospitalService;
-import ami.domain.hospitals.Hospital;
+import ami.domain.security.hospitals.Hospital;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

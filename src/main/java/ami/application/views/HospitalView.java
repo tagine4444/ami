@@ -6,8 +6,8 @@ import java.util.List;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
 
-import ami.domain.amiusers.AmiUser;
-import ami.domain.hospitals.Hospital;
+import ami.domain.security.amiusers.AmiUser;
+import ami.domain.security.hospitals.Hospital;
 
 public class HospitalView {
 
