@@ -1,14 +1,13 @@
-package ami.application.services.security;
+package ami.domain.model.security.hospitals;
 
 import org.joda.time.DateTime;
 
 import ami.application.views.HospitalView;
 import ami.domain.model.security.amiusers.AmiUser;
-import ami.domain.model.security.hospitals.Hospital;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public interface HospitalService {
+public interface HospitalRepository {
 
 	
 	HospitalView findHospital(String hospitalId) ;

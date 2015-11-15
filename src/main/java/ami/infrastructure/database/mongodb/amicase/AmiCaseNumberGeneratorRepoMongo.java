@@ -1,4 +1,4 @@
-package ami.application.services.utils;
+package ami.infrastructure.database.mongodb.amicase;
 
 import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -9,16 +9,16 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import ami.infrastructure.database.mongodb.Counter;
+import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 
 @Service
-public class MongoSequenceServiceImpl implements MongoSequenceService {
+public class AmiCaseNumberGeneratorRepoMongo implements AmiCaseNumberGeneratorRepository {
 
 	@Autowired
 	private MongoTemplate mongo;
 
 	@Override
-	public int getNextSequence(String collectionName) {
+	public int getNextAmiCase() {
 		Counter counter = mongo.findAndModify(
 				query(where("_id").is("amirequestsequence")),
 				new Update().inc("seq", 1), options().returnNew(true),

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.application.services.security.HospitalService;
 import ami.domain.model.amicase.AnimalRepository;
 import ami.domain.model.amicase.Animals;
 import ami.domain.model.amicase.amiservices.AmiServiceCategory;
@@ -29,6 +28,7 @@ import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserAuthority;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.hospitals.Hospital;
+import ami.domain.model.security.hospitals.HospitalRepository;
 import ami.domain.model.security.hospitals.Phone;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,7 +56,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	private ObjectMapper mapper;
 	
 	@Autowired
-	private HospitalService hospitalService;
+	private HospitalRepository hospitalService;
 	
 	@Autowired
 	private AmiUserRepository amiUserService;

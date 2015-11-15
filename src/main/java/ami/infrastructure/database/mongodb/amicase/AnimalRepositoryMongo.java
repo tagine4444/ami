@@ -1,4 +1,4 @@
-package ami.infrastructure.database.mongodb;
+package ami.infrastructure.database.mongodb.amicase;
 
 import java.util.ArrayList;
 import java.util.List;

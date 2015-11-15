@@ -5,8 +5,8 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ami.application.services.security.HospitalService;
 import ami.domain.model.security.hospitals.Hospital;
+import ami.domain.model.security.hospitals.HospitalRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class HospitalEventHandler {
 
 	@Autowired
-	private HospitalService hospitalViewService;
+	private HospitalRepository hospitalViewService;
 
     
     @EventHandler

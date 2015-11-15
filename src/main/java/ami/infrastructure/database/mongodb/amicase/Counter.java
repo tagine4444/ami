@@ -1,4 +1,4 @@
-package ami.infrastructure.database.mongodb;
+package ami.infrastructure.database.mongodb.amicase;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

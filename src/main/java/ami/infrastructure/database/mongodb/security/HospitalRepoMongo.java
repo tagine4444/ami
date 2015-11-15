@@ -1,4 +1,4 @@
-package ami.application.services.security;
+package ami.infrastructure.database.mongodb.security;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.Timestamp;
@@ -14,11 +14,12 @@ import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.views.HospitalView;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.hospitals.Hospital;
+import ami.domain.model.security.hospitals.HospitalRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
-public class HospitalServiceImpl implements HospitalService{
+public class HospitalRepoMongo implements HospitalRepository{
 	
 	private final static String AMI_HOSPITAL_VIEW = "viewSecHospital";
 	

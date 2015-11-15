@@ -1,4 +1,4 @@
-package ami.infrastructure.database.mongodb;
+package ami.infrastructure.database.mongodb.amicase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,9 +22,9 @@ import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
-import ami.application.services.utils.MongoSequenceService;
 import ami.application.views.AmiRequestView;
 import ami.application.views.AmiUserView;
+import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
@@ -44,7 +44,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	private CommandGateway commandGateway;
 	
 	@Autowired
-	private MongoSequenceService mongoSequenceService;
+	private AmiCaseNumberGeneratorRepository mongoSequenceService;
 	
 	@Autowired
 	private MongoTemplate mongo;
@@ -71,7 +71,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		
 		if( isCreate ){
 //			boolean editable = false;
-			caseNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
+			caseNumber = String.valueOf(mongoSequenceService.getNextAmiCase());
+//			caseNumber = String.valueOf(mongoSequenceService.getNextAmiCase("counters"));
 //			amiRequestJson.setRequestNumber(requestNumber);
 			
 			commandGateway.sendAndWait(new SubmitNewAmiRequestCmd(caseNumber,amiRequestJson, userName, 
@@ -100,7 +101,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		final boolean isCreate = StringUtils.isEmpty(caseNumber);
 		
 		if( isCreate){
-			myCaseNumber = String.valueOf(mongoSequenceService.getNextSequence("counters"));
+			myCaseNumber = String.valueOf(mongoSequenceService.getNextAmiCase());
 //			amiRequestJson.setRequestNumber(myCaseNumber);
 			
 			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(myCaseNumber, amiRequestJson, userName, hospitalName,  hospitalId
