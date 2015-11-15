@@ -1,4 +1,4 @@
-package ami.application.events.amirequest;
+package ami.domain.model.amicase.events;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventhandling.annotation.Timestamp;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ami.domain.model.amicase.amirequest.AmiRequest;
-import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -16,12 +16,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class AmiRequestEventHandler {
 
 	@Autowired
-	private AmiRequestRepository amiServiceRequestSvc;
+	private AmiRequestRepository amiServiceRequestRepo;
 
     @EventHandler
     public void handle(NewAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
        
-    	amiServiceRequestSvc.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(), 
+    	amiServiceRequestRepo.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(), 
     			event.getHospitalName(), event.getHospitalId(), 
     			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
     			null,null,
@@ -40,7 +40,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestSavedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
+    	amiServiceRequestRepo.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null, null,null,null,
     			time);
@@ -51,7 +51,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(AmiRequestUpdatedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.updateAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
+    	amiServiceRequestRepo.updateAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null,null,null,null, 
     			true,
@@ -61,7 +61,7 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(DraftAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.updateAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
+    	amiServiceRequestRepo.updateAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			event.getHasBeenSavedAndSubmittedToRadiologist(),null,null,null, 
     			true,
@@ -73,14 +73,14 @@ public class AmiRequestEventHandler {
     	
     	FileUploadInfo info = new FileUploadInfo(event.getId(),event.getFileName(), event.getOriginalFileName(), event.getFilePath(), event.getUserName(),time);
     	  
-    	amiServiceRequestSvc.updateUploadedFileList(info, time);
+    	amiServiceRequestRepo.updateUploadedFileList(info, time);
 		
     }
     
     @EventHandler
     public void handle(UploadedFileDeletedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
     	
-    	amiServiceRequestSvc.deleteUploadedFile(event.getFileName() ,event.getId(), time);
+    	amiServiceRequestRepo.deleteUploadedFile(event.getFileName() ,event.getId(), time);
     	
     }
     

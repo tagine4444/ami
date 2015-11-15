@@ -1,4 +1,4 @@
-package ami.domain.model.amicase.amirequest;
+package ami.domain.model.amicase.amirequest.repo;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 
 import org.joda.time.DateTime;
 import org.springframework.web.multipart.MultipartFile;
+
+import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
 
 public interface UploadFileRepository {

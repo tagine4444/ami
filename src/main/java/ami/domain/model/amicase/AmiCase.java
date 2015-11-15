@@ -16,14 +16,14 @@ import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
-import ami.application.events.amirequest.AmiRequestSavedAsDraftEvent;
-import ami.application.events.amirequest.AmiRequestUpdatedAsDraftEvent;
-import ami.application.events.amirequest.DraftAmiRequestSubmittedEvent;
-import ami.application.events.amirequest.NewAmiRequestSubmittedEvent;
-import ami.application.events.amirequest.UploadFileRequestedEvent;
-import ami.application.events.amirequest.UploadedFileDeletedEvent;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.events.AmiRequestSavedAsDraftEvent;
+import ami.domain.model.amicase.events.AmiRequestUpdatedAsDraftEvent;
+import ami.domain.model.amicase.events.DraftAmiRequestSubmittedEvent;
+import ami.domain.model.amicase.events.NewAmiRequestSubmittedEvent;
+import ami.domain.model.amicase.events.UploadFileRequestedEvent;
+import ami.domain.model.amicase.events.UploadedFileDeletedEvent;
 
 public class AmiCase extends AbstractAnnotatedAggregateRoot {
 

@@ -1,10 +1,10 @@
-package ami.application.events.amirequest;
+package ami.domain.model.amicase.events;
 
 import org.joda.time.DateTime;
 
 import ami.domain.model.amicase.amirequest.AmiRequest;
 
-public class NewAmiRequestSubmittedEvent {
+public class DraftAmiRequestSubmittedEvent {
 
 	private final String id;
 	private final AmiRequest amiRequestJson;
@@ -14,14 +14,15 @@ public class NewAmiRequestSubmittedEvent {
 	
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 //	private boolean editable;
+	private DateTime dateTime;
  
-    public NewAmiRequestSubmittedEvent(String id, AmiRequest amiRequestJson, 
+    public DraftAmiRequestSubmittedEvent(String id, AmiRequest amiRequestJson, 
     		String userName, 
     		String hospitalName, 
     		String hospitalId,
-    		DateTime hasBeenSavedAndSubmittedToRadiologist
-//    		,boolean editable 
-    		) {
+    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
+//    		boolean editable,
+    		DateTime dateTime) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
@@ -29,7 +30,8 @@ public class NewAmiRequestSubmittedEvent {
         this.hospitalId  = hospitalId;
         
         this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-//		this.editable   = editable;                  
+//		this.editable   = editable;        
+		this.dateTime = dateTime;
     }
     
     public String getUserName() {
@@ -62,4 +64,7 @@ public class NewAmiRequestSubmittedEvent {
 		return hasBeenSavedAndSubmittedToRadiologist;
 	}
 
+	public DateTime getDateTime() {
+		return dateTime;
+	}
 }

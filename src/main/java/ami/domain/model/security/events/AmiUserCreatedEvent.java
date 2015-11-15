@@ -1,4 +1,4 @@
-package ami.application.events.security;
+package ami.domain.model.security.events;
 
 import ami.domain.model.security.amiusers.AmiUser;
 

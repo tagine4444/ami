@@ -17,9 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.UploadFileCommand;
-import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
-import ami.domain.model.amicase.amirequest.UploadFileRepository;
+import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
+import ami.domain.model.amicase.amirequest.repo.UploadFileRepository;
 import ami.web.HttpUtils;
 import ami.web.ResumableInfo;
 import ami.web.ResumableInfoStorage;

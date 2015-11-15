@@ -15,11 +15,11 @@ import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.DeactivateAmiUserCmd;
 import ami.application.commands.security.DeactivateHospitalCmd;
-import ami.application.events.security.AmiUserCreatedEvent;
-import ami.application.events.security.AmiUserDeactivatedEvent;
-import ami.application.events.security.HospitaDeactivatedEvent;
-import ami.application.events.security.HospitalCreatedEvent;
 import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.events.AmiUserCreatedEvent;
+import ami.domain.model.security.events.AmiUserDeactivatedEvent;
+import ami.domain.model.security.events.HospitaDeactivatedEvent;
+import ami.domain.model.security.events.HospitalCreatedEvent;
 import ami.domain.model.security.hospitals.Hospital;
 
 public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {

@@ -1,4 +1,4 @@
-package ami.application.events.security;
+package ami.domain.model.security.events;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.DateTime;

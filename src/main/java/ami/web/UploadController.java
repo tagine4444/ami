@@ -24,7 +24,7 @@ import com.mongodb.util.JSON;
 
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
-import ami.domain.model.amicase.amirequest.UploadFileRepository;
+import ami.domain.model.amicase.amirequest.repo.UploadFileRepository;
 
 @Controller
 public class UploadController {

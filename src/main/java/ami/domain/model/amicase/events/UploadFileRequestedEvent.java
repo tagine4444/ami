@@ -1,4 +1,4 @@
-package ami.application.events.amirequest;
+package ami.domain.model.amicase.events;
 
 import org.joda.time.DateTime;
 

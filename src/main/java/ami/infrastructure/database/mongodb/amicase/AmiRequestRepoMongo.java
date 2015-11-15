@@ -26,8 +26,8 @@ import ami.application.views.AmiRequestView;
 import ami.application.views.AmiUserView;
 import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 import ami.domain.model.amicase.amirequest.AmiRequest;
-import ami.domain.model.amicase.amirequest.AmiRequestRepository;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.web.converters.DateTimeToStringConverter;
 

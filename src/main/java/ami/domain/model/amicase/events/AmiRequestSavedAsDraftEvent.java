@@ -1,10 +1,8 @@
-package ami.application.events.amirequest;
-
-import org.joda.time.DateTime;
+package ami.domain.model.amicase.events;
 
 import ami.domain.model.amicase.amirequest.AmiRequest;
 
-public class AmiRequestUpdatedAsDraftEvent {
+public class AmiRequestSavedAsDraftEvent {
 
 	private final String id;
 	private final AmiRequest amiRequestJson;
@@ -16,23 +14,31 @@ public class AmiRequestUpdatedAsDraftEvent {
 //	private DateTime interpretationInProgress;
 //	private DateTime interpretationReadyForReview;
 //	private DateTime interpretationReadyComplete;
+	
 //	private boolean editable;
-    private DateTime dateTime;
+ 
     
         
        
 
-    public AmiRequestUpdatedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,
-//    		boolean editable,
-    		DateTime dateTime ) {
+    public AmiRequestSavedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId
+//    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
+//    		DateTime interpretationInProgress,              
+//    		DateTime interpretationReadyForReview,          
+//    		DateTime interpretationReadyComplete,           
+//    		,boolean editable 
+    		) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId   = hospitalId;
         
+//        this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
+//		this.interpretationInProgress = interpretationInProgress ;              
+//		this.interpretationReadyForReview = interpretationReadyForReview;          
+//		this.interpretationReadyComplete = interpretationReadyComplete;           
 //		this.editable   = editable;    
-		this.dateTime = dateTime;
     }
     
     public String getUserName() {
@@ -58,10 +64,6 @@ public class AmiRequestUpdatedAsDraftEvent {
 //	public boolean isEditable() {
 //		return editable;
 //	}
-
-	public DateTime getDateTime() {
-		return dateTime;
-	}
 
 //	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
 //		return hasBeenSavedAndSubmittedToRadiologist;
