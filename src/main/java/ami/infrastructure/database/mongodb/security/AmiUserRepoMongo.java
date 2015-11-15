@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import ami.application.commands.security.CreateAmiUserCmd;
-import ami.application.views.AmiUserView;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserRepository;
+import ami.infrastructure.database.model.AmiUserView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 @Service

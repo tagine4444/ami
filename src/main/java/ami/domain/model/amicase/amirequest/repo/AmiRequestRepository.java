@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import ami.application.views.AmiRequestView;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.infrastructure.database.model.AmiRequestView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

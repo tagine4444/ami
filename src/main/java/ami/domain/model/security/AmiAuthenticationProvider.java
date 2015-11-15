@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import ami.application.views.AmiUserView;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserRepository;
+import ami.infrastructure.database.model.AmiUserView;
 
 @Service
 public class AmiAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {

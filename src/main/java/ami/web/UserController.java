@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ami.application.views.HospitalView;
 import ami.domain.model.security.AmiAuthtorities;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserAuthority;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.amiusers.NewUser;
 import ami.domain.model.security.hospitals.HospitalRepository;
+import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,4 +1,4 @@
-package ami.application.views;
+package ami.infrastructure.database.model;
 
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;

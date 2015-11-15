@@ -11,10 +11,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import ami.application.commands.security.CreateHospitalCmd;
-import ami.application.views.HospitalView;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
+import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

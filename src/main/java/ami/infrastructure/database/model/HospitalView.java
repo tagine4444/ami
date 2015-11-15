@@ -1,4 +1,4 @@
-package ami.application.views;
+package ami.infrastructure.database.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,13 +22,13 @@ import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
-import ami.application.views.AmiRequestView;
-import ami.application.views.AmiUserView;
 import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.domain.model.security.amiusers.AmiUserRepository;
+import ami.infrastructure.database.model.AmiRequestView;
+import ami.infrastructure.database.model.AmiUserView;
 import ami.web.converters.DateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
