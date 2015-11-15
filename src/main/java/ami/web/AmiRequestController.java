@@ -1,9 +1,7 @@
 package ami.web;
 
 import java.io.IOException;
-import java.util.List;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ami.application.services.AmiRequestService;
 import ami.domain.model.amicase.amirequest.AmiRequest;
-import ami.domain.model.amicase.amirequest.FileUploadInfo;
-import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.domain.model.security.AmiAuthtorities;
-import ami.infrastructure.database.model.AmiRequestView;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,7 +37,7 @@ public class AmiRequestController {
 	public static final String UPLOAD_DIR = "uploads";
 	
 	@Autowired
-	private AmiRequestRepository amiRequestService;
+	private AmiRequestService amiRequestService;
 	
 	
 	@Autowired
@@ -52,59 +48,42 @@ public class AmiRequestController {
 	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequest(@RequestParam String requestNumber) throws JsonProcessingException {
-		AmiRequestView amiRequestView = amiRequestService.findAmiRequest(requestNumber);
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findAmiRequest(requestNumber);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/byanimals", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByAnimalName(@RequestParam String animalName) throws JsonProcessingException {
-		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByAnimalName(animalName);
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findAmiRequestByAnimalName(animalName) ;
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/byclientlastname", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByClientLastName(@RequestParam String clientlastname) throws JsonProcessingException {
-		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByClientLastName(clientlastname);
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findAmiRequestByClientLastName(clientlastname);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/byreqdaterange", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
-//		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByClientLastName(clientlastname);
-		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestBySubmittedDateRange( date1,  date2);
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findAmiRequestBySubmittedDateRange(  date1,   date2);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/bylastnrecords", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByLast50Records() throws JsonProcessingException {
-		final String nRecords = "50";
-		List<AmiRequestView> amiRequestView = amiRequestService.findAmiRequestByLastNRecords( nRecords);
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findAmiRequestByLast50Records();
 	}
-	
-	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/pending", method = RequestMethod.GET)
 	@ResponseBody
 	public String findPendigAmiRequests() throws JsonProcessingException {
-		
-		List<AmiRequestView> amiRequestView = amiRequestService.findPendingAmiRequest();
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findPendigAmiRequests();
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
@@ -112,9 +91,7 @@ public class AmiRequestController {
 	@ResponseBody
 	public String findDraftAmiRequests() throws JsonProcessingException {
 		
-		List<AmiRequestView> amiRequestView = amiRequestService.findDraftAmiRequest();
-		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-		return amiRequestViewString;
+		return amiRequestService.findDraftAmiRequests();
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
@@ -122,11 +99,7 @@ public class AmiRequestController {
 	@ResponseBody
 	public String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException {
 		
-		AmiRequestView amiRequestView = amiRequestService.findAmiRequest( requestNumber);
-		List<FileUploadInfo> fileUploads = amiRequestView.getFileUploads();
-		
-		String fileUploadsString = objectMapper.writeValueAsString(fileUploads);
-		return fileUploadsString;
+		return amiRequestService.getUploadedFiles(requestNumber);
 	}
 	
 	
@@ -146,9 +119,8 @@ public class AmiRequestController {
 		final String caseNumber = (String) dbObject.get("caseNumber");
 		AmiRequest amiRequest1 = objectMapper.readValue(amiRequest.toString(), AmiRequest.class);
 		
-		amiRequestService.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId);
+		return amiRequestService.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId);
 		
-		return "{}";
 	}
 	
 	
@@ -169,9 +141,8 @@ public class AmiRequestController {
 		final String hospitalName = (String) dbObject.get("hospitalName");
 		final String hospitalId = (String) dbObject.get("hospitalId");
 		
-		String requestNumber = amiRequestService.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime());
+		return amiRequestService.createCaseAsDraft(caseNumber,req ,userName , hospitalName, hospitalId);
 		
-		return "{\"requestNumber\": \""+requestNumber+"\"}";
 	}
 	
 	
