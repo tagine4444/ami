@@ -6,28 +6,22 @@ public class Hospital {
 	
 	private String id;
 	private String name;
-	private String address;
-	private String mainPhone;
-	private String mainFax;
-	private String fax2;
+	private String acronym;
+	private List<Address> addresses;
 	private List<Phone> phones;
-	private List<String> emails;// default emails where the reports are sent
+	private List<Email> emails;// default emails where the reports are sent
 	
 	public Hospital(String id,
 					String name,
-					String address,
-					String mainPhone,
-					String mainFax,
-					String fax2,
+					String acronym,
+					List<Address> addresses,
 					List<Phone> phones,
-					List<String>emails) {
+					List<Email>emails) {
 		
 		this.id       = id       ;
 		this.name     = name     ;
-		this.address  = address  ;
-		this.mainPhone= mainPhone;
-		this.mainFax  = mainFax  ;
-		this.fax2     = fax2     ;
+		this.acronym  = acronym     ;
+		this.addresses  = addresses  ;
 		this.phones   = phones   ;
 		this.emails   = emails;
 	}
@@ -40,28 +34,20 @@ public class Hospital {
 		return name;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public String getMainPhone() {
-		return mainPhone;
-	}
-
-	public String getMainFax() {
-		return mainFax;
-	}
-
-	public String getFax2() {
-		return fax2;
-	}
-
 	public List<Phone> getPhones() {
 		return phones;
 	}
 
-	public List<String> getEmails() {
+	public List<Email> getEmails() {
 		return emails;
+	}
+
+	public String getAcronym() {
+		return acronym;
+	}
+
+	public List<Address> getAddresses() {
+		return addresses;
 	}
 	
 }

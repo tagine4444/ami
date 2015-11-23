@@ -27,6 +27,8 @@ import ami.domain.model.security.AmiMasterAuthority;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserAuthority;
 import ami.domain.model.security.amiusers.AmiUserRepository;
+import ami.domain.model.security.hospitals.Address;
+import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
 import ami.domain.model.security.hospitals.Phone;
@@ -73,7 +75,8 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			
 			// create hospital
 			final String hospitalName = "Animal Medical Imaging";
-			Hospital amiHospital = getHospital(hospitalName);
+			final String acronym = "";
+			Hospital amiHospital = getHospital(hospitalName,acronym);
 			hospitalService.createHospital(amiHospital, now);
 			Hospital savedHospital = hospitalService.findHospitalbyName(hospitalName);
 			
@@ -89,7 +92,8 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			
 			// create hospital
 			final String hospitalName2 = "Pet Clinic";
-			Hospital petClinicHospital = getHospital(hospitalName2);
+			final String acronym1 = "PETCLI";
+			Hospital petClinicHospital = getHospital(hospitalName2,acronym1);
 			hospitalService.createHospital(petClinicHospital, now);
 			Hospital savedHospital2 = hospitalService.findHospitalbyName(hospitalName2);
 			
@@ -235,34 +239,39 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	}
 	
 	
-	private Hospital getHospital(String hospitalName) {
+	private Hospital getHospital(String hospitalName, String acronym) {
 		
 		String id = String.valueOf(System.currentTimeMillis());
-		String address = "1100 Main Street, WA 98221 USA";
-		String mainPhone = "321 213 6732";
-		String mainFax = "212 221 9876";
-		String fax2 =  "212 221 9876";
+		
+		List<Address> addresses = new ArrayList<Address>();
+		Address address = new Address( "Main", "1100 Main Street, WA 98221 USA");
+		Address billable = new Address( "Billable", "PO Box 3993 New York");
+		addresses.add(address);
+		addresses.add(billable);
 		
 		Phone phone = new Phone("Cell Phone", "298 334 9832");
+		Phone fax = new Phone("Fax", "298 334 9832");
+		Phone mainPhone = new Phone("Main Phone", "321 213 6732");
 		List<Phone> phones = new ArrayList<Phone>();
 		phones.add(phone);
-		phones.add(phone);
-		phones.add(phone);
-		
-		List<String> emails = new ArrayList<String>();
-		emails.add("company.email@yahoo.com");
-		emails.add("anothercompany.email@gmail.com");
-		
+		phones.add(fax);
+		phones.add(mainPhone);
 
+		
+		Email email1 = new Email("Main", "company.email@yahoo.com");
+		Email email2 = new Email("Personal", "company.email@yahoo.com");
+		List<Email> emails = new ArrayList<Email>();
+		emails.add(email1);
+		emails.add(email2);
+		
 
 		Hospital hospital = new Hospital( id,
 				hospitalName,
-				 address,
-				 mainPhone,
-				 mainFax,
-				 fax2,
+				acronym,
+				addresses,
 				 phones,
-				 emails);
+				emails);
+		
 		return hospital;
 	}
 	
