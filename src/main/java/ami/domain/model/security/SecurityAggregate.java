@@ -25,7 +25,7 @@ import ami.domain.model.security.hospitals.Hospital;
 public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 
 		@AggregateIdentifier
-		private String hospitalId;
+		private String id;
 		
 		private Hospital hospital;
 		private List<AmiUser> amiUsers = new ArrayList<AmiUser>();
@@ -121,7 +121,7 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		
 		@EventSourcingHandler
 		public void on(HospitalCreatedEvent event) {
-			this.hospitalId = event.getHospital().getId();
+			this.id = event.getHospital().getId();
 			this.hospital = event.getHospital();
 			this.hospitalActivationDate = event.getHospitalActivationDate();
 			
@@ -129,7 +129,7 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		
 		@EventSourcingHandler
 		public void on(HospitaDeactivatedEvent event) {
-			this.hospitalId = event.getHospitalId();
+			this.id = event.getHospitalId();
 			this.hospitalDeactivatedBy = event.getHospitalDeactivatedBy();
 			this.hospitalDeactivationDate = event.getHospitalDeactivationDate();
 			this.hospitalDeactivationReason = event.getHospitalDeactivationReason();

@@ -14,5 +14,10 @@ public class AmiAdminAuthority implements GrantedAuthority {
 	public String getAuthority() {
 		return AmiAuthtorities.AMI_ADMIN;
 	}
+	
+	public static boolean isAdmin(String anAuthority){
+		
+		return AmiAuthtorities.AMI_ADMIN.equals(anAuthority);
+	}
 
 }
