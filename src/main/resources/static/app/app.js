@@ -1,8 +1,9 @@
 
-var chidra = angular.module('chidra',['flow','ngRoute','mgcrea.ngStrap','angularMoment', 'AmiCustModule']);
+var amicust = angular.module('amicust',['flow','ngRoute','mgcrea.ngStrap','angularMoment', 'AmiCustModule']);
+var amiadmin = angular.module('amiadmin',[ 'ngRoute','AmiAdminModule']);
 
 
-chidra.filter('jsonDate', ['$filter', function ($filter) {
+amicust.filter('jsonDate', ['$filter', function ($filter) {
     return function (input, format) {
         
         if(input == null){ return ""; } 
@@ -13,7 +14,7 @@ chidra.filter('jsonDate', ['$filter', function ($filter) {
 }]);
 
 
-chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
+amicust.factory('newUserFactory', function($http,$q, $routeParams) {return {
 		getNewUser: function(){ 
 			var newUser ={
 					'userName'  : '',
@@ -28,7 +29,7 @@ chidra.factory('newUserFactory', function($http,$q, $routeParams) {return {
 		}
 	}
 });
-chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
+amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 	getNewAmiRequest: function(){ 
 		 
 		var hospitalAndClientInfo = { };
@@ -165,7 +166,7 @@ chidra.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 }});
 
 
-chidra.factory('animalService', function($http,$q, $routeParams){return {
+amicust.factory('animalService', function($http,$q, $routeParams){return {
 	
 	
 	getHospital: function(){ 
@@ -273,14 +274,12 @@ chidra.factory('animalService', function($http,$q, $routeParams){return {
 		 
 		 return res;
 	 }
-	 
-	 
-
-	
 }});
 
-chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalProvider','CSRF_TOKEN',
+
+amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalProvider','CSRF_TOKEN',
                     function($routeProvider) {	
+	
                       $routeProvider.
                         when('/', {
                         	templateUrl: "/app/components/amicust/newrequest.html",
@@ -463,4 +462,7 @@ chidra.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalPr
                        }
                       
 }]);
+
+
+
 		

@@ -14,34 +14,49 @@
 		    
 		   
 		    <div class="col-sm-2">
-		    	<label for="hospitalMainPhoneId">Main Phone</label>
-			    <div class="form-group">
-<!-- 				    <input type="text" id="hospitalMainPhoneId" class="form-control" ng-model="hospital.hospital.mainPhone"  > -->
-					<p id="hospitalAddressId"  >{{hospital.hospital.mainPhone}}</p>
-				</div>
-		    </div>
-		    <div class="col-sm-2">
-		    	<label for="hospitalMainPhoneId">Main Fax</label>
-			    <div class="form-group">
-					<p id="hospitalAddressId"  >{{hospital.hospital.mainFax}}</p>
-				</div>
+<!-- 		    	<label for="hospitalMainPhoneId">Phone/Fax</label> -->
+				 <table ng-repeat="aPhone in hospital.hospital.phones" >
+				     	<tr>
+				     		<td align="left"><strong>{{aPhone.name}}</strong></td>
+				     	</tr>
+				     	<tr>
+				     		<td align="left">{{aPhone.number}}</td>
+				     	</tr>
+				  </table>
 		    </div>
 		     <div class="col-sm-4">
-		    	<label for="hospitalAddressId">Address</label>
-			    <div class="form-group">
-				    <p id="hospitalAddressId"  >{{hospital.hospital.address}}</p>
-				</div>
+<!-- 		    	<label for="hospitalAddressId">Address</label> -->
+<!-- 			    <div class="form-group"> -->
+<!-- 				    <p id="hospitalAddressId"  >{{hospital.hospital.address}}</p> -->
+<!-- 				</div> -->
+				 <table ng-repeat="anAddress in hospital.hospital.addresses" >
+				     	<tr>
+				     		<td align="left"><strong>{{anAddress.label}}</strong></td>
+				     	</tr>
+				     	<tr>
+				     		<td align="left">{{anAddress.value}}</td>
+				     	</tr>
+				  </table>
+				
+				
 		    </div>
 		     <div class="col-sm-4">
-		    	<label for="hospitalAddressId">Default Emails (used to email reports) </label>
+<!-- 		    	<label for="hospitalAddressId">Default Emails </label> -->
 			    <div class="form-group">
-				     <ul ng-repeat="anEmail in hospital.hospital.emails">
-						   	<li>{{anEmail}}</td>
-					</ul>
+				     <table ng-repeat="anEmail in hospital.hospital.emails" >
+				     	<tr>
+				     		<td align="left"><strong>{{anEmail.label}}</strong></td>
+				     	</tr>
+				     	<tr>
+				     		<td align="left">{{anEmail.value}} </td>
+				     	</tr>
+				     </table>
 				</div>
 		    </div>
 		    
+		   
 		      <div class="col-sm-12">
+		       <br/>
 			    <div class="form-group">
 					<div class="panel panel-default">
 					  <!-- Default panel contents -->
@@ -72,15 +87,6 @@
 				    
 				</div>
 		    </div>
-		    
-		    
-		    
-		    
-
-		    
-		    
-		    
-		    
 		    
 		</div>
 	  </div>
