@@ -26,4 +26,13 @@ public class AmiCaseNumberGeneratorRepoMongo implements AmiCaseNumberGeneratorRe
 
 		return counter.getSeq();
 	}
+	@Override
+	public int getNextHospitalId() {
+		Counter counter = mongo.findAndModify(
+				query(where("_id").is("amihospitalsequence")),
+				new Update().inc("seq", 1), options().returnNew(true),
+				Counter.class);
+		
+		return counter.getSeq();
+	}
 }

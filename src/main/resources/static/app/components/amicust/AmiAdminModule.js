@@ -14,17 +14,17 @@
 		$scope.page = 'hospitalAdmin';
 		
 		var masterUser ={
-				'username'   : '', 
+				'user'   : '', 
 				'pwd'   	 : '',
-				'email'   	 : '',
 				'firstName'  : '',
 				'lastName'   : '',
+				'email'   	 : '',
 				'occupation' : ''
 			};
 		
 		var hospital ={
 				'name'  	: '', //default to phone
-				'address'   : [],
+				'addresses'   : [],
 				'phones'	: [],
 				'emails'	: []
 			};
@@ -35,7 +35,7 @@
 		$scope.addPhone = function(){
 			var aLabel = $scope.newPhoneLabel;
 			var aNumber = $scope.newPhoneNumber;
-			var newPhone ={'label': aLabel, 'number': aNumber};
+			var newPhone ={'label': aLabel, 'value': aNumber};
 			$scope.hospital.phones.push(newPhone);
 			
 			$scope.newPhoneLabel  = '';
@@ -57,15 +57,23 @@
 			var aNewAddressValue = $scope.newAddress;
 			var aNewAddress ={'label': aLabel, 'value': aNewAddressValue};
 			
-			$scope.hospital.address.push(aNewAddress);
+			$scope.hospital.addresses.push(aNewAddress);
 			$scope.newAddressLabel  = '';
 			$scope.newAddress  = '';
 		}
 		
 		$scope.saveNewHospital = function(){
+
+			var data = {hospital:$scope.hospital, masterUser: $scope.masterUser };
 			
-			var hosp = $scope.hospital;
-			var mUser = $scope.masterUser;
+			var res = $http.post('/ami/amiadminhome/hospital/setup',data);
+			res.success(function(data, status, headers, config) {
+				alert('success');
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "failure message: " + JSON.stringify({data: data}));
+			});	
+			
 		}
 		$scope.cancel = function(){
 			

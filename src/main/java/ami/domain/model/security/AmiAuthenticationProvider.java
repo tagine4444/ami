@@ -42,7 +42,7 @@ public class AmiAuthenticationProvider extends AbstractUserDetailsAuthentication
         try 
         {
         	final String userName =  arg1.getName();
-        	AmiUserView userView = amiUserService.findAmiUser(userName);
+        	AmiUserView userView = amiUserService.authenticate(userName, arg1.getCredentials().toString());
         	AmiUser amiUser = userView.getAmiUser();
             loadedUser = new User(amiUser.getUser(), amiUser.getPwd(), amiUser.getRole());
         } 

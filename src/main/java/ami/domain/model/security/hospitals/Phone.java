@@ -1,19 +1,27 @@
 package ami.domain.model.security.hospitals;
 
-public class Phone {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-	private String name;
-	private String number;
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Phone {
 	
-	public Phone(String name, String number) {
-		this.name = name;
-		this.number = number;
+
+	private String label;
+	private String value;
+	
+	public Phone(){}
+	
+	public Phone(String label, String value) {
+		this.label = label;
+		this.value = value;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public String getValue() {
+		return value;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	public String getNumber() {
-		return number;
-	}
 }

@@ -37,6 +37,24 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 	}
 	
 	@Override
+	public AmiUserView authenticate(String userName, String pwd) {
+		
+		Query query = new Query();
+		query.addCriteria(
+				Criteria.where("amiUser.user").is(userName)
+				.andOperator(
+					Criteria.where("amiUser.pwd").is(pwd)
+				)
+			);
+		
+		AmiUserView  view = mongo.findOne(query, AmiUserView.class,AMI_USER_VIEW);
+		if(view==null){
+			throw new RuntimeException("User not found");
+		}
+		return view;
+	}
+	
+	@Override
 	public void createAmiUser(String hospitalId, String hospitalName, AmiUser amiUser) throws JsonProcessingException {
 		commandGateway.sendAndWait(new CreateAmiUserCmd( hospitalId, hospitalName, amiUser));
 	}
@@ -50,5 +68,6 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 		mongo.save(view, AMI_USER_VIEW);
 		
 	}
+
 
 }

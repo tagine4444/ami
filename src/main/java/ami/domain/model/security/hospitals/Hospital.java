@@ -2,6 +2,9 @@ package ami.domain.model.security.hospitals;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Hospital {
 	
 	private String id;
@@ -10,6 +13,9 @@ public class Hospital {
 	private List<Address> addresses;
 	private List<Phone> phones;
 	private List<Email> emails;// default emails where the reports are sent
+	
+	// only for object mapper to turn json into Object
+	public Hospital(){}
 	
 	public Hospital(String id,
 					String name,
@@ -26,6 +32,9 @@ public class Hospital {
 		this.emails   = emails;
 	}
 
+	public void init(String id){
+		this.id = id;
+	}
 	public String getId() {
 		return id;
 	}

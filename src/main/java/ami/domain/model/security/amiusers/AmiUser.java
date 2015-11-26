@@ -1,13 +1,18 @@
 package ami.domain.model.security.amiusers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
+import ami.domain.model.security.AmiAdminAuthority;
 import ami.domain.model.security.AmiAuthtorities;
+import ami.domain.model.security.AmiMasterAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+@JsonIgnoreProperties(ignoreUnknown=true)
 @Document
 public class AmiUser {
 
@@ -16,6 +21,7 @@ public class AmiUser {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String occupation;
 	private String hospitalName;
 	private String hospitalId;
 	private  DateTime creationDate;
@@ -25,24 +31,25 @@ public class AmiUser {
 	private  String deactivationReason;
 	private boolean masterUser;
 	
-	private List<? extends GrantedAuthority> role;
+	private List< GrantedAuthority> role;
 	
 	public AmiUser(){
 		
 	}
 	
-	public AmiUser(NewUser newUser, String hospitalName, String hospitalId ,List<? extends GrantedAuthority> role){
+	public AmiUser(NewUser newUser, String hospitalName, String hospitalId ,List< GrantedAuthority> role){
 		this(newUser.getUserName(), newUser.getPwd(), newUser.getFirstName(),
-				newUser.getLastName(),newUser.getEmail(), hospitalName, hospitalId, new DateTime(), 
+				newUser.getLastName(),newUser.getEmail(),newUser.getOccupation(),  hospitalName, hospitalId, new DateTime(), 
 				role);
 	}
 	
-	public AmiUser(String user,String pwd, String firstName, String lastName, String email, String hospitalName, String hospitalId, DateTime creationDate, List<? extends GrantedAuthority> role) {
+	public AmiUser(String user,String pwd, String firstName, String lastName, String email,String occupation, String hospitalName, String hospitalId, DateTime creationDate, List< GrantedAuthority> role) {
 		this.user = user;
 		this.pwd = pwd;
 		this.firstName =firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.occupation = occupation;
 		this.hospitalName = hospitalName;
 		this.hospitalId = hospitalId;
 		this.creationDate =creationDate;
@@ -60,11 +67,21 @@ public class AmiUser {
 		}
 	}
 	
+	
+	public void initializeMasterUser(String hospitalId){
+		this.hospitalId = hospitalId;
+		this.masterUser = true;
+		if(this.role ==null){
+			this.role = new ArrayList<GrantedAuthority>();
+		}
+		this.role.add(new AmiMasterAuthority());
+	}
+	
 	public String getHospitalName() {
 		return hospitalName;
 	}
 
-	public List<? extends GrantedAuthority> getRole() {
+	public List< GrantedAuthority> getRole() {
 		return role;
 	}
 
@@ -117,6 +134,10 @@ public class AmiUser {
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getOccupation() {
+		return occupation;
 	}
 	
 	

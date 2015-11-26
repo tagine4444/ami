@@ -4,4 +4,6 @@ public interface AmiCaseNumberGeneratorRepository {
 
 	int getNextAmiCase();
 
+	int getNextHospitalId();
+
 }

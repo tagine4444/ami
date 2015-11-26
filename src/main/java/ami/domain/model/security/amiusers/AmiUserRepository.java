@@ -10,5 +10,7 @@ public interface AmiUserRepository {
 	void createAmiUserView(String hospitalId,String hospitalName, AmiUser amiUser)
 			throws JsonProcessingException;
 	AmiUserView findAmiUser(String userName);
+	
+	AmiUserView authenticate(String userName, String pwd);
 
 }

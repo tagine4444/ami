@@ -15,7 +15,7 @@
 	  	<div class="row">
 	  		<div class="col-sm-3">
 			    <div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$invalid }">
-				    <input type="text" id="userName" name="userName" class="form-control" ng-model="masterUser.userName" placeholder="User Name" ng-minlength="5" required="required" >
+				    <input type="text" id="userName" name="userName" class="form-control" ng-model="masterUser.user" placeholder="User Name" ng-minlength="5" required="required" >
 				    <p ng-show="(newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$error.required" class="help-block">Must be at least 5 characters</p>
 				    <p ng-show="(newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$error.minlength" class="help-block">Must be at least 5 characters</p>
 				</div>
@@ -88,7 +88,7 @@
 								<td><strong>{{aPhone.label}}</strong></td>
 							</tr>
 							<tr>	
-								<td>{{aPhone.number}}</td>
+								<td>{{aPhone.value}}</td>
 							</tr>
 						</table>
 					</div>
@@ -124,7 +124,7 @@
 			  <div class="panel-body">
 				<div class="row">
 					<div class="col-sm-12">
-						<table width="100%"  ng-repeat="anAddress in hospital.address">
+						<table width="100%"  ng-repeat="anAddress in hospital.addresses">
 							<tr >
 								<td><strong>{{anAddress.label}}</strong></td>
 							</tr>
@@ -246,26 +246,33 @@
 	      </div>
 	      <div class="modal-body">
 	      
-	      		<div class="row">
+	      	<div class="row">
+	      		
+	      	  <div class="col-md-12">
+				<p><strong>What shoud the Hospital's email be?</strong></p>
 		          <div class="col-md-12">
-					<p><strong>What shoud the Hospital's email be?</strong></p>
-			          <div class="col-md-12">
-						<p>Anyone that needs to be alerted when a report is ready. Typically it is the the veterinarian's email address.</p>
-					 </div>		          
+					<p>Typically it is the the veterinarian's email address.</p>
 				 </div>		          
+			 </div>		
+		      <div class="col-md-12">
+					<p><strong>How is the Hospital's email used?</strong></p>
+			          <div class="col-md-12">
+						<p>It is the email where all the completed reports are sent to.</p>
+					 </div>		          
+			  </div>
+					
+				
+	          <div class="col-md-12">
+				<p><strong>Don't users have email? Shouldn't the emails go to them?</strong></p>
 		          <div class="col-md-12">
-		          	<p><strong>What email address is a completed report emailed to?</strong></p>
-				          <div class="col-md-12">
-			          		<p>All completed reports are emailed to:</p>
-			          		<ol>
-			          			<li>The user's email address who submitted the request. Keep in mind it could be a technician</li>
-			          			<li><strong>This email address</strong></li>
-			          		</ol>
-			          		<p>As a result, it is important that the email address you provide here is notifies someone that needs
-			          		 to be alerted when a report is ready. </p>
-		          		</div>
-		          </div>
-		        </div>
+					<p>Yes users have their own emails. And the report will be sent to them.
+					But what if the user is a technician? The veterinarian will not be alerted when the report is done. 
+					<br/>That's where the the hospital email comes in.
+					An copy of the report is <strong>always sent to the hospital's email.</strong>
+					regardless of who submitted the request.</p>
+				 </div>		          
+			 </div>	
+		          
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -273,7 +280,7 @@
 	    </div>
 	  </div>
 </div>
-
+</div>
 <!-- New Address Modal -->
 <div class="modal fade bs-example-modal-lg" id="addAddressModal" tabindex="-1" role="dialog" 
 	aria-labelledby="addAddressModalLabel" aria-hidden="true">

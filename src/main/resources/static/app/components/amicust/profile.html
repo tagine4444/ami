@@ -17,10 +17,10 @@
 <!-- 		    	<label for="hospitalMainPhoneId">Phone/Fax</label> -->
 				 <table ng-repeat="aPhone in hospital.hospital.phones" >
 				     	<tr>
-				     		<td align="left"><strong>{{aPhone.name}}</strong></td>
+				     		<td align="left"><strong>{{aPhone.label}}</strong></td>
 				     	</tr>
 				     	<tr>
-				     		<td align="left">{{aPhone.number}}</td>
+				     		<td align="left">{{aPhone.value}}</td>
 				     	</tr>
 				  </table>
 		    </div>

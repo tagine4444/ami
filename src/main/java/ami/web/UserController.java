@@ -101,7 +101,7 @@ public class UserController {
 		DBObject dbObject = (DBObject)JSON.parse(data);
 		final BasicDBObject newUserBasicDBObject = (BasicDBObject) dbObject.get("newUser");
 		
-		List<AmiUserAuthority> userList =  new ArrayList<AmiUserAuthority>();
+		List<GrantedAuthority> userList =  new ArrayList<GrantedAuthority>();
 		AmiUserAuthority role = new AmiUserAuthority();
 		userList.add(role);
 		
