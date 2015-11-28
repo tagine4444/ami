@@ -13,6 +13,7 @@ public class Hospital {
 	private List<Address> addresses;
 	private List<Phone> phones;
 	private List<Email> emails;// default emails where the reports are sent
+	private String notes;
 	
 	// only for object mapper to turn json into Object
 	public Hospital(){}
@@ -22,7 +23,8 @@ public class Hospital {
 					String acronym,
 					List<Address> addresses,
 					List<Phone> phones,
-					List<Email>emails) {
+					List<Email>emails,
+					String notes) {
 		
 		this.id       = id       ;
 		this.name     = name     ;
@@ -30,6 +32,7 @@ public class Hospital {
 		this.addresses  = addresses  ;
 		this.phones   = phones   ;
 		this.emails   = emails;
+		this.notes = notes;
 	}
 
 	public void init(String id){
@@ -57,6 +60,10 @@ public class Hospital {
 
 	public List<Address> getAddresses() {
 		return addresses;
+	}
+
+	public String getNotes() {
+		return notes;
 	}
 	
 }

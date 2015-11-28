@@ -65,7 +65,7 @@ public class LoginController {
 		
 	}
 	
-	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')")
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')")
 	@RequestMapping(value = "/ami/amicust", method = RequestMethod.GET)
 	public String customerLogin(Model model) {
 		

@@ -2,32 +2,49 @@
 	
 	var amiAdminModule = angular.module('AmiAdminModule',[]);
 	
-	// ============ SearchRequest ===============
+	// ============ Controller ===============
 	amiAdminModule.controller('CaseQueueCtrl', function ($scope, $http, $window,$location) {
 		$scope.page = 'caseQueue';
 			
 		
 	});
-	// ============ SearchRequest ===============
-	amiAdminModule.controller('HospitalAdminCtrl', function ($scope, $http, $window,$location) {
+	
+	
+	// ============ Controller ===============
+	amiAdminModule.controller('HospitalAdminSearchCtrl', function ($scope, $http, $window,$location, allHospitalViews) {
+		$scope.page = 'hospitalAdmin';
+		$scope.allHospitalViews = allHospitalViews;
+		
+		$scope.goToNewHospitalPage = function(){
+			$location.path('/hospitalAdminCreate');
+		}
+
+	});
+	// ============ Controller ===============
+	amiAdminModule.controller('HospitalAdminCreateCtrl', function ($scope, $http, $window,$location, amiadminFactory) {
 
 		$scope.page = 'hospitalAdmin';
 		
-		var masterUser ={
-				'user'   : '', 
-				'pwd'   	 : '',
-				'firstName'  : '',
-				'lastName'   : '',
-				'email'   	 : '',
-				'occupation' : ''
-			};
 		
-		var hospital ={
-				'name'  	: '', //default to phone
-				'addresses'   : [],
-				'phones'	: [],
-				'emails'	: []
-			};
+		var masterUser = amiadminFactory.getNewMasterUser()  
+		var hospital   = amiadminFactory.getNewHospital();
+		
+//		var masterUser ={
+//				'user'   : '', 
+//				'pwd'   	 : '',
+//				'firstName'  : '',
+//				'lastName'   : '',
+//				'email'   	 : '',
+//				'occupation' : ''
+//			};
+//		
+//		var hospital ={
+//				'name'  	: '', //default to phone
+//				'addresses'   : [],
+//				'phones'	: [],
+//				'emails'	: [],
+//				'notes'		:''
+//			};
 		
 		$scope.hospital = hospital;
 		$scope.masterUser = masterUser;
@@ -68,7 +85,7 @@
 			
 			var res = $http.post('/ami/amiadminhome/hospital/setup',data);
 			res.success(function(data, status, headers, config) {
-				alert('success');
+				$location.path('/hospitalAdminSearch');
 			});
 			res.error(function(data, status, headers, config) {
 				alert( "failure message: " + JSON.stringify({data: data}));
@@ -76,10 +93,20 @@
 			
 		}
 		$scope.cancel = function(){
-			
-			
+			$location.path('/hospitalAdminSearch');
 		}
+	});
+	
+	// ============ Controller ===============
+	amiAdminModule.controller('HospitalAdminUpdateCtrl', function ($scope, $http, $window,$location, allHospitalViews) {
+		$scope.page = 'hospitalAdmin';
+		$scope.allHospitalViews = allHospitalViews;
 		
+		
+		$scope.goToNewHospitalPage = function(){
+			$location.path('/hospitalAdminCreate');
+		}
+
 	});
 		
 		

@@ -1,7 +1,5 @@
 
 var amicust = angular.module('amicust',['flow','ngRoute','mgcrea.ngStrap','angularMoment', 'AmiCustModule']);
-var amiadmin = angular.module('amiadmin',[ 'ngRoute','AmiAdminModule']);
-
 
 amicust.filter('jsonDate', ['$filter', function ($filter) {
     return function (input, format) {
@@ -29,6 +27,7 @@ amicust.factory('newUserFactory', function($http,$q, $routeParams) {return {
 		}
 	}
 });
+
 amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 	getNewAmiRequest: function(){ 
 		 
@@ -164,7 +163,6 @@ amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 	 }
 	 
 }});
-
 
 amicust.factory('animalService', function($http,$q, $routeParams){return {
 	

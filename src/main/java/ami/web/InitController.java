@@ -264,13 +264,15 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 		emails.add(email1);
 		emails.add(email2);
 		
+		final String notes ="This hospital is very nice so treat it well";
 
 		Hospital hospital = new Hospital( id,
 				hospitalName,
 				acronym,
 				addresses,
 				 phones,
-				emails);
+				emails,
+				notes);
 		
 		return hospital;
 	}

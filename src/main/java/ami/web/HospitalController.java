@@ -1,6 +1,7 @@
 package ami.web;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +24,7 @@ import ami.domain.model.security.hospitals.HospitalRepository;
 import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
@@ -47,7 +50,7 @@ public class HospitalController {
 	private ObjectMapper objectMapper;
 
 	
-	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amiadminhome/hospital/setup", method = RequestMethod.POST)
 	@ResponseBody
 	public void setupNewHospital(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
@@ -74,6 +77,16 @@ public class HospitalController {
 		final String hospName = myHospital.getName();
 		
 		amiUserService.createAmiUser(hospId, hospName, amiMasterUser);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadminhome/hospitalview", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAllHospitals(Model model) throws JsonProcessingException {
+		
+		List<HospitalView> hopitalViews = hospitalService.getAllHospitals();
+		String speciesString = objectMapper.writeValueAsString(hopitalViews);
+		return speciesString;
 		
 	}
 	

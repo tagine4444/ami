@@ -1,0 +1,358 @@
+<div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
+
+<div class="row">
+	
+
+   	
+</div>
+<br/>
+
+<div class="row">
+<form name="newHospitalForm" ng-submit="saveNewHospital()"   >
+<div class="row">
+	<div class="col-sm-10">
+		<a href =""  data-toggle="modal" data-target="#helpModal" ><span class="label label-warning">Click here for help</span></a>
+	</div>
+	
+	<div class="col-sm-1">
+  		<button ng-click="cancel()" type="submit" class="btn btn-default" >Cancel</button>
+	</div>
+
+   	
+   	<div class="col-sm-1">
+   		<button ng-click="submitted=true" type="submit" class="btn btn-danger" >Save</button>
+   	</div>
+</div>
+
+	<div class="panel panel-primary">
+	  <div class="panel-heading"><strong>Master User</strong></div>
+	  <div class="panel-body">
+	  
+	  	<div class="row">
+	  		<div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$invalid }">
+				    <input type="text" id="userName" name="userName" class="form-control" ng-model="masterUser.user" placeholder="User Name" ng-minlength="5" required="required" >
+				    <p ng-show="(newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$error.required" class="help-block">Must be at least 5 characters</p>
+				    <p ng-show="(newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$error.minlength" class="help-block">Must be at least 5 characters</p>
+				</div>
+		    </div>
+	  		<div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.pwd.$touched || submitted ) && newHospitalForm.pwd.$invalid  }">
+				    <input type="text" id="pwd" name="pwd" class="form-control" ng-model="masterUser.pwd" placeholder="Temporary Password" required="required" ng-minlength="5" >
+				    <p ng-show="(newHospitalForm.pwd.$touched || submitted ) && newHospitalForm.pwd.$error.required" class="help-block">Must be at least 5 characters</p>
+				    <p ng-show="(newHospitalForm.pwd.$touched || submitted ) &&  newHospitalForm.pwd.$error.minlength" class="help-block">Must be at least 5 characters</p>
+				</div>
+		    </div>
+		    <div class="col-sm-4">
+				
+				<div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.email.$touched || submitted ) &&  newHospitalForm.email.$invalid }">
+				    <input type="text" name="email" class="form-control" ng-model="masterUser.email" placeholder="Email" required >
+				    <p ng-show="(newHospitalForm.email.$touched || submitted ) && newHospitalForm.email.$error.required" class="help-block">required field</p>
+				</div>
+		    </div>
+	  	</div>
+		<div class="row">
+		    <div class="col-sm-3">
+			    <div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.firstName.$touched || submitted ) &&  newHospitalForm.firstName.$invalid }">
+				    <input type="text" name="firstName" class="form-control" ng-model="masterUser.firstName" placeholder="First Name" required  >
+				    <p ng-show="(newHospitalForm.firstName.$touched || submitted ) && newHospitalForm.firstName.$error.required" class="help-block">required field</p>
+				</div>
+		    </div>
+		    <div class="col-sm-3">
+		    	<div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.lastName.$touched || submitted ) &&  newHospitalForm.lastName.$invalid }">
+				    <input type="text" name="lastName" class="form-control" ng-model="masterUser.lastName" placeholder="Last Name" required >
+				    <p ng-show="(newHospitalForm.lastName.$touched || submitted ) && newHospitalForm.lastName.$error.required" class="help-block">required field</p>
+				</div>
+		    </div>
+		     <div class="col-sm-3">
+		    	<div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.occupation.$touched || submitted ) &&  newHospitalForm.occupation.$invalid }">
+				    <input type="text" name="occupation" class="form-control" ng-model="masterUser.occupation" placeholder="Occupation" required >
+				    <p ng-show="(newHospitalForm.occupation.$touched || submitted ) && newHospitalForm.occupation.$error.required" class="help-block">required field</p>
+				</div>
+		    </div>
+		</div>
+	  </div>
+	</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading"><strong>Hospital</strong></div>
+  <div class="panel-body">	  
+	<div class="row">
+		<div class="col-sm-4">
+		    	<div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.hospitalName.$touched || submitted ) &&  newHospitalForm.hospitalName.$invalid }">
+				    <input type="text" name="hospitalName" class="form-control" ng-model="hospital.name" placeholder="Hospital Name" required >
+				    <p ng-show="(newHospitalForm.hospitalName.$touched || submitted ) && newHospitalForm.hospitalName.$error.required" class="help-block">required field</p>
+				</div>
+		</div>
+		<div class="col-sm-2">
+	    	<div class="form-group" >
+			    <input type="text" name="acronymId" class="form-control" ng-model="hospital.acronym" placeholder="Hospital Acronym" >
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="panel panel-default">
+			  <div class="panel-heading"><a href ="" data-toggle="modal" data-target="#addPhoneModal" ><strong>Add</strong></a>  <strong>Phone/Fax</strong></div>
+			  <div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<table width="100%" ng-repeat="aPhone in hospital.phones">
+							<tr  >
+								<td><strong>{{aPhone.label}}</strong></td>
+							</tr>
+							<tr>	
+								<td>{{aPhone.value}}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			  </div>
+			</div> 
+		</div>
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			  <strong><a href ="" data-toggle="modal" data-target="#addEmailModal" >Add</a></strong> <strong>Email</strong> <a href ="" data-toggle="modal" data-target="#addEmailHelpModal" >How is it used?</a></div>
+			  <div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<table width="100%"  ng-repeat="anEmail in hospital.emails">
+							<tr >
+								<td><strong>{{anEmail.label}}</strong></td>
+							</tr>
+							<tr >
+								<td>{{anEmail.value}}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			  </div>
+			</div> 
+		</div>
+		
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+			  <div class="panel-heading"><strong><a href ="" data-toggle="modal" data-target="#addAddressModal" >Add</a></strong> <strong>Address</strong></div>
+			  
+			  <div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<table width="100%"  ng-repeat="anAddress in hospital.addresses">
+							<tr >
+								<td><strong>{{anAddress.label}}</strong></td>
+							</tr>
+							<tr >
+								<td>{{anAddress.value}}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			  </div>
+			</div> 
+		</div>
+		
+		
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-12">
+				<div class="row">
+					<div class="col-sm-12">
+					  <textarea  id="notesId" class="form-control" rows="4" ng-model="hospital.notes" placeholder="Just type your notes here" ></textarea>
+					</div>
+				</div>
+			
+		</div>
+	</div>
+</div>
+</div>
+
+</form>
+	
+
+</div>
+
+<!-- New Phone Modal -->
+<div class="modal fade bs-example-modal-lg" id="addPhoneModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addPhoneModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addPhoneModalLabel">Add Phones / Fax</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      		<div class="row">
+		          <div class="col-md-3">
+<!-- 		          		<select class="form-control" ng-model="newPhoneLabel" ng-selected="newPhoneLabel"> -->
+<!-- 							<option ng-repeat="phoneType in phoneTypes">{{phoneType}}</option> -->
+<!-- 					    </select> -->
+					    
+					    <input type="text"  class="form-control" id="newPhoneLabelId" 
+		          		ng-model='newPhoneLabel' placeholder="Label" >
+		          		
+		          </div>
+		          <div class="col-md-6">
+		          		<input type="text"  class="form-control" id="newPhoneId" 
+		          		ng-model='newPhoneNumber' placeholder="Number" >
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="addPhone()" >Add</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+
+
+<!-- New Email Modal -->
+<div class="modal fade bs-example-modal-lg" id="addEmailModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addEmailModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addEmailModalLabel">Add Email</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      		<div class="row">
+		          <div class="col-md-3">
+		          		<input type="text"  class="form-control" id="newEmailabelId" 
+		          		ng-model='newEmailabel' placeholder="Label" >
+		          </div>
+		          <div class="col-md-9">
+		          		<input type="text"  class="form-control" id="newEmailValueId" 
+		          		ng-model='newEmailValue' placeholder="Email" >
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="addEmail()" >Add</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+<!-- New Email Modal -->
+<div class="modal fade bs-example-modal-lg" id="addEmailHelpModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addEmailHelpModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addEmailHelpModalLabel">How is this email used?</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      	<div class="row">
+	      		
+	      	  <div class="col-md-12">
+				<p><strong>What shoud the Hospital's email be?</strong></p>
+		          <div class="col-md-12">
+					<p>Typically it is the the veterinarian's email address.</p>
+				 </div>		          
+			 </div>		
+		      <div class="col-md-12">
+					<p><strong>How is the Hospital's email used?</strong></p>
+			          <div class="col-md-12">
+						<p>It is the email where all the completed reports are sent to.</p>
+					 </div>		          
+			  </div>
+					
+				
+	          <div class="col-md-12">
+				<p><strong>Don't users have email? Shouldn't the emails go to them?</strong></p>
+		          <div class="col-md-12">
+					<p>Yes users have their own emails. And the report will be sent to them.
+					But what if the user is a technician? The veterinarian will not be alerted when the report is done. 
+					<br/>That's where the the hospital email comes in.
+					An copy of the report is <strong>always sent to the hospital's email.</strong>
+					regardless of who submitted the request.</p>
+				 </div>		          
+			 </div>	
+		          
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+</div>
+<!-- New Address Modal -->
+<div class="modal fade bs-example-modal-lg" id="addAddressModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addAddressModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addAddressModalLabel">Add Address</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      		<div class="row">
+		          <div class="col-md-3">
+		          		<input type="text"  class="form-control" id="newAddressLabelId" 
+		          		ng-model='newAddressLabel' placeholder="Label" >
+		          </div>
+		          <div class="col-md-9">
+		          		<input type="text"  class="form-control" id="newAddressId" 
+		          		ng-model='newAddress' placeholder="Address" >
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="addAddress()" >Add</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="helpModal" tabindex="-1" role="dialog" 
+	aria-labelledby="helpModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="helpModalLabel">How to setup new Hospital</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+	      		<div class="row">
+		          <div class="col-md-12">
+		          		<p>To setup a new hospital you need to:</p>
+		         		<ol>
+		         			<li>Provide hospital information</li>
+		         			<li>Associate a Master User with this hospital</li>
+		         		</ol>
+		         		
+		         		<p><strong>What is a Master User? </strong></p>
+		         		<p>Typically he is the veterinarian you talk to. After, completing and saving this page, you email the master user his user name and temporary password. 
+		         		He will then be the first user (for his hospital) to log in to AMI. Once logged in to AMI, he will be able to:</p>
+		         		<ol>
+		         			<li>Change his temporary password</li>
+		         			<li>Add new users for his hospital</li>
+		         			<li>Remove users from his hospital</li>
+		         			<li>Change users passwords </li>
+		         		</ol>
+		          </div>
+		        </div>
+	      		<div class="row">
+		          <div class="col-md-12">
+		          		<p></p>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+</div>

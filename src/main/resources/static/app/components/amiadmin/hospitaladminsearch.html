@@ -1,0 +1,84 @@
+<div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
+
+<div class="row">
+	<div class="col-sm-10"  >
+	</div>
+	<div class="col-sm-2"  >
+	    <div class="form-group">
+		    <button ng-click="goToNewHospitalPage()" type="submit" class="btn btn-primary" >Create New Hospital</button>
+		</div>
+    </div>
+</div>
+<div class="row">
+	
+	<div class="panel panel-primary">
+	  <div class="panel-heading"><strong>Hospitals</strong></div>
+	  <div class="panel-body">
+		<!--  Clients  Row -->
+		<div class="row">
+	     	<div class="col-sm-12">
+			  <table class="table">
+			     <thead>
+				   <tr>
+				   	<th>Name</th>
+				   	<th>Acronym</th>
+				   	<th>Phones</th>
+				   	<th>Address</th>
+				   	<th>Emails</th>
+				   </tr>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="aHospitalView in allHospitalViews">
+				   	<td>
+				   		
+				   		<table>
+					   		<tr>
+					   			<td><strong>{{aHospitalView.hospital.name}}</strong></td>
+					   		</tr>
+					   		<tr>
+					   			<td><a  href="#/profile" >Edit</a></td>
+					   		</tr>
+					   	</table>
+				   		
+				   		
+				   	</td>
+				   	<td>{{aHospitalView.hospital.acronym}}</td>
+				   	<td>
+					   	<table ng-repeat="aPhone in aHospitalView.hospital.phones">
+					   		<tr>
+					   			<td><strong>{{aPhone.label}}</strong></td>
+					   		</tr>
+					   		<tr>
+					   			<td>{{aPhone.value}}</td>
+					   		</tr>
+					   	</table>
+				   	</td>
+				   	<td>
+				   		<table ng-repeat="anAddress in aHospitalView.hospital.addresses">
+					   		<tr>
+					   			<td><strong>{{anAddress.label}}</strong></td>
+					   		</tr>
+					   		<tr>
+					   			<td>{{anAddress.value}}</td>
+					   		</tr>
+					   	</table>
+				   	</td>
+				   	<td>
+				   		<table ng-repeat="anEmail in aHospitalView.hospital.emails">
+					   		<tr>
+					   			<td><strong>{{anEmail.label}}</strong></td>
+					   		</tr>
+					   		<tr>
+					   			<td>{{anEmail.value}}</td>
+					   		</tr>
+					   	</table>
+				   	</td>
+				   </tr>
+				   </tbody>
+				</table>
+		    </div>
+		    
+		</div>
+	  </div>
+	</div> 
+</div>

@@ -1,5 +1,7 @@
 package ami.domain.model.security.hospitals;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 import ami.domain.model.security.amiusers.AmiUser;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public interface HospitalRepository {
 
 	
+	List<HospitalView> getAllHospitals() ;
 	HospitalView findHospital(String hospitalId) ;
 	Hospital findHospitalbyName(String name) ;
 	void createHospitalView(Hospital hospital, DateTime hospitalActivationDate) throws JsonProcessingException ;

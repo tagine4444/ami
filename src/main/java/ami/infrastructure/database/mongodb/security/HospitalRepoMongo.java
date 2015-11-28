@@ -1,5 +1,7 @@
 package ami.infrastructure.database.mongodb.security;
 
+import java.util.List;
+
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
@@ -67,6 +69,11 @@ public class HospitalRepoMongo implements HospitalRepository{
 
 		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.name").is(name)), HospitalView.class,AMI_HOSPITAL_VIEW);
 		return view.getHospital();
+	}
+	@Override
+	public List<HospitalView> getAllHospitals() {
+		List<HospitalView>  views = mongo.findAll( HospitalView.class,AMI_HOSPITAL_VIEW);
+		return views;
 	}
 
 }

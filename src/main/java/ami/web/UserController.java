@@ -87,7 +87,7 @@ public class UserController {
 	}
 	
 	
-	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/newuser", method = RequestMethod.POST)
 	@ResponseBody
 	public String addNewUser(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
