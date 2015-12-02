@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
@@ -86,6 +87,16 @@ public class HospitalController {
 		
 		List<HospitalView> hopitalViews = hospitalService.getAllHospitals();
 		String speciesString = objectMapper.writeValueAsString(hopitalViews);
+		return speciesString;
+		
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadminhome/hospitalviewbyhospitalid", method = RequestMethod.GET)
+	@ResponseBody
+	public String getHospitalById(Model model, @RequestParam(value="hospitalId") String hospitalId) throws JsonProcessingException {
+		HospitalView hopitalView = hospitalService.findHospital(hospitalId);
+		String speciesString = objectMapper.writeValueAsString(hopitalView);
 		return speciesString;
 		
 	}

@@ -18,6 +18,21 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 
 			return res;
 	 },
+	 
+	 getHospitalView: function(hospitalId){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadminhome/hospitalviewbyhospitalid?hospitalId='+hospitalId);
+		 
+		 res.success(function(data, status, headers, config) {
+			 deferred.resolve();
+		 });
+		 res.error(function(data, status, headers, config) {
+			 deferred.reject('failure to get hospital');
+		 });	
+		 
+		 return res;
+	 },
 
 	getNewMasterUser: function(){ 
 		var newUser ={
@@ -71,6 +86,23 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     when('/hospitalAdminCreate', {
                     	templateUrl: '/app/components/amiadmin/hospitaladmincreate.html',
                     	controller: 'HospitalAdminCreateCtrl',
+                    }).
+                    when('/hospitalAdminUpdate/:hospitalId', {
+                    	templateUrl: "/app/components/amiadmin/hospitaladminupdate.html",
+                        controller: "HospitalAdminUpdateCtrl",
+                    	 resolve: {
+                         	
+                    		 myHospitalView: ['amiadminFactory','$route', function (amiadminFactory, $route) {
+                         		
+                    			var hospitalId = $route.current.params.hospitalId;
+                    			
+                         		return amiadminFactory.getHospitalView(hospitalId).then(
+                         			function(result){
+                         				var myResult = result.data;
+                         				return myResult;
+                         			});
+                             }]
+                    	 }// resolve
                     }).
                     when('/error', {
                       templateUrl: '/app/components/error/error.html',

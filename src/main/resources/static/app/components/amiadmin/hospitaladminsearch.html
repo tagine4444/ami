@@ -30,17 +30,7 @@
 				  <tbody>
 				   <tr ng-repeat="aHospitalView in allHospitalViews">
 				   	<td>
-				   		
-				   		<table>
-					   		<tr>
-					   			<td><strong>{{aHospitalView.hospital.name}}</strong></td>
-					   		</tr>
-					   		<tr>
-					   			<td><a  href="#/profile" >Edit</a></td>
-					   		</tr>
-					   	</table>
-				   		
-				   		
+					 	<a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {{aHospitalView.hospital.name}}</a>
 				   	</td>
 				   	<td>{{aHospitalView.hospital.acronym}}</td>
 				   	<td>

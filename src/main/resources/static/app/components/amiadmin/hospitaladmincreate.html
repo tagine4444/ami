@@ -1,34 +1,38 @@
 <div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
 
-<div class="row">
-	
 
-   	
-</div>
-<br/>
-
-<div class="row">
 <form name="newHospitalForm" ng-submit="saveNewHospital()"   >
+
 <div class="row">
-	<div class="col-sm-10">
-		<a href =""  data-toggle="modal" data-target="#helpModal" ><span class="label label-warning">Click here for help</span></a>
-	</div>
 	
+	<div class="col-sm-10"></div>
 	<div class="col-sm-1">
   		<button ng-click="cancel()" type="submit" class="btn btn-default" >Cancel</button>
 	</div>
-
-   	
    	<div class="col-sm-1">
    		<button ng-click="submitted=true" type="submit" class="btn btn-danger" >Save</button>
+   		<p/>
    	</div>
+   	
+	
+	<div class="col-sm-12">
+	<ol class="breadcrumb">
+	  <li><a href="#/hospitalAdminSearch">Hospital Admin</a></li>
+	  <li class="active">Create New Hospital</li>
+	</ol>
+	</div>
 </div>
+
+<div class="row">
 
 	<div class="panel panel-primary">
 	  <div class="panel-heading"><strong>Master User</strong></div>
 	  <div class="panel-body">
 	  
 	  	<div class="row">
+			  <div class="col-sm-12">
+			  <p><a href =""  data-toggle="modal" data-target="#helpModal" ><span class="label label-warning">What is a Master User?</span></a></p>
+			</div>
 	  		<div class="col-sm-3">
 			    <div class="form-group" ng-class="{ 'has-error' : (newHospitalForm.userName.$touched || submitted ) && newHospitalForm.userName.$invalid }">
 				    <input type="text" id="userName" name="userName" class="form-control" ng-model="masterUser.user" placeholder="User Name" ng-minlength="5" required="required" >
@@ -167,12 +171,8 @@
 	</div>
 </div>
 </div>
-
-</form>
-	
-
 </div>
-
+</form>
 <!-- New Phone Modal -->
 <div class="modal fade bs-example-modal-lg" id="addPhoneModal" tabindex="-1" role="dialog" 
 	aria-labelledby="addPhoneModalLabel" aria-hidden="true">
@@ -186,10 +186,6 @@
 	      
 	      		<div class="row">
 		          <div class="col-md-3">
-<!-- 		          		<select class="form-control" ng-model="newPhoneLabel" ng-selected="newPhoneLabel"> -->
-<!-- 							<option ng-repeat="phoneType in phoneTypes">{{phoneType}}</option> -->
-<!-- 					    </select> -->
-					    
 					    <input type="text"  class="form-control" id="newPhoneLabelId" 
 		          		ng-model='newPhoneLabel' placeholder="Label" >
 		          		
@@ -321,21 +317,21 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="helpModalLabel">How to setup new Hospital</h4>
+	        <h4 class="modal-title" id="helpModalLabel">What is a Master User?</h4>
 	      </div>
 	      <div class="modal-body">
 	      
 	      		<div class="row">
 		          <div class="col-md-12">
-		          		<p>To setup a new hospital you need to:</p>
+		          		<p>When creating a new hospital you need to:</p>
 		         		<ol>
-		         			<li>Provide hospital information</li>
-		         			<li>Associate a Master User with this hospital</li>
+		         			<li>Provide the hospital information</li>
+		         			<li>Assign this hospital a special user called Master User</li>
 		         		</ol>
 		         		
-		         		<p><strong>What is a Master User? </strong></p>
-		         		<p>Typically he is the veterinarian you talk to. After, completing and saving this page, you email the master user his user name and temporary password. 
-		         		He will then be the first user (for his hospital) to log in to AMI. Once logged in to AMI, he will be able to:</p>
+		         		<p><strong>So what is a Master User? </strong></p>
+		         		<p>Typically he is the veterinarian you talk to. You give him a temporary password (you create in this page).
+		         		He will then be the first user (for his hospital) to log in to AMI. Once logged in to AMI, the master user will be able to:</p>
 		         		<ol>
 		         			<li>Change his temporary password</li>
 		         			<li>Add new users for his hospital</li>

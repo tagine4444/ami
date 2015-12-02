@@ -29,23 +29,6 @@
 		var masterUser = amiadminFactory.getNewMasterUser()  
 		var hospital   = amiadminFactory.getNewHospital();
 		
-//		var masterUser ={
-//				'user'   : '', 
-//				'pwd'   	 : '',
-//				'firstName'  : '',
-//				'lastName'   : '',
-//				'email'   	 : '',
-//				'occupation' : ''
-//			};
-//		
-//		var hospital ={
-//				'name'  	: '', //default to phone
-//				'addresses'   : [],
-//				'phones'	: [],
-//				'emails'	: [],
-//				'notes'		:''
-//			};
-		
 		$scope.hospital = hospital;
 		$scope.masterUser = masterUser;
 		
@@ -98,13 +81,24 @@
 	});
 	
 	// ============ Controller ===============
-	amiAdminModule.controller('HospitalAdminUpdateCtrl', function ($scope, $http, $window,$location, allHospitalViews) {
+	amiAdminModule.controller('HospitalAdminUpdateCtrl', function ($scope, $http, $window,$location, myHospitalView) {
 		$scope.page = 'hospitalAdmin';
-		$scope.allHospitalViews = allHospitalViews;
+		$scope.hospital = myHospitalView.hospital;
 		
+		if(myHospitalView.amiUsers){
+			myHospitalView.amiUsers.forEach(function(aUser){
+				if( aUser.masterUser == true){
+					$scope.masterUser = aUser;
+				}
+			})
+		}
 		
 		$scope.goToNewHospitalPage = function(){
 			$location.path('/hospitalAdminCreate');
+		}
+		
+		$scope.cancel = function(){
+			$location.path('/hospitalAdminSearch');
 		}
 
 	});
