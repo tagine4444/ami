@@ -15,11 +15,17 @@ import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.DeactivateAmiUserCmd;
 import ami.application.commands.security.DeactivateHospitalCmd;
+import ami.application.commands.security.UpdateMasterUserEmailCmd;
+import ami.application.commands.security.UpdateMasterUserFirstNameCmd;
+import ami.application.commands.security.UpdateMasterUserPwdCmd;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.events.AmiUserCreatedEvent;
 import ami.domain.model.security.events.AmiUserDeactivatedEvent;
 import ami.domain.model.security.events.HospitaDeactivatedEvent;
 import ami.domain.model.security.events.HospitalCreatedEvent;
+import ami.domain.model.security.events.MasterUserEmailUpdatedEvent;
+import ami.domain.model.security.events.MasterUserFirstNameUpdatedEvent;
+import ami.domain.model.security.events.MasterUserPwdUpdatedEvent;
 import ami.domain.model.security.hospitals.Hospital;
 
 public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
@@ -87,7 +93,7 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		@CommandHandler
 		public void deactivateAmiUser(DeactivateAmiUserCmd command) {
 			if(!this.hospital.getId().equals(command.getHospitalId())){
-				throw new IllegalArgumentException("Cannot deactivate User '"+command.getHospitalId() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+				throw new IllegalArgumentException("Cannot deactivate User '"+command.getAmiUserName() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
 			}
 			
 			apply(new AmiUserDeactivatedEvent(
@@ -97,7 +103,57 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 					command.getDeactivatedBy() , 
 					command.getDeactivationReason()) );
 		}
-
+		
+		@CommandHandler
+		public void updateMasterUserCmd(UpdateMasterUserPwdCmd command) {
+			
+			if(!this.hospital.getId().equals(command.getHospitalId())){
+				throw new IllegalArgumentException("Cannot update pwd for  '"+command.getUserName() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			if(! isMasterUser(command.getUserName()) ){
+				throw new IllegalArgumentException("Cannot update pwd for  '"+command.getUserName() +"' because he is not a master user for hospital "+this.hospital.getId()+"' " );
+			}
+			apply(new MasterUserPwdUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewPwd() ) );
+		}
+		
+		
+		@CommandHandler
+		public void updateMasterUserCmd(UpdateMasterUserEmailCmd command) {
+			
+			if(!this.hospital.getId().equals(command.getHospitalId())){
+				throw new IllegalArgumentException("Cannot update email for  '"+command.getUserName() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			if(! isMasterUser(command.getUserName()) ){
+				throw new IllegalArgumentException("Cannot update email for  '"+command.getUserName() +"' because he is not a master user for hospital "+this.hospital.getId()+"' " );
+			}
+			
+			apply(new MasterUserEmailUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewEmail() ) );
+		}
+		
+		@CommandHandler
+		public void updateMasterUserCmd(UpdateMasterUserFirstNameCmd command) {
+			
+			if(!this.hospital.getId().equals(command.getHospitalId())){
+				throw new IllegalArgumentException("Cannot update first name for  '"+command.getUserName() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			if(! isMasterUser(command.getUserName()) ){
+				throw new IllegalArgumentException("Cannot update first name for  '"+command.getUserName() +"' because he is not a master user for hospital "+this.hospital.getId()+"' " );
+			}
+			
+			apply(new MasterUserFirstNameUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewFirstName() ) );
+		}
 		
 		
 		@EventSourcingHandler
@@ -125,6 +181,21 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			this.hospital = event.getHospital();
 			this.hospitalActivationDate = event.getHospitalActivationDate();
 			
+		}
+		
+		@EventSourcingHandler
+		public void on(MasterUserPwdUpdatedEvent event) {
+			this.id = event.getHospitalId();
+		}
+		
+		@EventSourcingHandler
+		public void on(MasterUserEmailUpdatedEvent event) {
+			this.id = event.getHospitalId();
+		}
+		
+		@EventSourcingHandler
+		public void on(MasterUserFirstNameUpdatedEvent event) {
+			this.id = event.getHospitalId();
 		}
 		
 		@EventSourcingHandler
@@ -168,6 +239,20 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			}
 			
 			return foundMasterRole;
+		}
+		
+		private boolean isMasterUser(String userName) {
+			
+			Iterator<AmiUser> iterator = this.amiUsers.iterator();
+			
+			while (iterator.hasNext()) {
+				AmiUser amiUser = (AmiUser) iterator.next();
+				if(userName.equals(amiUser.getUser())){
+					return amiUser.isMasterUser();
+				}
+			}
+			
+			return false;
 		}
 		
 }

@@ -19,5 +19,12 @@ public interface HospitalRepository {
 	void createHospital(Hospital hospital, DateTime hospitalActivationDate)
 			throws JsonProcessingException;
 	void addUser(String hospitalId, AmiUser amiUser);
+	void updateHospitalMasterUserPwd(String hospitalId ,String userName, String newPwd);
+	void updateMasterUserPwd(String hospitalId, String userName, String newPwd) ;
+	void updateMasterUserEmail(String hospitalId, String userName, String newEmail);
+	void updateHospitalMasterUserEmail(String hospitalId, String userName, String newPwd);
+	void updateMasterUserFirstName(String hospitalId, String userName,String newValue);
+//	void updateHospitalMasterUserFirstName(String hospitalId, String userName,String newEmail);
+	void updateHospitalMasterFirstName(String hospitalId, String userName,String newFirstName);
 
 }

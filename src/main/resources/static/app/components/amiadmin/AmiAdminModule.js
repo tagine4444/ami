@@ -100,6 +100,104 @@
 		$scope.cancel = function(){
 			$location.path('/hospitalAdminSearch');
 		}
+		
+		$scope.masterUserUpdateValue = "";
+		$scope.masterUserUpdateAction ="";
+		
+		var masterUserUpdateType = {
+			pwd:		{'myPwd': 'updatePwd'   },
+			email:		{'myEmail': 'updateEmail' },
+			firstName:	{'myFirstName': 'updateFirstName' },
+			lastName:	{'myLastName': 'updateLastName' },
+			occupation: {'myOccupation': 'updateOccupation'}
+		}
+		
+		$scope.updateMasterUserPwd = function(){
+			$scope.modalLabel = "Update Password";
+			$scope.modalCurrentLabel = "Current Password";
+			$scope.modalCurrentValue = $scope.masterUser.pwd;
+			$scope.modalNewValuePlaceHolder = "New Password";
+			$scope.masterUserUpdateAction = masterUserUpdateType.pwd.myPwd;
+		}
+		
+		$scope.updateMasterUserEmail = function(){
+			$scope.modalLabel = "Update Email";
+			$scope.modalCurrentLabel = "Current Email";
+			$scope.modalCurrentValue = $scope.masterUser.email;
+			$scope.modalNewValuePlaceHolder = "New Email";
+			$scope.masterUserUpdateAction = masterUserUpdateType.email.myEmail;
+		}
+		
+		$scope.updateMasterUserFirstName = function(){
+			$scope.modalLabel = "Update First Name";
+			$scope.modalCurrentLabel = "Current First Name";
+			$scope.modalCurrentValue = $scope.masterUser.firstName;
+			$scope.modalNewValuePlaceHolder = "New First Name";
+			$scope.masterUserUpdateAction = masterUserUpdateType.firstName.myFirstName;
+		}
+		
+		$scope.updateMasterUserLastName = function(){
+			$scope.modalLabel = "Update Last Name";
+			$scope.modalCurrentLabel = "Current Last Name";
+			$scope.modalCurrentValue = $scope.masterUser.lastName;
+			$scope.modalNewValuePlaceHolder = "New Last Name";
+			$scope.masterUserUpdateAction = masterUserUpdateType.lastName.myLastName;
+		}
+		
+		$scope.updateMasterUserOccupation = function(){
+			$scope.modalLabel = "Update Occupation";
+			$scope.modalCurrentLabel = "Current Occupation";
+			$scope.modalCurrentValue = $scope.masterUser.occupation;
+			$scope.modalNewValuePlaceHolder = "New Occupation";
+			$scope.masterUserUpdateAction = masterUserUpdateType.occupation.myOccupation;
+		}
+		
+		$scope.cancelMasterUserUpdateModal = function(){
+			clearModal();
+		}
+		
+		var clearModal = function(){
+			$scope.modalLabel = "";
+			$scope.modalCurrentLabel = "";
+			$scope.modalCurrentValue = "";
+			$scope.modalNewValuePlaceHolder = "";
+			$scope.masterUserUpdateAction ="";
+			$scope.masterUserUpdateValue = "";
+		}
+		
+		$scope.updateMasterUser = function(){
+			
+			var url = '/ami/amiadminhome/hospital/updatemasteruser';
+			var data = {hospitalId: $scope.hospital.id, value: $scope.masterUserUpdateValue, 'action': $scope.masterUserUpdateAction};
+			var res = $http.post(url,data);
+			
+			res.success(function(data, status, headers, config) {
+				
+				if( $scope.masterUserUpdateAction == masterUserUpdateType.pwd.myPwd){
+					$scope.masterUser.pwd = $scope.masterUserUpdateValue;
+				}
+				else if($scope.masterUserUpdateAction == masterUserUpdateType.email.myEmail){
+					$scope.masterUser.email = $scope.masterUserUpdateValue;
+				}
+				else if($scope.masterUserUpdateAction == masterUserUpdateType.firstName.myFirstName){
+					$scope.masterUser.firstName = $scope.masterUserUpdateValue;
+				}
+				else if($scope.masterUserUpdateAction == masterUserUpdateType.lastName.myLastName){
+					$scope.masterUser.lastName = $scope.masterUserUpdateValue;
+				}
+				else if($scope.masterUserUpdateAction == masterUserUpdateType.occupation.myOccupation){
+					$scope.masterUser.occupation = $scope.masterUserUpdateValue;
+				}
+				
+				clearModal();
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( $scope.masterUserUpdateAction + " failed: " + JSON.stringify({data: data}));
+			});	
+			
+		}
+		
 
 	});
 		
