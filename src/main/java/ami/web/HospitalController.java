@@ -1,6 +1,8 @@
 package ami.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -34,6 +36,10 @@ import com.mongodb.util.JSON;
 
 @Controller
 public class HospitalController {
+	
+	enum VALID_MASTER_USER_ACTIONS {updatePwd, updateEmail, updateFirstName, updateLastName, updateOccupation}
+	                                                      
+	
 	
 	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 	
@@ -98,6 +104,52 @@ public class HospitalController {
 		HospitalView hopitalView = hospitalService.findHospital(hospitalId);
 		String speciesString = objectMapper.writeValueAsString(hopitalView);
 		return speciesString;
+		
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadminhome/hospital/updatemasteruser", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateMasterUserPwd(@RequestBody String data) throws IOException {
+		
+
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String newValue = (String) dbObject.get("value");
+		final String hospitalId = (String) dbObject.get("hospitalId");
+		final String action = (String) dbObject.get("action");
+		
+		try {
+			 VALID_MASTER_USER_ACTIONS.valueOf(action);
+		} catch (Exception e) {
+			throw new RuntimeException("Master Uer not updated because the action is unknown: " +action );
+		}
+		
+		HospitalView hospitalView = hospitalService.findHospital(hospitalId);
+		final String userName     = hospitalView.getMasterUser().getUser();
+		
+		if( action.equals(VALID_MASTER_USER_ACTIONS.updatePwd.name())){
+			
+			hospitalService.updateMasterUserPwd(hospitalId, userName, newValue);
+			
+		}else if (action.equals(VALID_MASTER_USER_ACTIONS.updateEmail.name())){
+			
+			hospitalService.updateMasterUserEmail(hospitalId, userName, newValue);
+		}
+		 else if (action.equals(VALID_MASTER_USER_ACTIONS.updateFirstName.name())){
+			 
+			 hospitalService.updateMasterUserFirstName(hospitalId, userName, newValue);
+			
+		}
+		else if (action.equals(VALID_MASTER_USER_ACTIONS.updateLastName.name())){
+			
+		
+		}else if (action.equals(VALID_MASTER_USER_ACTIONS.updateOccupation.name())){
+			
+		}
+		else {
+			throw new RuntimeException("Should never be here, but just in case. Master Uer not updated because the action is unknown: " +action );
+		}
+		
 		
 	}
 	

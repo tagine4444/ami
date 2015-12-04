@@ -68,4 +68,15 @@ public class HospitalView {
 		return amiUsers;
 	}
 	
+	public AmiUser getMasterUser(){
+		
+		for (AmiUser amiUser : this.amiUsers) {
+			if(amiUser.isMasterUser()){
+				return amiUser;
+			}
+		}
+		
+		throw new RuntimeException("Could not find a master user for hospital " + this.hospital.getId() + " " + this.hospital.getName());
+	}
+	
 }

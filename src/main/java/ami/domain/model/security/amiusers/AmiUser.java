@@ -77,6 +77,10 @@ public class AmiUser {
 		this.role.add(new AmiMasterAuthority());
 	}
 	
+	public void updatePwd(String newPwd){
+		this.pwd = newPwd;
+	}
+	
 	public String getHospitalName() {
 		return hospitalName;
 	}
@@ -138,6 +142,15 @@ public class AmiUser {
 
 	public String getOccupation() {
 		return occupation;
+	}
+
+	public void updateEmail(String newEmail) {
+		this.email = newEmail;
+	}
+
+	public void updateFirstName(String firstName) {
+		this.firstName = firstName;
+		
 	}
 	
 	

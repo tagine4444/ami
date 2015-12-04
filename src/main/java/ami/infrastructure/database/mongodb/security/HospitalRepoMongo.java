@@ -1,5 +1,6 @@
 package ami.infrastructure.database.mongodb.security;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -13,6 +14,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import ami.application.commands.security.CreateHospitalCmd;
+import ami.application.commands.security.UpdateMasterUserEmailCmd;
+import ami.application.commands.security.UpdateMasterUserFirstNameCmd;
+import ami.application.commands.security.UpdateMasterUserPwdCmd;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
@@ -74,6 +78,89 @@ public class HospitalRepoMongo implements HospitalRepository{
 	public List<HospitalView> getAllHospitals() {
 		List<HospitalView>  views = mongo.findAll( HospitalView.class,AMI_HOSPITAL_VIEW);
 		return views;
+	}
+	
+	
+	
+	@Override
+	public void updateMasterUserPwd(String hospitalId ,String userName, String newPwd) {
+		commandGateway.sendAndWait(new UpdateMasterUserPwdCmd( hospitalId , userName, newPwd));
+	}
+	
+	@Override
+	public void updateHospitalMasterUserPwd(String hospitalId ,String userName, String newPwd) {
+		
+		
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		List<AmiUser> amiUsers = view.getAmiUsers();
+		Iterator<AmiUser> it = amiUsers.iterator();
+		while(it.hasNext()){
+			AmiUser anAmiUser = it.next();
+			if(anAmiUser.getUser().equals(userName)){
+				anAmiUser.updatePwd(newPwd);
+				break;
+			}
+		}
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("hospital._id").is(hospitalId)),
+	            Update.update("amiUsers", amiUsers),
+	            AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateHospitalMasterUserEmail(String hospitalId ,String userName, String newEmail) {
+		
+		
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		List<AmiUser> amiUsers = view.getAmiUsers();
+		Iterator<AmiUser> it = amiUsers.iterator();
+		while(it.hasNext()){
+			AmiUser anAmiUser = it.next();
+			if(anAmiUser.getUser().equals(userName)){
+				anAmiUser.updateEmail(newEmail);
+				break;
+			}
+		}
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("amiUsers", amiUsers),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateMasterUserEmail(String hospitalId, String userName,
+			String newEmail)  {
+		commandGateway.sendAndWait(new UpdateMasterUserEmailCmd( hospitalId , userName, newEmail));
+		
+	}
+	@Override
+	public void updateMasterUserFirstName(String hospitalId, String userName,
+			String newValue) {
+		commandGateway.sendAndWait(new UpdateMasterUserFirstNameCmd( hospitalId , userName, newValue));
+		
+	}
+	
+	@Override
+	public void updateHospitalMasterFirstName(String hospitalId,
+			String userName, String newFirstName) {
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		List<AmiUser> amiUsers = view.getAmiUsers();
+		Iterator<AmiUser> it = amiUsers.iterator();
+		while(it.hasNext()){
+			AmiUser anAmiUser = it.next();
+			if(anAmiUser.getUser().equals(userName)){
+				anAmiUser.updateFirstName(newFirstName);
+				break;
+			}
+		}
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("amiUsers", amiUsers),
+				AMI_HOSPITAL_VIEW);
+		
 	}
 
 }

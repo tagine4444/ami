@@ -12,5 +12,10 @@ public interface AmiUserRepository {
 	AmiUserView findAmiUser(String userName);
 	
 	AmiUserView authenticate(String userName, String pwd);
+	
+	void updateMasterUserPwd(String hospitalId, String user, String newPwd) throws JsonProcessingException;
+	void upateMasterUserPwd(String userName, String newPwd);
+	void upateMasterUserEmail(String userName, String newEmail);
+	void upateMasterUserFirstName(String userName, String newFirstName);
 
 }

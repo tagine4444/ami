@@ -2,8 +2,6 @@ package ami.domain.model.security.events;
 
 import org.joda.time.DateTime;
 
-import ami.domain.model.security.hospitals.Hospital;
-
 public class AmiUserDeactivatedEvent {
 
 	private final String   hospitalId;
