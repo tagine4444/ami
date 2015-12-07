@@ -453,8 +453,6 @@
 				$scope.newRequest.requestedServices.selectedServices.push(serviceToAdd);
 			}
 			
-			
-			
 			$scope.deleteFilteredItem = function(anItem){
 				
 				for(var i = $scope.newRequest.requestedServices.selectedServices.length - 1; i >= 0; i--) {

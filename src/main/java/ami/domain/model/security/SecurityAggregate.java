@@ -15,8 +15,11 @@ import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.DeactivateAmiUserCmd;
 import ami.application.commands.security.DeactivateHospitalCmd;
+import ami.application.commands.security.SwitchMasterUserCmd;
 import ami.application.commands.security.UpdateMasterUserEmailCmd;
 import ami.application.commands.security.UpdateMasterUserFirstNameCmd;
+import ami.application.commands.security.UpdateMasterUserLastNameCmd;
+import ami.application.commands.security.UpdateMasterUserOccupationCmd;
 import ami.application.commands.security.UpdateMasterUserPwdCmd;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.events.AmiUserCreatedEvent;
@@ -25,7 +28,11 @@ import ami.domain.model.security.events.HospitaDeactivatedEvent;
 import ami.domain.model.security.events.HospitalCreatedEvent;
 import ami.domain.model.security.events.MasterUserEmailUpdatedEvent;
 import ami.domain.model.security.events.MasterUserFirstNameUpdatedEvent;
+import ami.domain.model.security.events.MasterUserLastNameUpdatedEvent;
+import ami.domain.model.security.events.MasterUserOccupationUpdatedEvent;
 import ami.domain.model.security.events.MasterUserPwdUpdatedEvent;
+import ami.domain.model.security.events.MasterUserSwitchedAbortedCauseAlreadyMasterUserEvent;
+import ami.domain.model.security.events.MasterUserSwitchedEvent;
 import ami.domain.model.security.hospitals.Hospital;
 
 public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
@@ -156,6 +163,58 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		}
 		
 		
+		@CommandHandler
+		public void updateMasterUserCmd(UpdateMasterUserLastNameCmd command) {
+			
+			if(!this.hospital.getId().equals(command.getHospitalId())){
+				throw new IllegalArgumentException("Cannot update last name for  '"+command.getUserName() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			if(! isMasterUser(command.getUserName()) ){
+				throw new IllegalArgumentException("Cannot update last name for  '"+command.getUserName() +"' because he is not a master user for hospital "+this.hospital.getId()+"' " );
+			}
+			
+			apply(new MasterUserLastNameUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewLastName() ) );
+		}
+		
+		@CommandHandler
+		public void updateMasterUserCmd(UpdateMasterUserOccupationCmd command) {
+			
+			if(!this.hospital.getId().equals(command.getHospitalId())){
+				throw new IllegalArgumentException("Cannot update occupation for  '"+command.getUserName() +"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			if(! isMasterUser(command.getUserName()) ){
+				throw new IllegalArgumentException("Cannot update occupation for  '"+command.getUserName() +"' because he is not a master user for hospital "+this.hospital.getId()+"' " );
+			}
+			
+			apply(new MasterUserOccupationUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewOccupation() ) );
+		}
+		@CommandHandler
+		public void updateMasterUserCmd(SwitchMasterUserCmd command) {
+			
+			if(!this.hospital.getId().equals(command.getHospitalId())){
+				throw new IllegalArgumentException("Cannot switch master user to '"+command.getNewMasterUser()+"' because he doesn't work at hospital '"+this.hospital.getId()+"' " );
+			}
+			
+			if( isMasterUser(command.getNewMasterUser()) ){
+				apply(new MasterUserSwitchedAbortedCauseAlreadyMasterUserEvent(
+						command.getHospitalId(),
+						command.getNewMasterUser() ) );
+			}
+			
+			apply(new MasterUserSwitchedEvent(
+					command.getHospitalId(),
+					command.getNewMasterUser() ) );
+		}
+		
+		
 		@EventSourcingHandler
 		public void on(AmiUserCreatedEvent event) {
 			this.amiUsers.add(event.getAmiUser());
@@ -195,6 +254,20 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 		
 		@EventSourcingHandler
 		public void on(MasterUserFirstNameUpdatedEvent event) {
+			this.id = event.getHospitalId();
+		}
+		
+		@EventSourcingHandler
+		public void on(MasterUserLastNameUpdatedEvent event) {
+			this.id = event.getHospitalId();
+		}
+		
+		@EventSourcingHandler
+		public void on(MasterUserOccupationUpdatedEvent event) {
+			this.id = event.getHospitalId();
+		}
+		@EventSourcingHandler
+		public void on(MasterUserSwitchedEvent event) {
 			this.id = event.getHospitalId();
 		}
 		

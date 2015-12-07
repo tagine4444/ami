@@ -1,5 +1,8 @@
 package ami.infrastructure.database.mongodb.security;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +16,8 @@ import ami.application.commands.security.CreateAmiUserCmd;
 import ami.application.commands.security.UpdateMasterUserPwdCmd;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserRepository;
-import ami.infrastructure.database.model.AmiRequestView;
 import ami.infrastructure.database.model.AmiUserView;
-import ami.web.converters.DateTimeToStringConverter;
+import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 @Service
@@ -83,12 +85,6 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 
 	@Override
 	public void upateMasterUserPwd(String userName, String newPwd) {
-		    
-//		Query query = new Query(Criteria.where("amiUser.user").is(userName));
-//		Update update = new Update() ;
-//		update.set("amiUser.pwd", newPwd);
-		
-		//AmiUserView updatedView = mongo.findAndModify(query, update, AmiUserView.class, AMI_USER_VIEW); 
 		
 		mongo.updateFirst(
 				new Query(Criteria.where("amiUser.user").is(userName)),
@@ -100,12 +96,6 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 
 	@Override
 	public void upateMasterUserEmail(String userName, String newEmail) {
-		
-//		Query query = new Query(Criteria.where("amiUser.user").is(userName));
-//		Update update = new Update() ;
-//		update.set("amiUser.email", newEmail);
-//		
-//		AmiUserView updatedView = mongo.findAndModify(query, update, AmiUserView.class, AMI_USER_VIEW); 
 		
 		mongo.updateFirst(
 				new Query(Criteria.where("amiUser.user").is(userName)),
@@ -120,6 +110,58 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 				new Query(Criteria.where("amiUser.user").is(userName)),
 				Update.update("amiUser.firstName", newFirstName),
 				AMI_USER_VIEW);
+		
+	}
+
+	@Override
+	public void upateMasterUserLastName(String userName, String newLastName) {
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("amiUser.user").is(userName)),
+				Update.update("amiUser.lastName", newLastName),
+				AMI_USER_VIEW);
+		
+	}
+
+	@Override
+	public void upateMasterUserOccupation(String userName, String newOccupation) {
+		mongo.updateFirst(
+				new Query(Criteria.where("amiUser.user").is(userName)),
+				Update.update("amiUser.occupation", newOccupation),
+				AMI_USER_VIEW);
+		
+	}
+
+	@Override
+	public void switchMasterUserService(String hospitalId, String newMasterUser) {
+		
+		List<AmiUserView>  views = mongo.find(Query.query(Criteria.where("hospitalId").is(hospitalId)), AmiUserView.class,AMI_USER_VIEW);
+		Iterator<AmiUserView> it = views.iterator();
+		while(it.hasNext()){
+			AmiUserView anAmiUserView = it.next();
+			AmiUser amiUser = anAmiUserView.getAmiUser();
+			
+			if(amiUser.getUser().equals(newMasterUser)){
+				amiUser.addMasterUserRole();
+				mongo.updateFirst(
+						new Query(Criteria.where("hospitalId").is(hospitalId).and("amiUser.user").is(amiUser.getUser())),
+						Update.update("amiUser", amiUser),
+						AMI_USER_VIEW);
+				
+			}else{
+				if(amiUser.isMasterUser()){
+					amiUser.removeMasterUserRole();
+					mongo.updateFirst(
+							new Query(Criteria.where("hospitalId").is(hospitalId).and("amiUser.user").is(amiUser.getUser())),
+							Update.update("amiUser", amiUser),
+							AMI_USER_VIEW);
+				}
+				
+			}
+			
+		}
+		
+		;
 		
 	}
 

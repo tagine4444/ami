@@ -1,6 +1,7 @@
 package ami.domain.model.security.amiusers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -150,6 +151,45 @@ public class AmiUser {
 
 	public void updateFirstName(String firstName) {
 		this.firstName = firstName;
+		
+	}
+
+	public void updateLastName(String newLastName) {
+		this.lastName = newLastName;
+		
+	}
+	public void updateOccupation(String newOccupation) {
+		this.occupation = newOccupation;
+	}
+
+	public void addMasterUserRole() {
+		
+		// add master user role
+		initializeMasterUser(this.hospitalId);
+		
+		// now make sure it doesn't have 2 master user role, just in case.
+		int numberOfMasterUserRole = 0;
+		Iterator<GrantedAuthority> it = this.role.iterator();
+		while(it.hasNext()){
+			GrantedAuthority grantedAuthority = it.next();
+			if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
+				
+				if(numberOfMasterUserRole>1){
+					it.remove();
+				}
+			}
+		}
+	}
+
+	public void removeMasterUserRole() {
+		this.masterUser = false;
+		Iterator<GrantedAuthority> it = this.role.iterator();
+		while(it.hasNext()){
+			GrantedAuthority grantedAuthority = it.next();
+			if( AmiAuthtorities.AMI_MASTER_USER.toString().equals( grantedAuthority.getAuthority() )){
+				it.remove();
+			}
+		}
 		
 	}
 	

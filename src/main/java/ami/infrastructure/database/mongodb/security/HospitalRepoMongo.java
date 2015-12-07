@@ -14,8 +14,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import ami.application.commands.security.CreateHospitalCmd;
+import ami.application.commands.security.SwitchMasterUserCmd;
 import ami.application.commands.security.UpdateMasterUserEmailCmd;
 import ami.application.commands.security.UpdateMasterUserFirstNameCmd;
+import ami.application.commands.security.UpdateMasterUserLastNameCmd;
+import ami.application.commands.security.UpdateMasterUserOccupationCmd;
 import ami.application.commands.security.UpdateMasterUserPwdCmd;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.hospitals.Hospital;
@@ -143,8 +146,8 @@ public class HospitalRepoMongo implements HospitalRepository{
 	}
 	
 	@Override
-	public void updateHospitalMasterFirstName(String hospitalId,
-			String userName, String newFirstName) {
+	public void updateHospitalMasterFirstName(String hospitalId, String userName, String newFirstName) {
+		
 		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
 		List<AmiUser> amiUsers = view.getAmiUsers();
 		Iterator<AmiUser> it = amiUsers.iterator();
@@ -153,6 +156,83 @@ public class HospitalRepoMongo implements HospitalRepository{
 			if(anAmiUser.getUser().equals(userName)){
 				anAmiUser.updateFirstName(newFirstName);
 				break;
+			}
+		}
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("amiUsers", amiUsers),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateMasterUserLastName(String hospitalId, String userName, String newValue) {
+		commandGateway.sendAndWait(new UpdateMasterUserLastNameCmd( hospitalId , userName, newValue));
+		
+	}
+	@Override
+	public void updateHospitalMasterLastName(String hospitalId,
+			String userName, String newLastName) {
+		
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		List<AmiUser> amiUsers = view.getAmiUsers();
+		Iterator<AmiUser> it = amiUsers.iterator();
+		while(it.hasNext()){
+			AmiUser anAmiUser = it.next();
+			if(anAmiUser.getUser().equals(userName)){
+				anAmiUser.updateLastName(newLastName);
+				break;
+			}
+		}
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("amiUsers", amiUsers),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateMasterUserOccupation(String hospitalId, String userName, String newValue) {
+		commandGateway.sendAndWait(new UpdateMasterUserOccupationCmd( hospitalId , userName, newValue));
+		
+	}
+	@Override
+	public void updateHospitalMasterOccupation(String hospitalId,
+			String userName, String newOccupation) {
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		List<AmiUser> amiUsers = view.getAmiUsers();
+		Iterator<AmiUser> it = amiUsers.iterator();
+		while(it.hasNext()){
+			AmiUser anAmiUser = it.next();
+			if(anAmiUser.getUser().equals(userName)){
+				anAmiUser.updateOccupation(newOccupation);
+				break;
+			}
+		}
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("amiUsers", amiUsers),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void switchMasterUser(String hospitalId, String newMasterUser) {
+		commandGateway.sendAndWait(new SwitchMasterUserCmd( hospitalId , newMasterUser));
+	}
+	
+	@Override
+	public void switchMasterUserService(String hospitalId, String newMasterUser) {
+		HospitalView  view = mongo.findOne(Query.query(Criteria.where("hospital.id").is(hospitalId)), HospitalView.class,AMI_HOSPITAL_VIEW);
+		List<AmiUser> amiUsers = view.getAmiUsers();
+		Iterator<AmiUser> it = amiUsers.iterator();
+		while(it.hasNext()){
+			
+			AmiUser anAmiUser = it.next();
+			if(anAmiUser.getUser().equals(newMasterUser)){
+				anAmiUser.addMasterUserRole();
+			}else{
+				anAmiUser.removeMasterUserRole();
 			}
 		}
 		

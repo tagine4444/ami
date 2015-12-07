@@ -84,6 +84,7 @@
 	amiAdminModule.controller('HospitalAdminUpdateCtrl', function ($scope, $http, $window,$location, myHospitalView) {
 		$scope.page = 'hospitalAdmin';
 		$scope.hospital = myHospitalView.hospital;
+		$scope.hospitalUsers = myHospitalView.amiUsers;
 		
 		if(myHospitalView.amiUsers){
 			myHospitalView.amiUsers.forEach(function(aUser){
@@ -91,6 +92,17 @@
 					$scope.masterUser = aUser;
 				}
 			})
+		}
+		
+		// initilize the new master user to the current, so that when it is switch we assign it the new value
+		$scope.newMasterUser = $scope.masterUser.user;
+		
+		$scope.updateMasterUserName = function(newUserName){
+			$scope.newMasterUser = newUserName;
+		}
+		
+		$scope.cancelSwitchMasterUser = function(newUserName){
+			$scope.newMasterUser = $scope.masterUser.user;
 		}
 		
 		$scope.goToNewHospitalPage = function(){
@@ -165,8 +177,48 @@
 			$scope.masterUserUpdateValue = "";
 		}
 		
-		$scope.updateMasterUser = function(){
+		
+		$scope.isUpateMasterUserSaveBtnEnabled = function(){
 			
+			if ( $scope.masterUserUpdateAction == masterUserUpdateType.pwd.myPwd ){
+				$scope.showEmptyFieldHintInModal = false;
+				if( $scope.masterUserUpdateValue.length <5 ){
+					 $scope.showPwdHintInModal = true;
+					 return true;
+				}
+				$scope.showPwdHintInModal = false;
+				return false;
+			}
+			
+			$scope.showPwdHintInModal = false;
+			if( $scope.masterUserUpdateValue.length <2 ){
+				 $scope.showEmptyFieldHintInModal = true;
+				 return true;
+			}
+			$scope.showEmptyFieldHintInModal = false;
+			return false;
+		}
+			
+		$scope.switchMasterUserAndSave = function(){
+			
+			var url = '/ami/amiadminhome/hospital/switchmasteruser';
+			var data = {hospitalId: $scope.hospital.id, newMasterUser: $scope.newMasterUser};
+			var res = $http.post(url,data);
+			
+			res.success(function(data, status, headers, config) {
+				
+				$scope.masterUser = data.amiUser; 
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( $scope.masterUserUpdateAction + " failed: " + JSON.stringify({data: data}));
+			});	
+			
+		}
+		
+		
+		$scope.updateMasterUser = function(){
+				
 			var url = '/ami/amiadminhome/hospital/updatemasteruser';
 			var data = {hospitalId: $scope.hospital.id, value: $scope.masterUserUpdateValue, 'action': $scope.masterUserUpdateAction};
 			var res = $http.post(url,data);

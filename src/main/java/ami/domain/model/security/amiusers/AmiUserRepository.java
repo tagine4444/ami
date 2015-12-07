@@ -17,5 +17,8 @@ public interface AmiUserRepository {
 	void upateMasterUserPwd(String userName, String newPwd);
 	void upateMasterUserEmail(String userName, String newEmail);
 	void upateMasterUserFirstName(String userName, String newFirstName);
+	void upateMasterUserLastName(String userName, String newLastName);
+	void upateMasterUserOccupation(String userName, String newOccupation);
+	void switchMasterUserService(String hospitalId, String newMasterUser);
 
 }

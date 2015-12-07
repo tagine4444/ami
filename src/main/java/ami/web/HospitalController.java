@@ -24,6 +24,7 @@ import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
+import ami.infrastructure.database.model.AmiUserView;
 import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -136,21 +137,32 @@ public class HospitalController {
 			hospitalService.updateMasterUserEmail(hospitalId, userName, newValue);
 		}
 		 else if (action.equals(VALID_MASTER_USER_ACTIONS.updateFirstName.name())){
-			 
 			 hospitalService.updateMasterUserFirstName(hospitalId, userName, newValue);
-			
 		}
 		else if (action.equals(VALID_MASTER_USER_ACTIONS.updateLastName.name())){
 			
-		
+			hospitalService.updateMasterUserLastName(hospitalId, userName, newValue);
 		}else if (action.equals(VALID_MASTER_USER_ACTIONS.updateOccupation.name())){
-			
+			hospitalService.updateMasterUserOccupation(hospitalId, userName, newValue);
 		}
 		else {
 			throw new RuntimeException("Should never be here, but just in case. Master Uer not updated because the action is unknown: " +action );
 		}
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadminhome/hospital/switchmasteruser", method = RequestMethod.POST)
+	@ResponseBody
+	public String switchMasterUser(@RequestBody String data) throws IOException {
 		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String newMasterUser = (String) dbObject.get("newMasterUser");
+		final String hospitalId = (String) dbObject.get("hospitalId");
 		
+		hospitalService.switchMasterUser(hospitalId, newMasterUser);
+		AmiUserView updatedMasterUser = amiUserService.findAmiUser(newMasterUser);
+		
+		return objectMapper.writeValueAsString(updatedMasterUser);
 	}
 	
 }
