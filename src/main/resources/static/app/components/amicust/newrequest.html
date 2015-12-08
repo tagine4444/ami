@@ -498,12 +498,13 @@
 	      	<div class="panel panel-default">
 			  <!-- Default panel contents -->
 			  <div class="panel-heading">
-				  Adding images to this request is done in 2 steps. 
-				  <ol>
-				  	 <li>Push the &quot;Select Images&quot; button to select all the images you wish to upload</li>
-				  	 <li>Push the &quot;Upload&quot; button once all files are selected to upload them </li>
-				  </ol>
-				  <strong>Note</strong> You can only select 1 image at a time. So repeat step 1 until all images are selected, then push the upload button.
+				  <p ng-show="uploader.flow.files.length==0">Push the &quot;Select Images&quot; (blue button) to select images</p>
+			  	  <div ng-show="uploader.flow.files.length>0">
+			         <ol>
+				         <li>Push the Select Images button or the remove link to add or Remove images</li>
+				         <li><strong>Push the upload button</strong> when you are done.</li>
+			         </ol>
+		          </div>
 			  </div>
 			  
 			  	<div class="col-sm-12">
@@ -525,22 +526,16 @@
 	          					bs-tooltip>Select Images
 					        	<span class="btn-primary glyphicon glyphicon-plus" aria-hidden="true"></span>
 					        </button>
-					        &nbsp;
-					        <button class="btn btn-primary" 
-					        	data-dismiss="modal"
-					        	ng-click="upload()"  
-					        	data-trigger="hover" 
-	          					data-placement="top"
-	          					data-title="Transfer documents"
-	          					bs-tooltip>Upload
-					        	<span class="btn-primary glyphicon glyphicon-upload" aria-hidden="true"></span>
-					        </button>
 		   					
 					        <br/> <br/>
 					        
-					        <div class="panel panel-default">
+					         
+					         
+					        <div class="panel panel-default" ng-show="uploader.flow.files.length>0">
 								  <!-- Default panel contents -->
-								  <div class="panel-heading">Images Selected For Upload</div>
+								  <div class="panel-heading">
+									  Images Selected for upload<br/>
+								 </div>
 								  <table class="table">
 								  	 <thead>
 									   <tr>
@@ -563,6 +558,15 @@
 	        
 	      </div>
 	      <div class="modal-footer">
+	      	 <button class="btn btn-danger" ng-show="uploader.flow.files.length>0" 
+					        	data-dismiss="modal"
+					        	ng-click="upload()"  
+					        	data-trigger="hover" 
+	          					data-placement="top"
+	          					data-title="Transfer documents"
+	          					bs-tooltip>Upload
+					        	<span class="btn-danger glyphicon glyphicon-upload" aria-hidden="true"></span>
+					        </button> &nbsp;
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 	      </div>
 	    </div>
