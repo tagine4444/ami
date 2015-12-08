@@ -72,7 +72,7 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			final AmiUser amiUser = command.getAmiUser();
 			
 			
-			if(!this.hasMasterUser && !amiUser.isMasterUser()){
+			if(!amiUser.isMasterUser() && !this.hasMasterUser && !amiUser.isMasterUser()){
 				throw new IllegalArgumentException("Cannot Create User '"+command.getAmiUser().getUser()+"' No Master Users exist for this hospital: '"+this.hospital.getId()+"' " );
 			}
 			
