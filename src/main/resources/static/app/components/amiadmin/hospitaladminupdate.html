@@ -24,11 +24,11 @@
 					<tr>
 					
 						<th>User Name</th>
-						<th><a ng-click="updateMasterUserPwd()" href =""  data-toggle="modal" data-target="#updatePwdModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Password</a></th>
-						<th><a ng-click="updateMasterUserEmail()" href=""  data-toggle="modal" data-target="#updatePwdModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
-						<th><a ng-click="updateMasterUserFirstName()" href=""  data-toggle="modal" data-target="#updatePwdModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>First Name</a></th>
-						<th><a ng-click="updateMasterUserLastName()" href=""  data-toggle="modal" data-target="#updatePwdModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Last Name</a></th>
-						<th><a ng-click="updateMasterUserOccupation()" href=""  data-toggle="modal" data-target="#updatePwdModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Occupation</a></th>
+						<th><a ng-click="updateMasterUserPwd()" href =""  data-toggle="modal" data-target="#updateMasterUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Password</a></th>
+						<th><a ng-click="updateMasterUserEmail()" href=""  data-toggle="modal" data-target="#updateMasterUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
+						<th><a ng-click="updateMasterUserFirstName()" href=""  data-toggle="modal" data-target="#updateMasterUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>First Name</a></th>
+						<th><a ng-click="updateMasterUserLastName()" href=""  data-toggle="modal" data-target="#updateMasterUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Last Name</a></th>
+						<th><a ng-click="updateMasterUserOccupation()" href=""  data-toggle="modal" data-target="#updateMasterUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Occupation</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -62,10 +62,10 @@
 				<thead>
 					<tr>
 						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Hospital Name</a></th>
-						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Acronym</a></th>
-						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Phone</a></th>
-						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
-						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Address</a></th>
+						<th><a ng-click="updateHospitalAcronym()" href =""  data-toggle="modal" data-target="#updateHospitalStringModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Acronym</a></th>
+						<th><a ng-click="updateHospitalPhone()" href =""  data-toggle="modal" data-target="#updateHospitalModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Phone</a></th>
+						<th><a ng-click="updateHospitalEmails()" href =""  data-toggle="modal" data-target="#updateHospitalModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
+						<th><a ng-click="updateHospitalAddresses()" href =""  data-toggle="modal" data-target="#updateHospitalModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Address</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -113,7 +113,7 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Notes</a></th>
+						<th><a ng-click="updateHospitalNotes()" href =""  data-toggle="modal" data-target="#updateHospitalStringModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Notes</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -277,13 +277,13 @@
 </div>
 
 
-<div class="modal fade bs-example-modal-lg" id="updatePwdModal" tabindex="-1" role="dialog" 
-	aria-labelledby="updatePwdModalLabel" aria-hidden="true">
+<div class="modal fade bs-example-modal-lg" id="updateMasterUserModal" tabindex="-1" role="dialog" 
+	aria-labelledby="updateMasterUserModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="updatePwdModalLabel">{{modalLabel}}</h4>
+	        <h4 class="modal-title" id="updateMasterUserModalLabel">{{modalLabel}}</h4>
 	      </div>
 	      <div class="modal-body">
       		<div class="row">
@@ -348,6 +348,85 @@
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelSwitchMasterUser()" >Cancel</button>
 	        <button type="button" class="btn btn-danger" data-dismiss="modal"  ng-click="switchMasterUserAndSave()" >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="updateHospitalStringModal" tabindex="-1" role="dialog" 
+	aria-labelledby="updateHospitalStringModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="updateHospitalStringModalLabel">{{modalLabel}}</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12">
+					    <p><strong>Current Value:</strong> {{hospitalStringCurrentValue}}</p>
+		          </div>
+		          <div class="col-md-4" ng-show="inputSizeSmall">
+		          		<input type="text"  class="form-control" ng-model='newHospitalUpdateValue' placeholder="{{newHospitalUpdatePlaceHolderValue}}" >
+		          </div>
+		          <div class="col-md-12" ng-show="!inputSizeSmall">
+		          		 <textarea class="form-control" rows="6" ng-model="newHospitalUpdateValue"
+							    placeholder="{{newHospitalUpdatePlaceHolderValue}}" ></textarea>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelMasterUserUpdateModal()" >Cancel</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-disabled="newHospitalUpdateValue.length<2"  ng-click="updateHospital()" >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="updateHospitalModal" tabindex="-1" role="dialog" 
+	aria-labelledby="updateHospitalModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="updateHospitalModalLabel">{{modalLabel}}</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12" ng-show="updateHospitalErrorMsg.length>0">
+		          	<ul ng-repeat="anError in updateHospitalErrorMsg">
+		          		<li style="color:red">{{anError}}</li>
+		          	</ul>
+		          
+		          </div>
+		          <div class="col-md-12">
+		          
+		          	<table ng-repeat="aHospitalUpdate in hospitalListToUpdate" class="table" >
+						<tr>
+							<td>{{aHospitalUpdate.label}}</td>
+							<td>{{aHospitalUpdate.value}}</td>
+							<td><a href="" ng-click="removeHospitalUpdateItem(aHospitalUpdate)">Remove</a></td>
+						</tr>
+					</table>
+		          
+		          </div>
+		          <div class="col-md-12">
+<!-- 					    <p><strong>{{modalCurrentLabel}}:</strong> {{modalCurrentValue}}</p> -->
+		          </div>
+		          <div class="col-md-4">
+		          		<input type="text"  class="form-control" ng-model='newHospitalUpdateLabel' placeholder="{{newHospitalUpdatePlaceHolderLabel}}" >
+		          </div>
+		          <div class="col-md-6">
+		          		<input type="text"  class="form-control" ng-model='newHospitalUpdateValue' placeholder="{{newHospitalUpdatePlaceHolderValue}}" >
+		          </div>
+		          <div class="col-md-2">
+		          		<button type="button" class="btn btn-primary" ng-click="addHospitalUpdateItem()">Add</button>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelMasterUserUpdateModal()" >Cancel</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-disabled="!hospitalUpdated"  ng-click="updateHospital()" >Save</button>
 	      </div>
 	    </div>
 	  </div>

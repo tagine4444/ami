@@ -66,4 +66,28 @@ public class Hospital {
 		return notes;
 	}
 	
+	public void replacePhoneList(List<Phone> phoneList){
+		
+		this.phones = phoneList;
+		
+	}
+
+	public void replaceEmailsList(List<Email> newEmailList) {
+		this.emails = newEmailList;
+		
+	}
+
+	public void replaceAddressList(List<Address> newAddressList) {
+		this.addresses = newAddressList;
+		
+	}
+
+	public void replaceAcronym(String newAcronym) {
+		this.acronym = newAcronym;
+	}
+
+	public void replaceNotes(String newNotes) {
+		this.notes = newNotes;
+	}
+	
 }

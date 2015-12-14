@@ -1,15 +1,15 @@
 package ami.web;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,15 +22,21 @@ import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 import ami.domain.model.security.AmiAuthtorities;
 import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserRepository;
+import ami.domain.model.security.factory.HospitalAttributeFactory;
+import ami.domain.model.security.hospitals.Address;
+import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
+import ami.domain.model.security.hospitals.Phone;
 import ami.infrastructure.database.model.AmiUserView;
 import ami.infrastructure.database.model.HospitalView;
+import ami.infrastructure.services.AmiServices;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
@@ -39,6 +45,7 @@ import com.mongodb.util.JSON;
 public class HospitalController {
 	
 	enum VALID_MASTER_USER_ACTIONS {updatePwd, updateEmail, updateFirstName, updateLastName, updateOccupation}
+	enum VALID_HOSPTIAL_ACTIONS {updatePhones, updateEmails, updateAddresses, updateAcronym , updateNotes}
 	                                                      
 	
 	
@@ -47,8 +54,13 @@ public class HospitalController {
 	@Autowired
 	private HospitalRepository hospitalService;
 	
+	
+	@Autowired
+	private AmiServices amiServices;
+	
 	@Autowired
 	private AmiUserRepository amiUserService;
+	
 	@Autowired
 	private AmiCaseNumberGeneratorRepository sequenceGenerator;
 	
@@ -74,7 +86,7 @@ public class HospitalController {
 		Hospital hospital = objectMapper.readValue(hospitalJson.toString(), Hospital.class);
 		hospital.init(hospitalId);
 		
-		hospitalService.createHospital(hospital, new DateTime());
+		amiServices.createHospital(hospital, new DateTime());
 		HospitalView saveHospital = hospitalService.findHospital(hospitalId);
 		
 		AmiUser amiMasterUser = objectMapper.readValue(masterUser.toString(), AmiUser.class);
@@ -109,9 +121,62 @@ public class HospitalController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadminhome/hospital/updatehospital", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateHospital(@RequestBody String data) throws IOException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		
+		
+		final String hospitalId = (String) dbObject.get("hospitalId");
+		final String action = (String) dbObject.get("action");
+		
+		try {
+			VALID_HOSPTIAL_ACTIONS.valueOf(action);
+		} catch (Exception e) {
+			throw new RuntimeException("Master Uer not updated because the action is unknown: " +action );
+		}
+		
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		if( action.equals(VALID_HOSPTIAL_ACTIONS.updatePhones.name())){
+			
+			final BasicDBList newValue = (BasicDBList) dbObject.get("value");
+			List<Map<String, String>> updatedPhoneListOfMaps = objectMapper.readValue(newValue.toString(), List.class);
+			List<Phone> updatedPhoneList = HospitalAttributeFactory.getPhonesFromMap(updatedPhoneListOfMaps);
+			amiServices.updateHospitalPhones(hospitalId, userName, updatedPhoneList);
+		}
+		else if( action.equals(VALID_HOSPTIAL_ACTIONS.updateEmails.name())){
+			
+			final BasicDBList newValue = (BasicDBList) dbObject.get("value");
+			List<Map<String, String>> updatedEmailListOfMaps = objectMapper.readValue(newValue.toString(), List.class);
+			List<Email> updatedEmailList = HospitalAttributeFactory.getEmailsFromMap(updatedEmailListOfMaps);
+			amiServices.updateHospitalEmails(hospitalId, userName, updatedEmailList);
+		}
+		
+		else if( action.equals(VALID_HOSPTIAL_ACTIONS.updateAddresses.name())){
+			final BasicDBList newValue = (BasicDBList) dbObject.get("value");
+			List<Map<String, String>> updatedAddressesListOfMaps = objectMapper.readValue(newValue.toString(), List.class);
+			List<Address> updatedEmailList = HospitalAttributeFactory.getAddressesFromMap(updatedAddressesListOfMaps);
+			amiServices.updateHospitalAddresses(hospitalId, userName, updatedEmailList);
+		}
+		else if( action.equals(VALID_HOSPTIAL_ACTIONS.updateAcronym.name())){
+			
+			final String newValue = (String) dbObject.get("value");
+			amiServices.updateHospitalAcronym(hospitalId, userName, newValue);
+		}
+		else if( action.equals(VALID_HOSPTIAL_ACTIONS.updateNotes.name())){
+			
+			final String newValue = (String) dbObject.get("value");
+			amiServices.updateHospitalNotes(hospitalId, userName, newValue);
+		}
+	}
+	
+
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amiadminhome/hospital/updatemasteruser", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateMasterUserPwd(@RequestBody String data) throws IOException {
+	public void updateMasterUser(@RequestBody String data) throws IOException {
 		
 
 		DBObject dbObject = (DBObject)JSON.parse(data);
@@ -130,20 +195,20 @@ public class HospitalController {
 		
 		if( action.equals(VALID_MASTER_USER_ACTIONS.updatePwd.name())){
 			
-			hospitalService.updateMasterUserPwd(hospitalId, userName, newValue);
+			amiServices.updateMasterUserPwd(hospitalId, userName, newValue);
 			
 		}else if (action.equals(VALID_MASTER_USER_ACTIONS.updateEmail.name())){
 			
-			hospitalService.updateMasterUserEmail(hospitalId, userName, newValue);
+			amiServices.updateMasterUserEmail(hospitalId, userName, newValue);
 		}
 		 else if (action.equals(VALID_MASTER_USER_ACTIONS.updateFirstName.name())){
-			 hospitalService.updateMasterUserFirstName(hospitalId, userName, newValue);
+			 amiServices.updateMasterUserFirstName(hospitalId, userName, newValue);
 		}
 		else if (action.equals(VALID_MASTER_USER_ACTIONS.updateLastName.name())){
 			
-			hospitalService.updateMasterUserLastName(hospitalId, userName, newValue);
+			amiServices.updateMasterUserLastName(hospitalId, userName, newValue);
 		}else if (action.equals(VALID_MASTER_USER_ACTIONS.updateOccupation.name())){
-			hospitalService.updateMasterUserOccupation(hospitalId, userName, newValue);
+			amiServices.updateMasterUserOccupation(hospitalId, userName, newValue);
 		}
 		else {
 			throw new RuntimeException("Should never be here, but just in case. Master Uer not updated because the action is unknown: " +action );
@@ -159,7 +224,7 @@ public class HospitalController {
 		final String newMasterUser = (String) dbObject.get("newMasterUser");
 		final String hospitalId = (String) dbObject.get("hospitalId");
 		
-		hospitalService.switchMasterUser(hospitalId, newMasterUser);
+		amiServices.switchMasterUser(hospitalId, newMasterUser);
 		AmiUserView updatedMasterUser = amiUserService.findAmiUser(newMasterUser);
 		
 		return objectMapper.writeValueAsString(updatedMasterUser);

@@ -32,6 +32,7 @@ import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
 import ami.domain.model.security.hospitals.Phone;
+import ami.infrastructure.services.AmiServices;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,6 +62,9 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	private HospitalRepository hospitalService;
 	
 	@Autowired
+	private AmiServices amiInfrastructureService;
+	
+	@Autowired
 	private AmiUserRepository amiUserService;
 	
 	
@@ -77,7 +81,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			final String hospitalName = "Animal Medical Imaging";
 			final String acronym = "";
 			Hospital amiHospital = getHospital(hospitalName,acronym);
-			hospitalService.createHospital(amiHospital, now);
+			amiInfrastructureService.createHospital(amiHospital, now);
 			Hospital savedHospital = hospitalService.findHospitalbyName(hospitalName);
 			
 			// create user
@@ -94,7 +98,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			final String hospitalName2 = "Pet Clinic";
 			final String acronym1 = "PETCLI";
 			Hospital petClinicHospital = getHospital(hospitalName2,acronym1);
-			hospitalService.createHospital(petClinicHospital, now);
+			amiInfrastructureService.createHospital(petClinicHospital, now);
 			Hospital savedHospital2 = hospitalService.findHospitalbyName(hospitalName2);
 			
 			

@@ -3,7 +3,7 @@ package ami.domain.model.security.hospitals;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Email {
+public class Email implements HospitalAttribute {
 
 	
 	private String label;
@@ -17,10 +17,12 @@ public class Email {
 		this.value = value;
 	}
 
+	@Override
 	public String getLabel() {
 		return label;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}

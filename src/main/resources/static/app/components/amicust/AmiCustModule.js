@@ -551,6 +551,7 @@
 					},
 					
 					fileCompleted: function ($flow, $file, $message) {
+						$flow.files = [];
 					    
 //					    var myRequestNumber = $scope.newRequest.requestNumber;
 //					    var myRequestNumber = $scope.caseNumber;
@@ -558,7 +559,7 @@
 						
 						promise.then(function(result) {
 							$scope.fileUploads  = result.data;
-							$scope.$apply();
+							//$scope.$apply();
 						}, 
 						function(response) {
 						  alert( response.data.message);

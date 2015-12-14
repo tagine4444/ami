@@ -21,8 +21,11 @@ import ami.application.commands.security.UpdateMasterUserLastNameCmd;
 import ami.application.commands.security.UpdateMasterUserOccupationCmd;
 import ami.application.commands.security.UpdateMasterUserPwdCmd;
 import ami.domain.model.security.amiusers.AmiUser;
+import ami.domain.model.security.hospitals.Address;
+import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
 import ami.domain.model.security.hospitals.HospitalRepository;
+import ami.domain.model.security.hospitals.Phone;
 import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,11 +42,11 @@ public class HospitalRepoMongo implements HospitalRepository{
 	private CommandGateway commandGateway;
 	 
 	
-	@Override
-	public void createHospital(Hospital hospital ,DateTime hospitalActivationDate) throws JsonProcessingException {
-		
-		commandGateway.sendAndWait(new CreateHospitalCmd(hospital,hospitalActivationDate));
-	}
+//	@Override
+//	public void createHospital(Hospital hospital ,DateTime hospitalActivationDate) throws JsonProcessingException {
+//		
+//		commandGateway.sendAndWait(new CreateHospitalCmd(hospital,hospitalActivationDate));
+//	}
 	@Override
 	public void createHospitalView(Hospital hospital,
 			@Timestamp DateTime hospitalActivationDate) throws JsonProcessingException {
@@ -83,12 +86,6 @@ public class HospitalRepoMongo implements HospitalRepository{
 		return views;
 	}
 	
-	
-	
-	@Override
-	public void updateMasterUserPwd(String hospitalId ,String userName, String newPwd) {
-		commandGateway.sendAndWait(new UpdateMasterUserPwdCmd( hospitalId , userName, newPwd));
-	}
 	
 	@Override
 	public void updateHospitalMasterUserPwd(String hospitalId ,String userName, String newPwd) {
@@ -132,18 +129,7 @@ public class HospitalRepoMongo implements HospitalRepository{
 				AMI_HOSPITAL_VIEW);
 		
 	}
-	@Override
-	public void updateMasterUserEmail(String hospitalId, String userName,
-			String newEmail)  {
-		commandGateway.sendAndWait(new UpdateMasterUserEmailCmd( hospitalId , userName, newEmail));
-		
-	}
-	@Override
-	public void updateMasterUserFirstName(String hospitalId, String userName,
-			String newValue) {
-		commandGateway.sendAndWait(new UpdateMasterUserFirstNameCmd( hospitalId , userName, newValue));
-		
-	}
+	
 	
 	@Override
 	public void updateHospitalMasterFirstName(String hospitalId, String userName, String newFirstName) {
@@ -165,11 +151,7 @@ public class HospitalRepoMongo implements HospitalRepository{
 				AMI_HOSPITAL_VIEW);
 		
 	}
-	@Override
-	public void updateMasterUserLastName(String hospitalId, String userName, String newValue) {
-		commandGateway.sendAndWait(new UpdateMasterUserLastNameCmd( hospitalId , userName, newValue));
-		
-	}
+
 	@Override
 	public void updateHospitalMasterLastName(String hospitalId,
 			String userName, String newLastName) {
@@ -191,11 +173,7 @@ public class HospitalRepoMongo implements HospitalRepository{
 				AMI_HOSPITAL_VIEW);
 		
 	}
-	@Override
-	public void updateMasterUserOccupation(String hospitalId, String userName, String newValue) {
-		commandGateway.sendAndWait(new UpdateMasterUserOccupationCmd( hospitalId , userName, newValue));
-		
-	}
+	
 	@Override
 	public void updateHospitalMasterOccupation(String hospitalId,
 			String userName, String newOccupation) {
@@ -216,10 +194,7 @@ public class HospitalRepoMongo implements HospitalRepository{
 				AMI_HOSPITAL_VIEW);
 		
 	}
-	@Override
-	public void switchMasterUser(String hospitalId, String newMasterUser) {
-		commandGateway.sendAndWait(new SwitchMasterUserCmd( hospitalId , newMasterUser));
-	}
+	
 	
 	@Override
 	public void switchMasterUserService(String hospitalId, String newMasterUser) {
@@ -242,5 +217,47 @@ public class HospitalRepoMongo implements HospitalRepository{
 				AMI_HOSPITAL_VIEW);
 		
 	}
-
+	@Override
+	public void updateHospitalPhones(String hospitalId, List<Phone> newPhoneList) {
+	
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.phones", newPhoneList),
+				AMI_HOSPITAL_VIEW);
+	}
+	@Override
+	public void updateHospitalEmails(String hospitalId, List<Email> newEmailList) {
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.emails", newEmailList),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateHospitalAddresses(String hospitalId,
+			List<Address> newAddressList) {
+		
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.addresses", newAddressList),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateHospitalAcronym(String hospitalId, String newAcronym) {
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.acronym", newAcronym),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateHospitalNotes(String hospitalId, String newNotes) {
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.notes", newNotes),
+				AMI_HOSPITAL_VIEW);
+		
+	}
 }

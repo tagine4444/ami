@@ -113,9 +113,205 @@
 			$location.path('/hospitalAdminSearch');
 		}
 		
+		
+		// ========= hospital updates ========
+		
+		$scope.hospitalUpdateAction ="";
+		$scope.newHospitalUpdateLabel ="";
+		$scope.newHospitalUpdateValue ="";
+		$scope.hospitalUpdated     = false;
+		$scope.hospitalListToUpdate =[];
+		
+		var clearHospitalUpdateModal = function(){
+			$scope.updateHospitalErrorMsg = "";
+			$scope.hospitalUpdated     = false;
+			$scope.modalLabel = "";
+			$scope.hospitalUpdateAction = "";
+			$scope.hospitalListToUpdate = [];
+			$scope.newHospitalUpdateLabel="";
+			$scope.newHospitalUpdateValue="";
+			$scope.newHospitalUpdatePlaceHolderLabel="";
+			$scope.newHospitalUpdatePlaceHolderValue="";
+			
+		}
+		
+		$scope.updateHospital = function(){
+			
+			var url = '/ami/amiadminhome/hospital/updatehospital';
+			
+			var myActionValue ='';
+			if($scope.hospitalActionIsString ){
+				myActionValue = $scope.newHospitalUpdateValue;
+			}else{
+				myActionValue = $scope.hospitalListToUpdate;
+			}
+			var data = {'hospitalId': $scope.hospital.id, 'value': myActionValue, 'action': $scope.hospitalUpdateAction};
+			
+			var res = $http.post(url,data);
+			
+			res.success(function(data, status, headers, config) {
+				
+				if( $scope.hospitalUpdateAction == 'updatePhones'){
+					$scope.hospital.phones = $scope.hospitalListToUpdate;
+				}
+				else if($scope.hospitalUpdateAction == 'updateEmails'){
+					$scope.hospital.emails = $scope.hospitalListToUpdate;
+				}
+				else if($scope.hospitalUpdateAction == 'updateAddresses'){
+					$scope.hospital.addresses = $scope.hospitalListToUpdate;
+				}
+				else if($scope.hospitalUpdateAction == 'updateAcronym'){
+					$scope.hospital.acronym = $scope.newHospitalUpdateValue;
+				}
+				else if($scope.hospitalUpdateAction == 'updateNotes'){
+					$scope.hospital.notes = $scope.newHospitalUpdateValue;
+				}
+				
+				clearHospitalUpdateModal();
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( $scope.masterUserUpdateAction + " failed: " + JSON.stringify({data: data}));
+			});	
+			
+			
+		}
+		
+		
+		$scope.removeHospitalUpdateItem = function(aHospitalUpdate){
+			$scope.hospitalUpdated     = true;
+			
+			var value = aHospitalUpdate.value;
+			var label = aHospitalUpdate.label;
+			
+			for(var i = $scope.hospitalListToUpdate.length - 1; i >= 0; i--) {
+			    if($scope.hospitalListToUpdate[i].value == value ) {
+			    	$scope.hospitalListToUpdate.splice(i, 1);
+			    }
+			}
+		}
+		
+		$scope.addHospitalUpdateItem = function(){
+			
+			$scope.updateHospitalErrorMsg = [];
+			
+			var copyOfNewValue = $scope.newHospitalUpdateValue;
+			copyOfNewValue = copyOfNewValue.replace(/\s/g,"");
+			if(copyOfNewValue==''){
+				$scope.updateHospitalErrorMsg.push( $scope.newHospitalUpdatePlaceHolderValue +" cannot be empty");
+				
+			}
+			
+			var copyOfNewLabel = $scope.newHospitalUpdateLabel;
+			copyOfNewLabel = copyOfNewLabel.replace(/\s/g,"");
+			if(copyOfNewLabel==''){
+				$scope.updateHospitalErrorMsg.push($scope.newHospitalUpdatePlaceHolderLabel +" cannot be empty");
+			}
+			
+			if($scope.updateHospitalErrorMsg.length>0){
+				return;
+			}
+			for(var i=0 ; i < $scope.hospitalListToUpdate.length ; i++) {
+				var value = $scope.hospitalListToUpdate[i].value;
+				var label = $scope.hospitalListToUpdate[i].label;
+				
+				
+				if( copyOfNewValue == value.replace(/\s/g,"")){
+					
+					$scope.updateHospitalErrorMsg.push( "'"+value + "' already exist with label '"+ label+"'");
+					return;
+				}
+			}
+			
+			$scope.hospitalUpdated     = true;
+			var newValue = {'label':$scope.newHospitalUpdateLabel, 'value': $scope.newHospitalUpdateValue};
+			$scope.hospitalListToUpdate.push(newValue);
+			$scope.newHospitalUpdateLabel="";
+			$scope.newHospitalUpdateValue="";
+		}
+		
+		$scope.updateHospitalPhone = function(){
+			$scope.hospitalActionIsString = false;
+			$scope.updateHospitalErrorMsg = "";
+			$scope.hospitalUpdated     = false;
+			$scope.modalLabel = "Update Phone";
+			$scope.hospitalUpdateAction = "updatePhones";
+			$scope.hospitalListToUpdate = [];
+			$scope.newHospitalUpdateLabel="";
+			$scope.newHospitalUpdateValue="";
+			$scope.newHospitalUpdatePlaceHolderLabel="Label";
+			$scope.newHospitalUpdatePlaceHolderValue="New Phone/Fax number";
+			
+			for(var i=0 ; i < $scope.hospital.phones.length ; i++) {
+				var value = $scope.hospital.phones[i];
+				$scope.hospitalListToUpdate.push(value);
+			}
+		}
+		
+		$scope.updateHospitalEmails = function(){
+			$scope.hospitalActionIsString = false;
+			$scope.updateHospitalErrorMsg = "";
+			$scope.hospitalUpdated     = false;
+			$scope.modalLabel = "Update Emails";
+			$scope.hospitalUpdateAction = "updateEmails";
+			$scope.hospitalListToUpdate = [];
+			$scope.newHospitalUpdateLabel="";
+			$scope.newHospitalUpdateValue="";
+			$scope.newHospitalUpdatePlaceHolderLabel="Email Label";
+			$scope.newHospitalUpdatePlaceHolderValue="New Email";
+			
+			for(var i=0 ; i < $scope.hospital.emails.length ; i++) {
+				var value = $scope.hospital.emails[i];
+				$scope.hospitalListToUpdate.push(value);
+			}
+			
+		}
+		
+		$scope.updateHospitalAddresses = function(){
+			$scope.hospitalActionIsString = false;
+			$scope.updateHospitalErrorMsg = "";
+			$scope.hospitalUpdated     = false;
+			$scope.modalLabel = "Update Address";
+			$scope.hospitalUpdateAction = "updateAddresses";
+			$scope.hospitalListToUpdate = [];
+			$scope.newHospitalUpdateLabel="";
+			$scope.newHospitalUpdateValue="";
+			$scope.newHospitalUpdatePlaceHolderLabel="Label";
+			$scope.newHospitalUpdatePlaceHolderValue="New Address";
+			
+			for(var i=0 ; i < $scope.hospital.addresses.length ; i++) {
+				var value = $scope.hospital.addresses[i];
+				$scope.hospitalListToUpdate.push(value);
+			}
+			
+		}
+		
+		$scope.updateHospitalAcronym = function(){
+			$scope.hospitalActionIsString = true;
+			$scope.inputSizeSmall = true;
+			$scope.modalLabel = "Update Acronym";
+			$scope.hospitalUpdateAction = "updateAcronym";
+			$scope.newHospitalUpdateValue="";
+			$scope.newHospitalUpdatePlaceHolderValue="New Acronym";
+			$scope.hospitalStringCurrentValue = $scope.hospital.acronym;
+			$scope.hospitalStringToUpdate = $scope.hospital.acronym;
+		}
+		
+		$scope.updateHospitalNotes = function(){
+			$scope.hospitalActionIsString = true;
+			$scope.inputSizeSmall = false;
+			$scope.modalLabel = "Update Notes";
+			$scope.hospitalUpdateAction = "updateNotes";
+			$scope.newHospitalUpdateValue="";
+			$scope.newHospitalUpdatePlaceHolderValue="New Notes";
+			$scope.hospitalStringCurrentValue = $scope.hospital.notes;
+			$scope.hospitalStringToUpdate = $scope.hospital.notes;
+		}
+		
+		
+	// ========= master user updates ========	
 		$scope.masterUserUpdateValue = "";
 		$scope.masterUserUpdateAction ="";
-		
 		var masterUserUpdateType = {
 			pwd:		{'myPwd': 'updatePwd'   },
 			email:		{'myEmail': 'updateEmail' },

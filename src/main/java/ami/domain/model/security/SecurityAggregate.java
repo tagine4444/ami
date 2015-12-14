@@ -16,6 +16,11 @@ import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.DeactivateAmiUserCmd;
 import ami.application.commands.security.DeactivateHospitalCmd;
 import ami.application.commands.security.SwitchMasterUserCmd;
+import ami.application.commands.security.UpdateHospitalAcronymCmd;
+import ami.application.commands.security.UpdateHospitalAddressesCmd;
+import ami.application.commands.security.UpdateHospitalEmailsCmd;
+import ami.application.commands.security.UpdateHospitalNotesCmd;
+import ami.application.commands.security.UpdateHospitalPhonesCmd;
 import ami.application.commands.security.UpdateMasterUserEmailCmd;
 import ami.application.commands.security.UpdateMasterUserFirstNameCmd;
 import ami.application.commands.security.UpdateMasterUserLastNameCmd;
@@ -25,7 +30,12 @@ import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.events.AmiUserCreatedEvent;
 import ami.domain.model.security.events.AmiUserDeactivatedEvent;
 import ami.domain.model.security.events.HospitaDeactivatedEvent;
+import ami.domain.model.security.events.HospitalAcronymUpdatedEvent;
+import ami.domain.model.security.events.HospitalAddressesUpdatedEvent;
 import ami.domain.model.security.events.HospitalCreatedEvent;
+import ami.domain.model.security.events.HospitalEmailsUpdatedEvent;
+import ami.domain.model.security.events.HospitalNotesUpdatedEvent;
+import ami.domain.model.security.events.HospitalPhonesUpdatedEvent;
 import ami.domain.model.security.events.MasterUserEmailUpdatedEvent;
 import ami.domain.model.security.events.MasterUserFirstNameUpdatedEvent;
 import ami.domain.model.security.events.MasterUserLastNameUpdatedEvent;
@@ -196,6 +206,7 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 					command.getUserName(),
 					command.getNewOccupation() ) );
 		}
+		
 		@CommandHandler
 		public void updateMasterUserCmd(SwitchMasterUserCmd command) {
 			
@@ -212,6 +223,53 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			apply(new MasterUserSwitchedEvent(
 					command.getHospitalId(),
 					command.getNewMasterUser() ) );
+		}
+		
+		
+
+		@CommandHandler
+		public void updateHospitalPhones(UpdateHospitalPhonesCmd command) {
+			
+			apply(new HospitalPhonesUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewPhoneList() ) );
+		}
+		
+		@CommandHandler
+		public void updateHospitalEmails(UpdateHospitalEmailsCmd command) {
+			
+			apply(new HospitalEmailsUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewEmailList() ) );
+		}
+		
+		@CommandHandler
+		public void updateHospitalAddresses(UpdateHospitalAddressesCmd command) {
+			
+			apply(new HospitalAddressesUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewAddressList() ) );
+		}
+		
+		@CommandHandler
+		public void updateHospitalAcronym(UpdateHospitalAcronymCmd command) {
+			
+			apply(new HospitalAcronymUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewAcronym() ) );
+		}
+		
+		@CommandHandler
+		public void updateHospitalNotes(UpdateHospitalNotesCmd command) {
+			
+			apply(new HospitalNotesUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewNotes() ) );
 		}
 		
 		
@@ -239,7 +297,6 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			this.id = event.getHospital().getId();
 			this.hospital = event.getHospital();
 			this.hospitalActivationDate = event.getHospitalActivationDate();
-			
 		}
 		
 		@EventSourcingHandler
@@ -279,6 +336,30 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			this.hospitalDeactivationReason = event.getHospitalDeactivationReason();
 		}
 		
+		@EventSourcingHandler
+		public void on(HospitalPhonesUpdatedEvent event) {
+			this.hospital.replacePhoneList(event.getNewPhoneList());
+		}
+		
+		@EventSourcingHandler
+		public void on(HospitalEmailsUpdatedEvent event) {
+			this.hospital.replaceEmailsList(event.getNewEmailList());
+		}
+		
+		@EventSourcingHandler
+		public void on(HospitalAddressesUpdatedEvent event) {
+			this.hospital.replaceAddressList(event.getNewAddressList());
+		}
+		
+		@EventSourcingHandler
+		public void on(HospitalAcronymUpdatedEvent event) {
+			this.hospital.replaceAcronym(event.getNewAcronym());
+		}
+		
+		@EventSourcingHandler
+		public void on(HospitalNotesUpdatedEvent event) {
+			this.hospital.replaceNotes(event.getNewNotes());
+		}
 		
 		private boolean userAlreadyExists(AmiUser newAmiUser) {
 			

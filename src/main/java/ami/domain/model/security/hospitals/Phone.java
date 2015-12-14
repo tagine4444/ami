@@ -3,8 +3,7 @@ package ami.domain.model.security.hospitals;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Phone {
-	
+public class Phone implements HospitalAttribute {
 
 	private String label;
 	private String value;
