@@ -1,0 +1,110 @@
+<div class="row">
+	<div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
+	
+	<div class="row">
+		<div class="col-sm-12">
+			<h4><span class="label label-default">account:{{amiCase.accountSize}}</span></h4>
+		</div>
+		
+	</div>
+	
+	<div ng-include="'/app/components/common/readonlyamicase.html'"></div>
+	
+
+
+	<div class="row">
+		<div class="col-sm-3" ng-show="amiCase.contract!='Contract'">
+		   <button class="btn btn-primary" data-toggle="modal" data-target="#addRadiographicInterpretationModal" >Radiographic interpretation</button>
+			&nbsp;
+		</div>
+		<div class="col-sm-3" >
+		   <button class="btn btn-primary" data-toggle="modal" data-target="#addRadiographicImpressionModal" >Radiographic Impression</button>
+			&nbsp;
+		</div>
+		<div class="col-sm-3" >
+		   <button class="btn btn-primary" data-toggle="modal" data-target="#addRecommendationModal" >Recommendations</button>
+		</div>
+		<div class="col-sm-2" >
+		
+		   <button class="btn btn-danger" >Submit For Review</button>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-12" >
+			<br/>
+			<br/>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="addRadiographicInterpretationModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addRadiographicInterpretationModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addRadiographicInterpretationModalLabel">Add Radiographic Interpretation</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12">
+					    
+					    <textarea class="form-control" rows="5" ng-model="amiCase.radiographicInterpretation" 
+							    placeholder="Add Radiographic Interpretation here" ></textarea>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal"  >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+<div class="modal fade bs-example-modal-lg" id="addRadiographicImpressionModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addRadiographicImpressionModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addRadiographicImpressionModalLabel">Radiographic Impression</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12">
+					    
+					    <textarea class="form-control" rows="5" ng-model="amiCase.radiographicImpression" 
+							    placeholder="Add Radiographic Impression here" ></textarea>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal"  >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+<div class="modal fade bs-example-modal-lg" id="addRecommendationModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addRecommendationModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addRecommendationModalLabel">Recommendation</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12">
+					    
+					    <textarea class="form-control" rows="5" ng-model="amiCase.recommendation" 
+							    placeholder="Add Recommendation here" ></textarea>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal"  >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
