@@ -28,8 +28,10 @@ import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserAuthority;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.hospitals.Address;
+import ami.domain.model.security.hospitals.ContractEnum;
 import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
+import ami.domain.model.security.hospitals.HospitalAccountSize;
 import ami.domain.model.security.hospitals.HospitalRepository;
 import ami.domain.model.security.hospitals.Phone;
 import ami.infrastructure.services.AmiServices;
@@ -80,7 +82,9 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			// create hospital
 			final String hospitalName = "Animal Medical Imaging";
 			final String acronym = "";
-			Hospital amiHospital = getHospital(hospitalName,acronym);
+			String contract = ContractEnum.NOT_CONTRACT.getName();
+			String accountSize = HospitalAccountSize.SMALL.getName();
+			Hospital amiHospital = getHospital(hospitalName,acronym,contract,accountSize);
 			amiInfrastructureService.createHospital(amiHospital, now);
 			Hospital savedHospital = hospitalService.findHospitalbyName(hospitalName);
 			
@@ -97,7 +101,9 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 			// create hospital
 			final String hospitalName2 = "Pet Clinic";
 			final String acronym1 = "PETCLI";
-			Hospital petClinicHospital = getHospital(hospitalName2,acronym1);
+			contract = ContractEnum.CONTRACT.getName();
+			accountSize = HospitalAccountSize.MEDIUM.getName();
+			Hospital petClinicHospital = getHospital(hospitalName2,acronym1,contract,accountSize);
 			amiInfrastructureService.createHospital(petClinicHospital, now);
 			Hospital savedHospital2 = hospitalService.findHospitalbyName(hospitalName2);
 			
@@ -243,7 +249,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	}
 	
 	
-	private Hospital getHospital(String hospitalName, String acronym) {
+	private Hospital getHospital(String hospitalName, String acronym, String contract, String accountSize) {
 		
 		String id = String.valueOf(System.currentTimeMillis());
 		
@@ -276,7 +282,10 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 				addresses,
 				 phones,
 				emails,
-				notes);
+				notes,
+				contract, 
+				accountSize
+				);
 		
 		return hospital;
 	}

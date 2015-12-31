@@ -1,6 +1,5 @@
 package ami.application.services;
 
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ami.domain.model.amicase.amirequest.AmiRequest;
@@ -24,9 +23,10 @@ public interface AmiRequestService {
 	String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException;
 	String submitAmiRequestToRadiologist(String caseNumber,
 			AmiRequest amiRequest1, String userName, String hospitalName,
-			String hospitalId);
+			String hospitalId, String contract, String accountSize);
 	String createCaseAsDraft(String caseNumber, AmiRequest req,
-			String userName, String hospitalName, String hospitalId);
+			String userName, String hospitalName, String hospitalId,String contract, String accountSize);
+	String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException;
 		
 
 }

@@ -44,4 +44,8 @@ public interface HospitalRepository {
 
 	void updateHospitalNotes(String hospitalId, String newNotes);
 
+	void updateHospitalContract(String hospitalId, String newContract);
+
+	void updateHospitalAccountSize(String hospitalId, String newAccountSize);
+
 }

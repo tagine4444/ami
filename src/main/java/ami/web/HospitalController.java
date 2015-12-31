@@ -45,7 +45,7 @@ import com.mongodb.util.JSON;
 public class HospitalController {
 	
 	enum VALID_MASTER_USER_ACTIONS {updatePwd, updateEmail, updateFirstName, updateLastName, updateOccupation}
-	enum VALID_HOSPTIAL_ACTIONS {updatePhones, updateEmails, updateAddresses, updateAcronym , updateNotes}
+	enum VALID_HOSPTIAL_ACTIONS {updatePhones, updateEmails, updateAddresses, updateAcronym , updateNotes, updateContract,updateAccountSize}
 	                                                      
 	
 	
@@ -90,7 +90,7 @@ public class HospitalController {
 		HospitalView saveHospital = hospitalService.findHospital(hospitalId);
 		
 		AmiUser amiMasterUser = objectMapper.readValue(masterUser.toString(), AmiUser.class);
-		amiMasterUser.initializeMasterUser(hospitalId);
+		amiMasterUser.initializeMasterUser(hospitalId, saveHospital.getHospital().getName());
 		
 		final Hospital myHospital = saveHospital.getHospital();
 		final String hospId  = myHospital.getId();
@@ -120,6 +120,41 @@ public class HospitalController {
 		
 	}
 	
+	
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadminhome/hospital/updatehospitalcontractoraccount", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateHospitalContractOrAccountSize(@RequestBody String data) throws IOException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		
+		
+		final String hospitalId = (String) dbObject.get("hospitalId");
+		final String action = (String) dbObject.get("action");
+		
+		try {
+			VALID_HOSPTIAL_ACTIONS.valueOf(action);
+		} catch (Exception e) {
+			throw new RuntimeException("Hospital not updated because the action is unknown: " +action );
+		}
+		
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		final String newValue = (String) dbObject.get("value");
+		System.out.println(newValue);
+		
+		if( action.equals(VALID_HOSPTIAL_ACTIONS.updateContract.name())){
+			
+			amiServices.updateHospitalContract(hospitalId, userName, newValue);
+		}
+		else if( action.equals(VALID_HOSPTIAL_ACTIONS.updateAccountSize.name())){
+			
+			amiServices.updateHospitalAccountSize(hospitalId, userName, newValue);
+		}
+	}
+	
+	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amiadminhome/hospital/updatehospital", method = RequestMethod.POST)
 	@ResponseBody
@@ -134,7 +169,7 @@ public class HospitalController {
 		try {
 			VALID_HOSPTIAL_ACTIONS.valueOf(action);
 		} catch (Exception e) {
-			throw new RuntimeException("Master Uer not updated because the action is unknown: " +action );
+			throw new RuntimeException("Hospital not updated because the action is unknown: " +action );
 		}
 		
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();

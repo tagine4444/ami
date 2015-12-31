@@ -23,19 +23,18 @@ public interface AmiRequestRepository {
 	
 	
 	
-	void createAmiRequestView(
+	void createAmiRequestView( 
 			String caseNumber, 
 			AmiRequest amiRequestJson, String userName,   String hospitalName , String hospitalid, 
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
     		DateTime interpretationInProgress,              
     		DateTime interpretationReadyForReview,          
     		DateTime interpretationReadyComplete,           
-//    		boolean editable, 
-    		DateTime time) throws JsonProcessingException;
+    		DateTime time,String contract, String accountSize) throws JsonProcessingException;
 
-	void submitAmiRequestToRadiologist(String caseNumber,AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId);
+	void submitAmiRequestToRadiologist(String caseNumber,AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId, String contract, String accountSize);
 	
-	String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime);
+	String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime, String contract, String accountSize);
 
 	
 	void updateUploadedFileList(FileUploadInfo fileUploadInfo, DateTime time)
@@ -60,6 +59,8 @@ public interface AmiRequestRepository {
 			throws JsonProcessingException;
 	List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1,
 			String date2);
+	List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats);
+	void switchCaseToInProgress(DateTime dateTime, String id);
 	
 	
 

@@ -16,8 +16,10 @@ import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.DeactivateAmiUserCmd;
 import ami.application.commands.security.DeactivateHospitalCmd;
 import ami.application.commands.security.SwitchMasterUserCmd;
+import ami.application.commands.security.UpdateHospitalAccountSizeCmd;
 import ami.application.commands.security.UpdateHospitalAcronymCmd;
 import ami.application.commands.security.UpdateHospitalAddressesCmd;
+import ami.application.commands.security.UpdateHospitalContractCmd;
 import ami.application.commands.security.UpdateHospitalEmailsCmd;
 import ami.application.commands.security.UpdateHospitalNotesCmd;
 import ami.application.commands.security.UpdateHospitalPhonesCmd;
@@ -30,8 +32,10 @@ import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.events.AmiUserCreatedEvent;
 import ami.domain.model.security.events.AmiUserDeactivatedEvent;
 import ami.domain.model.security.events.HospitaDeactivatedEvent;
+import ami.domain.model.security.events.HospitalAccountSizeUpdatedEvent;
 import ami.domain.model.security.events.HospitalAcronymUpdatedEvent;
 import ami.domain.model.security.events.HospitalAddressesUpdatedEvent;
+import ami.domain.model.security.events.HospitalContractUpdatedEvent;
 import ami.domain.model.security.events.HospitalCreatedEvent;
 import ami.domain.model.security.events.HospitalEmailsUpdatedEvent;
 import ami.domain.model.security.events.HospitalNotesUpdatedEvent;
@@ -263,6 +267,7 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 					command.getNewAcronym() ) );
 		}
 		
+		
 		@CommandHandler
 		public void updateHospitalNotes(UpdateHospitalNotesCmd command) {
 			
@@ -270,6 +275,25 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 					command.getHospitalId(),
 					command.getUserName(),
 					command.getNewNotes() ) );
+		}
+		
+		
+		@CommandHandler
+		public void updateHospitalAcronym(UpdateHospitalContractCmd command) {
+			
+			apply(new HospitalContractUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewContract()) );
+		}
+		
+		@CommandHandler
+		public void updateHospitalAcronym(UpdateHospitalAccountSizeCmd command) {
+			
+			apply(new HospitalAccountSizeUpdatedEvent(
+					command.getHospitalId(),
+					command.getUserName(),
+					command.getNewAccountSize()) );
 		}
 		
 		
@@ -361,6 +385,16 @@ public class SecurityAggregate extends AbstractAnnotatedAggregateRoot {
 			this.hospital.replaceNotes(event.getNewNotes());
 		}
 		
+		
+		@EventSourcingHandler
+		public void on(HospitalContractUpdatedEvent event) {
+			this.hospital.replaceContract(event.getNewContract());
+		}
+		
+		@EventSourcingHandler
+		public void on(HospitalAccountSizeUpdatedEvent event) {
+			this.hospital.replaceAccountSize(event.getNewAccountSize());
+		}
 		private boolean userAlreadyExists(AmiUser newAmiUser) {
 			
 			Iterator<AmiUser> iterator = this.amiUsers.iterator();

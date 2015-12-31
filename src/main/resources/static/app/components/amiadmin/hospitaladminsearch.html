@@ -22,6 +22,8 @@
 				   <tr>
 				   	<th>Name</th>
 				   	<th>Acronym</th>
+				   	<th>Contract</th>
+				   	<th>Account</th>
 				   	<th>Phones</th>
 				   	<th>Address</th>
 				   	<th>Emails</th>
@@ -33,6 +35,8 @@
 					 	<a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {{aHospitalView.hospital.name}}</a>
 				   	</td>
 				   	<td>{{aHospitalView.hospital.acronym}}</td>
+				   	<td>{{aHospitalView.hospital.contract}}</td>
+				   	<td>{{aHospitalView.hospital.accountSize}}</td>
 				   	<td>
 					   	<table ng-repeat="aPhone in aHospitalView.hospital.phones">
 					   		<tr>

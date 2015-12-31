@@ -14,12 +14,15 @@ import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
+import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.events.AmiRequestSavedAsDraftEvent;
 import ami.domain.model.amicase.events.AmiRequestUpdatedAsDraftEvent;
+import ami.domain.model.amicase.events.CaseIsAlreadyInProgressEvent;
+import ami.domain.model.amicase.events.CaseSwitchedToInProgressEvent;
 import ami.domain.model.amicase.events.DraftAmiRequestSubmittedEvent;
 import ami.domain.model.amicase.events.NewAmiRequestSubmittedEvent;
 import ami.domain.model.amicase.events.UploadFileRequestedEvent;
@@ -34,6 +37,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	private AmiRequest amiRequest;
 	private String userName;
 	private String hospitalName;
+	private String contract;
+	private String accountSize;
 	private List<FileUploadInfo> fileUploads = new ArrayList<FileUploadInfo>();
 	
 //	private boolean editable;
@@ -54,7 +59,9 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 				command.getAmiRequestJson() , command.getUserName(), 
 				command.getHospitalName(),
 				command.getHospitalId(),
-				command.getHasBeenSavedAndSubmittedToRadiologist()));
+				command.getHasBeenSavedAndSubmittedToRadiologist(), 
+				command.getContract(),
+				command.getAccountSize()));
 	}
 	
 	// ----------------- Save as Draft  (for the 1st time) ----------------- 
@@ -66,8 +73,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		}
 		apply(new AmiRequestSavedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
-				 command.getHospitalId()
-//				 ,command.isEditable()
+				 command.getHospitalId(),
+				 command.getContract(), command.getAccountSize()
 				 ) );
 	}
 	
@@ -84,8 +91,9 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 				command.getHospitalName(),
 				command.getHospitalId(),
 				command.getHasBeenSavedAndSubmittedToRadiologist(),
-//				command.isEditable(), 
-				command.getDateTime()));
+				command.getDateTime(),
+				command.getContract(),
+				command.getAccountSize()));
 	}
 	
 	// ===============================  update Draft Req (update) =============================
@@ -100,8 +108,9 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		apply(new AmiRequestUpdatedAsDraftEvent(command.getId(),
 				command.getAmiRequestJson() , command.getUserName(), command.getHospitalName() ,
 				 command.getHospitalId()
-//				 ,command.isEditable() 
-				 , command.getDateTime()) );
+				 , command.getDateTime(),
+				 command.getContract(),
+					command.getAccountSize()) );
     }
 	
 	@CommandHandler
@@ -124,6 +133,19 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		apply(new UploadedFileDeletedEvent(command.getId(),
 				command.getUserName(), command.getFileName(), command.getDateTime()));
 	}
+	
+	
+	@CommandHandler
+	public void deleteUploadedFile(SwitchCaseToInProgressCmd command) {
+		if(interpretationInProgress!=null){
+			apply(new CaseIsAlreadyInProgressEvent(command.getId(),
+					command.getUserName(),  command.getDateTime()));
+		}else{
+			apply(new CaseSwitchedToInProgressEvent(command.getId(),
+					command.getUserName(),  command.getDateTime()));
+		}
+		
+	}
 
 
 	// -==-=-=-=-=-=-=-=--=-=-=- EventSourceHandlers -==-=-=-=-=-=-=-=--=-=-=- 
@@ -135,7 +157,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
 		this.hasBeenSavedAndSubmittedToRadiologist = event.getHasBeenSavedAndSubmittedToRadiologist();
-		//this.editable   = event.isEditable();    
+		this.contract = event.getContract();
+		this.accountSize = event.getAccountSize();
 	}
 	
 	@EventSourcingHandler
@@ -144,7 +167,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-//		this.editable   = event.isEditable();    
+		this.contract = event.getContract();
+		this.accountSize = event.getAccountSize();
 	}
 	
 	
@@ -154,7 +178,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-//		this.editable   = event.isEditable(); 
+		this.contract = event.getContract();
+		this.accountSize = event.getAccountSize();
 	}
 	
 	@EventSourcingHandler
@@ -163,8 +188,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-//		this.editable   = event.isEditable(); 
-		
+		this.contract = event.getContract();
+		this.accountSize = event.getAccountSize();
 	}
 	
 	@EventSourcingHandler
@@ -173,7 +198,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		this.amiRequest = event.getAmiRequestJson();
 		this.userName = event.getUserName();
 		this.hospitalName = event.getHospitalName();
-//		this.editable   = event.isEditable(); 
+		this.contract = event.getContract();
+		this.accountSize = event.getAccountSize();
 	}
 	
 	
@@ -187,6 +213,7 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		this.fileUploads.add(info);
 		
 	}
+	
 	@EventSourcingHandler
 	public void on(UploadedFileDeletedEvent event) {
 		
@@ -202,6 +229,16 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 			}
 		}
 		
+	}
+	
+	@EventSourcingHandler
+	public void on(CaseSwitchedToInProgressEvent event) {
+		
+		this.interpretationInProgress = event.getDateTime();
+	}
+	@EventSourcingHandler
+	public void on(CaseIsAlreadyInProgressEvent event) {
+		//nothing to do... 
 	}
 	
 	private boolean hasBeenSavedAndSubmittedToRadiologist() {

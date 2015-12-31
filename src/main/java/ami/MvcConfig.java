@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.convert.DbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -30,8 +31,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
     	
        registry.addViewController("/ami/index").setViewName("index");
-       //registry.addViewController("/ami/amicusthome").setViewName("amicusthome");
-//       registry.addViewController("/ami/admin/amiadminhome").setViewName("amiadminhome");
        
        
        registry.addViewController("/ami/home").setViewName("home");
@@ -73,6 +72,11 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     	  om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
                   false);
     	  return om;
+      }
+      
+      @Override
+      public void addResourceHandlers(ResourceHandlerRegistry registry) {
+           registry.addResourceHandler("/uploads/**").addResourceLocations("file:///Users/chidra/dev/sts/sts-bundle/sts-3.6.3.RELEASE/workspace/ami/uploads");
       }
       
      

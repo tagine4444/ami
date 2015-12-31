@@ -7,10 +7,13 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.SwitchMasterUserCmd;
+import ami.application.commands.security.UpdateHospitalAccountSizeCmd;
 import ami.application.commands.security.UpdateHospitalAcronymCmd;
 import ami.application.commands.security.UpdateHospitalAddressesCmd;
+import ami.application.commands.security.UpdateHospitalContractCmd;
 import ami.application.commands.security.UpdateHospitalEmailsCmd;
 import ami.application.commands.security.UpdateHospitalNotesCmd;
 import ami.application.commands.security.UpdateHospitalPhonesCmd;
@@ -31,6 +34,7 @@ public class AmiServicesImpl implements AmiServices  {
 	
 	@Autowired
 	private CommandGateway commandGateway;
+	
 	
 	@Override
 	public void createHospital(Hospital hospital ,DateTime hospitalActivationDate) throws JsonProcessingException {
@@ -104,6 +108,27 @@ public class AmiServicesImpl implements AmiServices  {
 	public void updateHospitalNotes(String hospitalId, String userName,
 			String newNotes) {
 		commandGateway.sendAndWait(new UpdateHospitalNotesCmd( hospitalId , userName, newNotes));
+		
+	}
+	
+	@Override
+	public void switchCaseToInProgress(String caseNumber, String userName, DateTime dateTime) throws JsonProcessingException {
+		
+		commandGateway.sendAndWait(new SwitchCaseToInProgressCmd(  caseNumber,  userName,  dateTime));
+		
+	}
+
+	@Override
+	public void updateHospitalContract(String hospitalId, String userName,
+			String newContract) {
+		commandGateway.sendAndWait(new UpdateHospitalContractCmd( hospitalId , userName, newContract));
+		
+	}
+
+	@Override
+	public void updateHospitalAccountSize(String hospitalId, String userName,
+			String newAccountSize) {
+		commandGateway.sendAndWait(new UpdateHospitalAccountSizeCmd( hospitalId , userName, newAccountSize));
 		
 	}
 

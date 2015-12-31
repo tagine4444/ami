@@ -1,0 +1,106 @@
+
+<div class="row">
+	<div class="col-sm-9">
+		<h4><span class="label label-default">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT</span> 
+	   		<span  ng-show="amiRequest.requestedServices.isInterpretationOnly" class="label label-primary">Interpretation Only</span> 
+	   		<span ng-show="!amiRequest.requestedServices.isInterpretationOnly" ng-repeat="aSevice in amiRequest.requestedServices.selectedServices" class="label label-primary">{{aSevice}} </span>
+	    	<span class="label label-primary">Contract Type : {{amiCase.contract}}</span> 
+	    </h4>
+	</div>
+	<div class="col-sm-3">
+	</div>
+</div>
+
+<div class="row">
+	
+	<div class="col-sm-12">
+	<hr/>
+	</div>
+	<div class="col-sm-4">
+		<ul>
+			<li>Hospital Name: <b>{{amiCase.hospitalName}}</b></li>
+			<li>Veterinarian: <b>{{amiRequest.hospitalAndClientInfo.vet}}</b> </li>
+			<li>Requester: <b>{{amiCase.userName}}</b> </li>
+		</ul>
+	</div>
+	
+	<div class="col-sm-3">
+		<ul>
+			<li>Animal Name: <b>{{amiRequest.patientInfo.animalName}}</b></li>
+			<li>Client Name: <b>{{amiRequest.hospitalAndClientInfo.clientFirstName}} {{amiRequest.hospitalAndClientInfo.clientLastName}}</b></li>
+			<li ng-show="amiRequest.hospitalAndClientInfo.clientId!=''">Client ID: <b>{{amiRequest.hospitalAndClientInfo.clientId}}</b></li>
+			<li ng-show="amiRequest.hospitalAndClientInfo.isEmployee"><span class="label label-primary">is an employee</span></li>
+		</ul>
+	</div>
+	
+	<div class="col-sm-4">
+		<b><span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null" class="label label-info">Requested Date: {{ amiCase.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
+		<b><span ng-show="amiCase.interpretationInProgress!=null" class="label label-info">In Progress Date: {{ amiCase.interpretationInProgress  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
+		
+	</div>
+	
+</div>
+
+<br/>
+<div class="row">
+
+	<div class="col-sm-12">
+		<pre><b>Pet Information</b><br/>{{amiRequest.patientInfo.species}} {{amiRequest.patientInfo.breeds}}, {{amiRequest.patientInfo.animalAgeYears}} {{amiRequest.patientInfo.animalAgeMonths}}, {{amiRequest.patientInfo.animalSex}}, {{amiRequest.patientInfo.animalWeight}} {{amiRequest.patientInfo.animalWeightUom}}</pre>
+	</div>
+</div>	
+<div class="row">
+
+	<div class="col-sm-12">
+		
+		<pre><b>Exam</b><br/>{{amiRequest.vetObservation.exam}}<br/> <span class="label label-primary" ng-show="amiRequest.vetObservation.anesthetized">anesthetized</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.sedated">sedated</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.fasted">fasted</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.enema">enema</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.painful">painful</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.fractious">fractious</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.shocky">shocky</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.dyspneic">dyspneic</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.died">died</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.euthanized">euthanized</span></pre>
+	</div>
+	<div class="col-sm-12">
+		<pre><b>Tentative Diagnosis</b><br/>{{amiRequest.vetObservation.tentativeDiagnosis}}</pre>
+	</div>
+</div>
+
+<div class="row" ng-show="amiCase.contract!='Contract'"> 
+
+	<div class="col-sm-12">
+		<pre><b>Radiographic Interpretation</b><br/>{{amiCase.radiographicInterpretation}}</pre>
+	</div>
+</div>
+
+<div class="row">
+
+	<div class="col-sm-12">
+		<pre><b>Radiographic Impression</b><br/>{{amiCase.radiographicImpression}}</pre>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<pre><b>Recommendation</b><br/>{{amiCase.recommendation}}</pre>
+	</div>
+</div>
+	
+<div class="row">
+	
+	<div class="col-sm-12">
+		<p></p>
+		<p><b>Images</b></p>
+<!-- 		<ul ng-repeat="aFileUpload in amiCase.fileUploads"> -->
+		
+<!-- 			<li><a href="http://localhost:8080/{{aFileUpload.fileName}}" download>{{aFileUpload.fileName}}</a></li> -->
+<!-- 		</ul> -->
+		
+		<table class="table">
+			<tr ng-repeat="aFileUpload in amiCase.fileUploads" >
+				<td>
+					{{$index+1}}
+				</td>
+				<td >
+					<a href="http://localhost:8080/{{aFileUpload.fileName}}" download>{{aFileUpload.fileName}}</a>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+	
+</div>
+
+

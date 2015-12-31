@@ -11,6 +11,8 @@ public class AmiRequestUpdatedAsDraftEvent {
 	private final String userName;
 	private String hospitalName;
 	private String hospitalId;
+	private final String contract;
+	private final String accountSize;
 	
 //	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 //	private DateTime interpretationInProgress;
@@ -22,14 +24,18 @@ public class AmiRequestUpdatedAsDraftEvent {
         
        
 
-    public AmiRequestUpdatedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,
-//    		boolean editable,
-    		DateTime dateTime ) {
+    public AmiRequestUpdatedAsDraftEvent(String id, AmiRequest amiRequestJson, String userName, 
+    		String hospitalName,String hospitalId,
+    		DateTime dateTime,
+    		String contract,
+    		String accountSize) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId   = hospitalId;
+        this.contract = contract;
+        this.accountSize = accountSize;
         
 //		this.editable   = editable;    
 		this.dateTime = dateTime;
@@ -61,6 +67,14 @@ public class AmiRequestUpdatedAsDraftEvent {
 
 	public DateTime getDateTime() {
 		return dateTime;
+	}
+
+	public String getContract() {
+		return contract;
+	}
+
+	public String getAccountSize() {
+		return accountSize;
 	}
 
 //	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {

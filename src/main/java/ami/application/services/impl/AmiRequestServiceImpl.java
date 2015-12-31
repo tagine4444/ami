@@ -13,6 +13,7 @@ import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.infrastructure.database.model.AmiRequestView;
+import ami.infrastructure.database.model.PendingAmiCases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +40,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
+	
 
 	@Override
 	public String findAmiRequestByAnimalName(String animalName) throws JsonProcessingException {
@@ -77,6 +79,16 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	}
 
 	@Override
+	public String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException {
+		List<AmiRequestView> amiRequestViewNonStats = amiRequestRepo.findPendigAmiRequestsForAllHospitals(false);
+		List<AmiRequestView> amiRequestViewStats = amiRequestRepo.findPendigAmiRequestsForAllHospitals(true);
+		
+		PendingAmiCases pendingCases = new PendingAmiCases(amiRequestViewNonStats,amiRequestViewStats);
+		String amiRequestViewString = objectMapper.writeValueAsString(pendingCases);
+		return amiRequestViewString;
+	}
+	
+	@Override
 	public String findDraftAmiRequests() throws JsonProcessingException {
 		List<AmiRequestView> amiRequestView = amiRequestRepo.findDraftAmiRequest();
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
@@ -84,14 +96,15 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	}
 
 	@Override
-	public String submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequest1 ,String userName ,  String hospitalName, String hospitalId) {
-		amiRequestRepo.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId);
+	public String submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequest1 ,
+			String userName ,  String hospitalName, String hospitalId, String contract, String accountSize) {
+		amiRequestRepo.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId, contract,  accountSize);
 		return "{}";
 	}
 
 	@Override
-	public String createCaseAsDraft(String caseNumber, AmiRequest req ,String userName ,  String hospitalName, String hospitalId) {
-		String requestNumber = amiRequestRepo.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime());
+	public String createCaseAsDraft(String caseNumber, AmiRequest req ,String userName ,  String hospitalName, String hospitalId,String contract, String accountSize) {
+		String requestNumber = amiRequestRepo.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime(),contract, accountSize);
 		
 		return "{\"requestNumber\": \""+requestNumber+"\"}";
 	}
@@ -105,5 +118,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		String fileUploadsString = objectMapper.writeValueAsString(fileUploads);
 		return fileUploadsString;
 	}
+
+	
 
 }

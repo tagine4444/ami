@@ -29,6 +29,7 @@ import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.infrastructure.database.model.AmiRequestView;
 import ami.infrastructure.database.model.AmiUserView;
+import ami.infrastructure.database.model.HospitalView;
 import ami.web.converters.DateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,35 +59,29 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
 	
 	@Override
-	public void submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId) {
+	public void submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequestJson, String userName,   
+			String hospitalName, String hospitalId, String contract, String accountSize) {
 		
 		DateTime hasBeenSavedAndSubmittedToRadiologist = new DateTime();
 		
-		
-//		String requestNumber = amiRequestJson.getRequestNumber();
-//		String requestNumber = caseNumber;
 		
 		final boolean isCreate = StringUtils.isEmpty(caseNumber);
 		
 		
 		if( isCreate ){
-//			boolean editable = false;
 			caseNumber = String.valueOf(mongoSequenceService.getNextAmiCase());
-//			caseNumber = String.valueOf(mongoSequenceService.getNextAmiCase("counters"));
-//			amiRequestJson.setRequestNumber(requestNumber);
 			
 			commandGateway.sendAndWait(new SubmitNewAmiRequestCmd(caseNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
-					hasBeenSavedAndSubmittedToRadiologist
-					//, editable
+					hasBeenSavedAndSubmittedToRadiologist,
+					contract,  accountSize
 					));
 		}else{
 			
 			commandGateway.sendAndWait(new SubmitDraftAmiRequestCmd(caseNumber,amiRequestJson, userName, 
 					hospitalName, hospitalId,
 					hasBeenSavedAndSubmittedToRadiologist, 
-//					editable, 
-					new DateTime()));
+					new DateTime(),contract,  accountSize));
 			
 		}
 		                              
@@ -94,7 +89,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	}
 	
 	@Override 
-	public String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName,   String hospitalName, String hospitalId, DateTime dateTime) {
+	public String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName,   
+			String hospitalName, String hospitalId, DateTime dateTime, String contract, String accountSize) {
 		
 		String myCaseNumber = caseNumber;
 		
@@ -102,16 +98,14 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		
 		if( isCreate){
 			myCaseNumber = String.valueOf(mongoSequenceService.getNextAmiCase());
-//			amiRequestJson.setRequestNumber(myCaseNumber);
 			
-			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(myCaseNumber, amiRequestJson, userName, hospitalName,  hospitalId
-//					,editable
+			commandGateway.sendAndWait(new SaveAmiRequestAsDraftCmd(myCaseNumber, amiRequestJson, userName, hospitalName,  
+					hospitalId,contract,  accountSize
 					));
 		}else{
 			
 			commandGateway.sendAndWait(new UpdateAmiRequestAsDraftCmd(myCaseNumber, amiRequestJson, userName, hospitalName,  hospitalId
-//					,editable
-					, new DateTime()));
+					, new DateTime(),contract,  accountSize));
 		}
 		
 		return myCaseNumber;
@@ -123,10 +117,9 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			String hospitalName, String hospitalid, 
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
 			DateTime interpretationInProgress,              
-			DateTime interpretationReadyForReview,          
+			DateTime interpretationReadyForReview,           
 			DateTime interpretationReadyComplete,           
-//    		boolean editable,
-			DateTime time) throws JsonProcessingException {
+			DateTime time, String contract, String accountSize) throws JsonProcessingException {
 		
 		
 		String creationDate = new DateTimeToStringConverter().convert(time);
@@ -143,7 +136,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 				creationDate,
 				time,
 				new ArrayList<FileUploadInfo>(),
-				null,null,time);
+				null,null,time,
+				contract,  accountSize);
 		
 		String amiRequestView = objectMapper.writeValueAsString(view);
 		
@@ -176,6 +170,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		update.set("updateDate", updateDate);
 		update.set("updateUser", userName);
 		update.set("editable", editable);
+		update.set("hasBeenSavedAndSubmittedToRadiologist", hasBeenSavedAndSubmittedToRadiologist);
 		
 		AmiRequestView updatedView = mongo.findAndModify(query, update, AmiRequestView.class, AMIREQUEST_VIEW); 
 
@@ -275,6 +270,17 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		return amiRequestView;
 	}
 	
+	
+	@Override
+	public List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats) {
+		
+		   Query query =Query.query( Criteria.where("editable").is(Boolean.FALSE)
+				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats)));
+		   query.with(new Sort(Sort.Direction.ASC, "time"));
+		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
+		   return amiRequestView;
+	}
+	
 	@Override
 	public List<AmiRequestView> findDraftAmiRequest() {
 		 String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -297,6 +303,18 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("caseNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestView.getFileUploads();
 	}
+
+	@Override
+	public void switchCaseToInProgress(DateTime dateTime, String caseNumber) {
+	
+			mongo.updateFirst(
+		            new Query(Criteria.where("caseNumber").is(caseNumber)),
+		            Update.update("interpretationInProgress", dateTime),
+		            AMIREQUEST_VIEW);
+		
+	}
+
+	
 
 
 }

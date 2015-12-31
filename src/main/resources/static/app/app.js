@@ -43,7 +43,7 @@ amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 		patientInfo.animalName 		= '';
 		patientInfo.animalSex		= 'Sex';
 		patientInfo.animalWeight 	= '';
-		patientInfo.animalWeightUom = '';
+		patientInfo.animalWeightUom = 'LB';
 		patientInfo.animalAgeYears 	= '';
 		patientInfo.animalAgeMonths = '';
 		patientInfo.ageLabel		= '';
@@ -367,6 +367,24 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                                   }]  
                         	 
                         	 }// resolve
+                        }). 
+                        when('/editRequest1/:requestNumber', {
+                        	templateUrl: '/app/components/amicust/pendingCase.html',
+                        	controller: 'CasePendingCtrl',
+                        	 
+                            resolve: {
+                            
+                                myCase: ['amiRequestFactory','$route', function (amiRequestFactory, $route) {
+                                    
+                             		var requestNumber = $route.current.params.requestNumber;
+                             		return amiRequestFactory.getAmiRequest(requestNumber).then(
+                             			function(result){
+                             				var myResult = result.data;
+                             				return myResult;
+                             			}	
+                             		);
+                                 }]    
+                            }
                         }).
                         when('/searchRequest', {
                         	templateUrl: '/app/components/amicust/searchrequests.html',

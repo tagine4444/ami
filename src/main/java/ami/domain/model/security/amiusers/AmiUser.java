@@ -69,8 +69,9 @@ public class AmiUser {
 	}
 	
 	
-	public void initializeMasterUser(String hospitalId){
+	public void initializeMasterUser(String hospitalId, String hospitalName){
 		this.hospitalId = hospitalId;
+		this.hospitalName = hospitalName;
 		this.masterUser = true;
 		if(this.role ==null){
 			this.role = new ArrayList<GrantedAuthority>();
@@ -165,7 +166,7 @@ public class AmiUser {
 	public void addMasterUserRole() {
 		
 		// add master user role
-		initializeMasterUser(this.hospitalId);
+		initializeMasterUser(this.hospitalId, this.hospitalName);
 		
 		// now make sure it doesn't have 2 master user role, just in case.
 		int numberOfMasterUserRole = 0;

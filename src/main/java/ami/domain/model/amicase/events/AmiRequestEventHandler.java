@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 
@@ -25,8 +24,7 @@ public class AmiRequestEventHandler {
     			event.getHospitalName(), event.getHospitalId(), 
     			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
     			null,null,
-//    			event.isEditable(),
-    			time);
+    			time, event.getContract(), event.getAccountSize());
     	
 //    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
 //                                         event.getId(),
@@ -43,7 +41,7 @@ public class AmiRequestEventHandler {
     	amiServiceRequestRepo.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null, null,null,null,
-    			time);
+    			time, event.getContract(), event.getAccountSize());
     	
     	
     }
@@ -82,6 +80,11 @@ public class AmiRequestEventHandler {
     	
     	amiServiceRequestRepo.deleteUploadedFile(event.getFileName() ,event.getId(), time);
     	
+    }
+    
+    @EventHandler
+    public void handle(CaseSwitchedToInProgressEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.switchCaseToInProgress(event.getDateTime() ,event.getId());
     }
     
     

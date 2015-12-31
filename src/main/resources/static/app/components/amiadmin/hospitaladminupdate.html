@@ -61,7 +61,7 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th><a href="#/hospitalAdminUpdate/{{aHospitalView.hospital.id}}" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Hospital Name</a></th>
+						<th>Hospital Name</th>
 						<th><a ng-click="updateHospitalAcronym()" href =""  data-toggle="modal" data-target="#updateHospitalStringModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Acronym</a></th>
 						<th><a ng-click="updateHospitalPhone()" href =""  data-toggle="modal" data-target="#updateHospitalModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Phone</a></th>
 						<th><a ng-click="updateHospitalEmails()" href =""  data-toggle="modal" data-target="#updateHospitalModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
@@ -109,6 +109,24 @@
 			</table>
 	    </div>
 	
+		<div class="col-sm-12">
+		
+			<table class="table">
+				<thead>
+					<tr>
+						<th><a ng-click="updateHospitalContract()" href =""  data-toggle="modal" data-target="#updateHospitalContractAndAcctModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Contract</a></th>
+						<th><a ng-click="updateHospitalAccountSize()" href =""  data-toggle="modal" data-target="#updateHospitalContractAndAcctModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Account Size</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{hospital.contract}}</td>
+						<td>{{hospital.accountSize}}</td>
+					</tr>
+				</tbody>
+			</table>
+		
+		</div>
 		<div class="col-sm-12">
 			<table class="table">
 				<thead>
@@ -427,6 +445,39 @@
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelMasterUserUpdateModal()" >Cancel</button>
 	        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-disabled="!hospitalUpdated"  ng-click="updateHospital()" >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="updateHospitalContractAndAcctModal" tabindex="-1" role="dialog" 
+	aria-labelledby="updateHospitalContractAndAcctModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="updateHospitalContractAndAcctModalLabel">{{modalLabel}}</h4>
+	      </div>
+	      <div class="modal-body">
+	      
+      		<div class="row">
+		          <div class="col-md-12">
+					   <p>{{newHospitalUpdatePlaceHolderValue}}</p>
+		     	</div> 
+		     </div>	
+		     
+		     <div class="row">   
+		          <div class="col-md-6">
+		          		<select class="form-control" ng-model="newHospitalUpdateValue" ng-selected="hospitalStringCurrentValue">
+						  <option  ng-repeat="aValue in contractOrAcctList">{{aValue}}</option>
+						</select>
+		          </div>
+		      </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelMasterUserUpdateModal()" >Cancel</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-disabled="newHospitalUpdateValue==hospitalStringCurrentValue"  ng-click="updateContractOrAccountSize()" >Save</button>
 	      </div>
 	    </div>
 	  </div>

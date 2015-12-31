@@ -124,7 +124,13 @@
 			
 		});
 		
-		
+		// ============ Controller ===============
+		app.controller('CasePendingCtrl', function ($scope, $http, $window,$location, myCase) {
+			$scope.page = 'newRequest';
+			$scope.amiCase = myCase;
+			$scope.amiRequest = myCase.amiRequest;
+			
+		});
 		
 		// ============ NewRequest ===============
 		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest, myHospital) {
@@ -132,7 +138,7 @@
 			$scope.page = 'newRequest';
 			
 		
-			$scope.caseNumber =  $route.current.params.requestNumber;;
+			$scope.caseNumber =  $route.current.params.requestNumber;
 			
 			// this is a hack the files uploads should be in imagesAndDocuments
 //			var isUpdate = new Boolean(myAmiRequest.amiRequest);
@@ -214,6 +220,18 @@
 			
 			
 			$scope.hospitalEmails = myHospital.hospital.emails;
+			$scope.contract= myHospital.hospital.contract;
+			$scope.accountSize=myHospital.hospital.accountSize;
+			
+			var dupeEmails = [];
+			for(var i = 0; i < $scope.hospitalEmails.length; i++) {
+				if(dupeEmails.indexOf($scope.hospitalEmails[i].value) > -1){
+					 $scope.hospitalEmails.splice(i,1);
+				}else{
+					dupeEmails.push($scope.hospitalEmails[i].value);
+				}
+			}
+			
 			$scope.userEmailIsHospitalEmail = false;
 			
 			var promise = amiService.getAmiUser();
@@ -242,7 +260,7 @@
 			
 			$scope.animalWeightUomList  = ['LB', 'KG'];
 			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
-			$scope.animalSexList		= ['Sex','F/s', 'M/c', 'F','M'];
+			$scope.animalSexList		= ['Sex','Female spade', 'Male Castrated', 'Female','Male'];
 			$scope.animalAgeYearsList 	= [Years ];
 			$scope.animalAgeMonthsList =  [Months];
 			$scope.serviceCategory = 'Imaging Modalities';
@@ -490,7 +508,7 @@
 					
 					$scope.saveAction == '';
 						
-					var data = {caseNumber: $scope.caseNumber, amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+					var data = {caseNumber: $scope.caseNumber, amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId, contract: $scope.contract, accountSize:$scope.accountSize };
 					
 					var res = $http.post('amicusthome/amidraftrequest',data);
 					res.success(function(data, status, headers, config) {
@@ -510,7 +528,7 @@
 					
 					if ($scope.newRequestForm.$valid) {
 					
-						var data = {caseNumber: $scope.caseNumber,amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId };
+						var data = {caseNumber: $scope.caseNumber,amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId, contract: $scope.contract, accountSize:$scope.accountSize };
 						
 						var res = $http.post('amicusthome/amirequest',data);
 						res.success(function(data, status, headers, config) {

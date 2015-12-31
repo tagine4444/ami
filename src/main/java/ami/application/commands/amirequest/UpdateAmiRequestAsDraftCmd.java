@@ -13,36 +13,24 @@ public class UpdateAmiRequestAsDraftCmd {
     private final String userName;
     private final String hospitalName;
     private final String hospitalId;
-    
-//    private DateTime hasBeenSavedAndSubmittedToRadiologist;
-//   	private DateTime interpretationInProgress;
-//   	private DateTime interpretationReadyForReview;
-//   	private DateTime interpretationReadyComplete;
-//   	private boolean editable;
+    private final String contract;
+	private final String accountSize;
+
    	private DateTime dateTime;
 
 
     public UpdateAmiRequestAsDraftCmd(String id, AmiRequest amiRequestJson, String userName,   
     		String hospitalName, String hospitalId,
-    		
-//    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-//    		DateTime interpretationInProgress,              
-//    		DateTime interpretationReadyForReview,          
-//    		DateTime interpretationReadyComplete,           
-//    		boolean editable,
-    		DateTime dateTime ) {
+    		DateTime dateTime,
+    		String contract, String accountSize) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId =  hospitalId;
         this.dateTime = dateTime;
-        
-//        this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-//   		this.interpretationInProgress = interpretationInProgress ;              
-//   		this.interpretationReadyForReview = interpretationReadyForReview;          
-//   		this.interpretationReadyComplete = interpretationReadyComplete;           
-//   		this.editable   = editable;       
+        this.contract = contract;
+        this.accountSize = accountSize;
     }
 
     public String getUserName() {
@@ -65,28 +53,16 @@ public class UpdateAmiRequestAsDraftCmd {
 		return hospitalId;
 	}
 
-
-//	public boolean isEditable() {
-//		return editable;
-//	}
-
 	public DateTime getDateTime() {
 		return dateTime;
 	}
 
-//	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
-//		return hasBeenSavedAndSubmittedToRadiologist;
-//	}
-//
-//	public DateTime getInterpretationInProgress() {
-//		return interpretationInProgress;
-//	}
-//
-//	public DateTime getInterpretationReadyForReview() {
-//		return interpretationReadyForReview;
-//	}
-//
-//	public DateTime getInterpretationReadyComplete() {
-//		return interpretationReadyComplete;
-//	}
+	public String getContract() {
+		return contract;
+	}
+
+	public String getAccountSize() {
+		return accountSize;
+	}
+
 }

@@ -49,7 +49,7 @@ public class LoginController {
 		}
 		
 		if( isAdmiUser){
-			return "redirect:amiadmin";
+			return "redirect:amiadmin/#/hospitalAdminSubmittedRequests";
 		}
 		
 		return "redirect:amicust";

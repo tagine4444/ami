@@ -11,6 +11,8 @@ public class NewAmiRequestSubmittedEvent {
 	private final String userName;
 	private final String hospitalName;
 	private final String hospitalId;
+	private final String contract;
+	private final String accountSize;
 	
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 //	private boolean editable;
@@ -19,14 +21,19 @@ public class NewAmiRequestSubmittedEvent {
     		String userName, 
     		String hospitalName, 
     		String hospitalId,
-    		DateTime hasBeenSavedAndSubmittedToRadiologist
-//    		,boolean editable 
+    		DateTime hasBeenSavedAndSubmittedToRadiologist,
+    		String contract,
+    		String accountSize
     		) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId  = hospitalId;
+        this.contract = contract;
+        this.accountSize = accountSize;
+        	
+        
         
         this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
 //		this.editable   = editable;                  
@@ -60,6 +67,14 @@ public class NewAmiRequestSubmittedEvent {
 
 	public DateTime getHasBeenSavedAndSubmittedToRadiologist() {
 		return hasBeenSavedAndSubmittedToRadiologist;
+	}
+
+	public String getContract() {
+		return contract;
+	}
+
+	public String getAccountSize() {
+		return accountSize;
 	}
 
 }

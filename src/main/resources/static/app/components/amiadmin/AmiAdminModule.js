@@ -1,13 +1,50 @@
 (function(){
 	
-	var amiAdminModule = angular.module('AmiAdminModule',[]);
+	var amiAdminModule = angular.module('AmiAdminModule',['ngDialog']);
 	
 	// ============ Controller ===============
-	amiAdminModule.controller('CaseQueueCtrl', function ($scope, $http, $window,$location) {
-		$scope.page = 'caseQueue';
-			
+	amiAdminModule.controller('CaseQueueCtrl', function ($scope, $http, $window,$location, pendingRequestsAllHospitals) {
+		$scope.page = 'readCases';
+		
+		$scope.searchType = 'newCasesStat';
+		if(pendingRequestsAllHospitals.statsAmiRequests.length ==0){
+			$scope.searchType = 'newCases';
+		}else{
+			$scope.searchType = 'newCasesStat';
+		}
+		
+		$scope.newCases = pendingRequestsAllHospitals.amiRequests;
+		$scope.statsAmiRequests = pendingRequestsAllHospitals.statsAmiRequests;
+		$scope.caseReadyForReview = [];
+		$scope.caseCompletedToday = [];
 		
 	});
+	
+	// ============ Controller ===============
+	amiAdminModule.controller('CaseProcessingCtrl', function ($scope, $http, $window,$location, myCase,ngDialog) {
+		$scope.page = 'readCases';
+		$scope.amiCase = myCase;
+		$scope.amiRequest = myCase.amiRequest;
+		
+		$scope.clickToOpen = function (aFile) {
+			alert('opening '+ aFile);
+			var myFile ="/"+aFile;
+	        ngDialog.open({ template: myFile });
+	    };
+	});
+	
+	amiAdminModule.controller('FileUploadViewCtrl', function ($scope, $http, $window,$location, $route,ngDialog) {
+		$scope.imageName =  $route.current.params.file;
+		
+		
+//		$scope.clickToOpen = function (aFile) {
+//			alert('opening '+ aFile);
+//			var myFile ="/"+aFile;
+//	        ngDialog.open({ template: myFile });
+//	    };
+	});
+	
+	
 	
 	
 	// ============ Controller ===============
@@ -25,6 +62,8 @@
 
 		$scope.page = 'hospitalAdmin';
 		
+		$scope.contractList = amiadminFactory.getContractList();
+		$scope.accountList = amiadminFactory.getAccountList();
 		
 		var masterUser = amiadminFactory.getNewMasterUser()  
 		var hospital   = amiadminFactory.getNewHospital();
@@ -81,10 +120,13 @@
 	});
 	
 	// ============ Controller ===============
-	amiAdminModule.controller('HospitalAdminUpdateCtrl', function ($scope, $http, $window,$location, myHospitalView) {
+	amiAdminModule.controller('HospitalAdminUpdateCtrl', function ($scope, $http, $window,$location, myHospitalView, amiadminFactory) {
 		$scope.page = 'hospitalAdmin';
 		$scope.hospital = myHospitalView.hospital;
 		$scope.hospitalUsers = myHospitalView.amiUsers;
+		
+		$scope.contractList = amiadminFactory.getContractList();
+		$scope.accountList = amiadminFactory.getAccountList();
 		
 		if(myHospitalView.amiUsers){
 			myHospitalView.amiUsers.forEach(function(aUser){
@@ -116,6 +158,7 @@
 		
 		// ========= hospital updates ========
 		
+		$scope.hospitalActionIsString = false;
 		$scope.hospitalUpdateAction ="";
 		$scope.newHospitalUpdateLabel ="";
 		$scope.newHospitalUpdateValue ="";
@@ -123,6 +166,7 @@
 		$scope.hospitalListToUpdate =[];
 		
 		var clearHospitalUpdateModal = function(){
+			
 			$scope.updateHospitalErrorMsg = "";
 			$scope.hospitalUpdated     = false;
 			$scope.modalLabel = "";
@@ -132,6 +176,11 @@
 			$scope.newHospitalUpdateValue="";
 			$scope.newHospitalUpdatePlaceHolderLabel="";
 			$scope.newHospitalUpdatePlaceHolderValue="";
+			
+			$scope.hospitalActionIsString  = false;
+			$scope.inputSizeSmall = false;
+			$scope.hospitalStringCurrentValue = "";
+			$scope.hospitalStringToUpdate = "";
 			
 		}
 		
@@ -175,6 +224,31 @@
 			});	
 			
 			
+		}
+		
+		
+		$scope.updateContractOrAccountSize = function(){
+			
+			
+			var url = '/ami/amiadminhome/hospital/updatehospitalcontractoraccount';
+			
+		var data = {'hospitalId': $scope.hospital.id, 'value': $scope.newHospitalUpdateValue, 'action': $scope.hospitalUpdateAction};
+			
+			var res = $http.post(url,data);
+			
+			res.success(function(data, status, headers, config) {
+				
+				if( $scope.hospitalUpdateAction == 'updateContract'){
+					$scope.hospital.contract = $scope.newHospitalUpdateValue;
+				}
+				else if($scope.hospitalUpdateAction == 'updateAccountSize'){
+					$scope.hospital.accountSize = $scope.newHospitalUpdateValue;
+				}
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( $scope.masterUserUpdateAction + " failed: " + JSON.stringify({data: data}));
+			});	
 		}
 		
 		
@@ -286,6 +360,7 @@
 			
 		}
 		
+		
 		$scope.updateHospitalAcronym = function(){
 			$scope.hospitalActionIsString = true;
 			$scope.inputSizeSmall = true;
@@ -306,6 +381,26 @@
 			$scope.newHospitalUpdatePlaceHolderValue="New Notes";
 			$scope.hospitalStringCurrentValue = $scope.hospital.notes;
 			$scope.hospitalStringToUpdate = $scope.hospital.notes;
+		}
+		
+
+		$scope.updateHospitalContract = function(){
+			$scope.contractOrAcctList = $scope.contractList;
+			$scope.modalLabel = "Update Contract";
+			$scope.newHospitalUpdatePlaceHolderValue = $scope.hospital.name + " contract type is "+ $scope.hospital.contract +". Select the new value below and push Save";
+			$scope.hospitalUpdateAction = "updateContract";
+			$scope.newHospitalUpdateValue= $scope.hospital.contract;
+			$scope.hospitalStringCurrentValue = $scope.hospital.contract;
+			
+		}
+		$scope.updateHospitalAccountSize = function(){
+			$scope.contractOrAcctList = $scope.accountList;
+			$scope.modalLabel = "Update Account Size";
+			$scope.newHospitalUpdatePlaceHolderValue = $scope.hospital.name + " account is "+ $scope.hospital.accountSize +". Select the new value below and push Save";
+			$scope.hospitalUpdateAction = "updateAccountSize";
+			$scope.newHospitalUpdateValue= $scope.hospital.accountSize;
+			$scope.hospitalStringCurrentValue = $scope.hospital.accountSize;
+			
 		}
 		
 		
@@ -371,6 +466,12 @@
 			$scope.modalNewValuePlaceHolder = "";
 			$scope.masterUserUpdateAction ="";
 			$scope.masterUserUpdateValue = "";
+			
+			
+			$scope.newHospitalUpdatePlaceHolderValue = "";
+			$scope.hospitalUpdateAction = "";
+			$scope.newHospitalUpdateValue= "";
+			$scope.hospitalStringCurrentValue ="";
 		}
 		
 		

@@ -14,7 +14,8 @@ public class Hospital {
 	private List<Phone> phones;
 	private List<Email> emails;// default emails where the reports are sent
 	private String notes;
-	
+	private String contract;
+	private String accountSize;
 	// only for object mapper to turn json into Object
 	public Hospital(){}
 	
@@ -24,7 +25,9 @@ public class Hospital {
 					List<Address> addresses,
 					List<Phone> phones,
 					List<Email>emails,
-					String notes) {
+					String notes,
+					String contract, 
+					String accountSize) {
 		
 		this.id       = id       ;
 		this.name     = name     ;
@@ -33,6 +36,8 @@ public class Hospital {
 		this.phones   = phones   ;
 		this.emails   = emails;
 		this.notes = notes;
+		this.contract = contract;
+		this.accountSize =  accountSize;
 	}
 
 	public void init(String id){
@@ -89,5 +94,24 @@ public class Hospital {
 	public void replaceNotes(String newNotes) {
 		this.notes = newNotes;
 	}
+	
+	public void replaceContract(String newContract) {
+		this.contract = newContract;
+		
+	}
+
+	public void replaceAccountSize(String newAccountSize) {
+		this.accountSize = newAccountSize;
+	}
+
+	public String getContract() {
+		return contract;
+	}
+
+	public String getAccountSize() {
+		return accountSize;
+	}
+
+	
 	
 }

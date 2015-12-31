@@ -25,15 +25,8 @@
 	  <div class="panel-heading"><strong>{{hospitalName}} &amp; Client Section</strong></div>
 	  <div class="panel-body">
 	    <!--  Veterinarian and Lab Row -->
-	    <div class="row">
 	    
-	    	
-		    <div class="col-sm-4">
-		    	<div class="input-group input-group-sm" ng-class="{ 'has-error' : newRequestForm.vetId.$invalid }">
-				   <span class="input-group-addon" id="vetRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" id="vetRequiredIconSpan"></span></span>
-				  <input aria-describedby="vetRequiredIcon" type="text" name="vetId" class="form-control" id="vet" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
-				</div>
-		    </div>
+	    <div class="row">
 		    
 		     <div class="col-sm-4" ng-show="!userEmailIsHospitalEmail">
 			    <span >Send the report to your own email? </span> &nbsp;
@@ -50,6 +43,14 @@
 				<a href =""  data-toggle="modal" data-target="#myEmailModal" >See who this report is emailed to</a>
 			</div>
 			
+		</div>
+	    <div class="row">
+		    <div class="col-sm-4">
+		    	<div class="input-group input-group-sm" ng-class="{ 'has-error' : newRequestForm.vetId.$invalid }">
+				   <span class="input-group-addon" id="vetRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" id="vetRequiredIconSpan"></span></span>
+				  <input aria-describedby="vetRequiredIcon" type="text" name="vetId" class="form-control" id="vet" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
+				</div>
+		    </div>
 		</div>
 		<br/>
 		<!--  Clients  Row -->
@@ -93,27 +94,15 @@
 	  
 		    <div class="row">
 		    
-		    	<div class="col-sm-3">
+		    	<div class="col-sm-2">
 			      <input type="text" class="form-control" id="animalNameId" ng-model="newRequest.patientInfo.animalName" placeholder="Animal's Name">
 			    </div>
 			    
-			     <div class="col-sm-1">
+			     <div class="col-sm-2">
 				       <select class="form-control" ng-model="newRequest.patientInfo.animalSex" ng-selected="newRequest.patientInfo.animalSex">
 						  <option  ng-repeat="animalSex in animalSexList">{{animalSex}}</option>
 						</select>
 				 </div>
-				 
-				 
-<!-- 				  <div class="col-sm-1 input-group input-group-xs" ng-class="{ 'has-error' : newRequestForm.animalSexId.$invalid }"> -->
-<!-- 					    <span class="input-group-addon" id="animalSexRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" ></span></span> -->
-<!-- 						<select aria-describedby="animalSexRequiredIcon" id="animalSexId" name="animalSexId" class="form-control"  -->
-<!-- 							ng-required='isSexNotSelected()' -->
-<!-- 								ng-model="newRequest.patientInfo.animalSex"> -->
-<!-- 						  <option ng-selected="$index==0" ng-repeat="animalSex in animalSexList"> {{animalSex}}</option> -->
-<!-- 					   </select> -->
-					
-<!-- 				</div> -->
-				 
 				 
 				<!-- Weight -->
 				<div class="col-sm-3">	    
@@ -124,11 +113,6 @@
 						  		<select class="form-control" ng-model="newRequest.patientInfo.animalWeightUom">
 									<option ng-selected="$index==0" ng-repeat="anAnimalWeightUom in animalWeightUomList">{{anAnimalWeightUom}}</option>
 							    </select>
-							    
-<!-- 								<select class="form-control"> -->
-<!-- 						          <option>LB</option> -->
-<!-- 						          <option>KG</option> -->
-<!-- 							    </select> -->
 					  </div>
 					</div>
 				</div>

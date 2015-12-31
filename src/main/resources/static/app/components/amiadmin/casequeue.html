@@ -2,15 +2,108 @@
 	<div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
 	
 	<form name="hospitalAdminForm"    >
-	<div class="panel panel-default">
-	  <div class="panel-heading"><strong>Case Queue</strong></div>
-	  <div class="panel-body">
-	  
+<!-- 	<div class="panel panel-default"> -->
+<!-- 	  <div class="panel-heading"><strong>Case Queue</strong></div> -->
+<!-- 	  <div class="panel-body"> -->
 	  	<div class="row">
-	  		<h1>Select New Case</h1>
+	  		<ul class="nav nav-tabs">
+		  <li role="presentation" ng-class="{'active' : searchType=='newCasesStat'}"><a href="#/hospitalAdminSubmittedRequests" ng-click="searchType = 'newCasesStat'"> <span class="label label-danger">New STATs</span> <span class="badge">{{statsAmiRequests.length}}</span></a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='newCases'}"><a href="#/hospitalAdminSubmittedRequests" ng-click="searchType = 'newCases'">New Cases <span class="badge">{{newCases.length}}</span></a></li>
+		  <li role="presentation"ng-class="{'active' : searchType=='caseClosedToday'}"><a href="#/hospitalAdminSubmittedRequests" ng-click="searchType = 'caseClosedToday'">Completed Today</a></li>
+		</ul>  
+		
+		<br/>   
+		
+		<div class="panel panel-primary" ng-show="searchType=='newCasesStat'">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading"></div>
+		  <div class="panel-body">
+		     <table class="table">
+			     <thead>
+				   <tr>
+				   	<th>Case Number</th>
+				   	<th>Status</th>
+				   	<th>Account</th>
+				   	<th>Contract</th>
+				   	<th>Hospital</th>
+				   	<th>Veterinarian</th>
+				   	<th>Client</th>
+				   	<th>Animal</th>
+				   	<th>Species</th>
+				   	<th>Breed</th>
+				   	<th>Age</th>
+				   </tr>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="aNewCase in statsAmiRequests">
+				   	<td><a href="#/hospitalAdminProcessCase/{{aNewCase.caseNumber}}"  >Read Case {{aNewCase.caseNumber}}</a></td>
+				   	<td>
+						<span ng-show="aNewCase.interpretationInProgress==null">Not Started</span>
+						<span style="color:red;" ng-show="aNewCase.interpretationInProgress!=null">In Progress</span>
+					</td>
+				   	<td>{{aNewCase.accountSize}}</td>
+				   	<td>{{aNewCase.contract}}</td>
+				   	<td>{{aNewCase.hospitalName}}</td>
+				   	<td>{{aNewCase.amiRequest.hospitalAndClientInfo.vet}}</td>
+				   	<td>{{aNewCase.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aNewCase.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.animalName}} </td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.species}}</td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.breeds}}</td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.animalAgeYears}} {{aNewCase.amiRequest.patientInfo.animalAgeMonths}}</td>
+				   </tr>
+				   </tbody>
+			</table>
+		  </div>
 		</div>
-	  </div>
-	</div> 
+		
+		      	  
+		<div class="panel panel-primary" ng-show="searchType=='newCases'">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading"></div>
+		  <div class="panel-body">
+		     <table class="table">
+			     <thead>
+				   <tr>
+				   	<th>Case Number</th>
+				   	<th>Status</th>
+				   	<th>Account</th>
+				   	<th>Contract</th>
+				   	<th>Hospital</th>
+				   	<th>Veterinarian</th>
+				   	<th>Client</th>
+				   	<th>Animal</th>
+				   	<th>Species</th>
+				   	<th>Breed</th>
+				   	<th>Age</th>
+				   </tr>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="aNewCase in newCases">
+				   	<td><a href="#/hospitalAdminProcessCase/{{aNewCase.caseNumber}}"  >Read Case {{aNewCase.caseNumber}}</a></td>
+				   	<td>
+						<span ng-show="aNewCase.interpretationInProgress==null">Not Started</span>
+						<span style="color:red;" ng-show="aNewCase.interpretationInProgress!=null">In Progress</span>
+					</td>
+				   	<td>{{aNewCase.accountSize}}</td>
+				   	<td>{{aNewCase.contract}}</td>
+				   	<td>{{aNewCase.hospitalName}}</td>
+				   	<td>{{aNewCase.amiRequest.hospitalAndClientInfo.vet}}</td>
+				   	<td>{{aNewCase.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aNewCase.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.animalName}} </td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.species}}</td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.breeds}}</td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.animalAgeYears}} {{aNewCase.amiRequest.patientInfo.animalAgeMonths}}</td>
+				   </tr>
+				   </tbody>
+			</table>
+		  </div>
+		</div>
+		
+		
+		
+		</div>
+<!-- 	  </div> -->
+<!-- 	</div>  -->
 	</form>
 	
 	

@@ -1,13 +1,24 @@
 
-var amiadmin = angular.module('amiadmin',[ 'ngRoute','AmiAdminModule']);
+var amiadmin = angular.module('amiadmin',[ 'ngRoute','angularMoment','AmiAdminModule']);
+
+amiadmin.filter('jsonDate', ['$filter', function ($filter) {
+    return function (input, format) {
+        
+        
+        if(input == null){ return ""; } 
+        
+        var myDate = $filter('date')(new Date(input.millis),format);
+        return myDate;
+    };
+}]);
 
 
 amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
-	
-	getAllHospitalViews: function(){ 
+
+	getPendingRequestsAllHospitals: function(){ 
 		 
 		 var deferred = $q.defer();
-		 var res = $http.get('/ami/amiadminhome/hospitalview');
+		 var res = $http.get('/ami/amicusthome/amirequest/pending/allhospitals');
 		 
 		 res.success(function(data, status, headers, config) {
 				deferred.resolve();
@@ -17,6 +28,34 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 			});	
 
 			return res;
+	 },
+	 getAmiRequest: function(requestNumber){
+		 
+		 var deferred = $q.defer(); 
+		 var res = $http.get('/ami/amiadmin/switchcasetoinprogress?caseNumber='+requestNumber);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By request number');
+			});	
+
+			return res;
+	 },
+	 getAllHospitalViews: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadminhome/hospitalview');
+		 
+		 res.success(function(data, status, headers, config) {
+			 deferred.resolve();
+		 });
+		 res.error(function(data, status, headers, config) {
+			 deferred.reject('failure to get hospital');
+		 });	
+		 
+		 return res;
 	 },
 	 
 	 getHospitalView: function(hospitalId){ 
@@ -51,9 +90,20 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 					'addresses'   : [],
 					'phones'	: [],
 					'emails'	: [],
-					'notes'		:''
+					'notes'		:'',
+                    'contract'  :'Not Contract',
+                    'accountSize': 'Smaill'
 		 };
 		 return hospital;
+	 },
+    getContractList: function(){
+        var contractList = ['Not Contract', 'Contract'];
+        return contractList;
+    },
+    
+	 getAccountList: function(){
+		 var contractList = ['Small', 'Medium', 'Large', 'Extra Large'];
+		 return contractList;
 	 }
 	
 }});
@@ -65,9 +115,37 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 amiadmin.config(['$routeProvider','$httpProvider',
                 function($routeProvider) {	
                   $routeProvider.
-                    when('/', {
+                    when('/hospitalAdminSubmittedRequests', {
                     	templateUrl: '/app/components/amiadmin/casequeue.html',
                     	controller: 'CaseQueueCtrl',
+                    	   resolve: {
+                             	
+                             	pendingRequestsAllHospitals: ['amiadminFactory', function (amiadminFactory) {
+                             		return amiadminFactory.getPendingRequestsAllHospitals().then(
+                             			function(result){
+                             				return result.data;
+                             			}	
+                             		);
+                                 }],
+                       	   }
+                    	
+                    }).
+                    when('/hospitalAdminProcessCase/:caseNumber', {
+                    	templateUrl: '/app/components/amiadmin/processCase.html',
+                    	controller: 'CaseProcessingCtrl',
+                    	resolve: {
+                    		
+                    		myCase: ['amiadminFactory','$route', function (amiadminFactory, $route) {
+                         		var caseNumber = $route.current.params.caseNumber;
+                         		return amiadminFactory.getAmiRequest(caseNumber).then(
+                         			function(result){
+                         				var myResult = result.data;
+                         				return myResult;
+                         			}	
+                         		);
+                             }]
+                    	}
+                    
                     }).
                     when('/hospitalAdminSearch', {
                     	templateUrl: '/app/components/amiadmin/hospitaladminsearch.html',
@@ -103,6 +181,10 @@ amiadmin.config(['$routeProvider','$httpProvider',
                          			});
                              }]
                     	 }// resolve
+                    }).
+                    when('/fileUploadView/:file', {
+                    	templateUrl: '/app/components/common/fileuploadview.html',
+                    	controller: 'FileUploadViewCtrl', 
                     }).
                     when('/error', {
                       templateUrl: '/app/components/error/error.html',

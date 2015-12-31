@@ -1,7 +1,6 @@
 package ami.application.commands.amirequest;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-import org.joda.time.DateTime;
 
 import ami.domain.model.amicase.amirequest.AmiRequest;
 
@@ -13,33 +12,21 @@ public class SaveAmiRequestAsDraftCmd {
     private final String userName;
     private final String hospitalName;
     private final String hospitalId;
+    private final String contract;
+	private final String accountSize;
     
-//    private DateTime hasBeenSavedAndSubmittedToRadiologist;
-//   	private DateTime interpretationInProgress;
-//   	private DateTime interpretationReadyForReview;
-//   	private DateTime interpretationReadyComplete;
-//   	private boolean editable;
-
 
     public SaveAmiRequestAsDraftCmd(String id, AmiRequest amiRequestJson, String userName,   
-    		String hospitalName, String hospitalId
-//    		DateTime hasBeenSavedAndSubmittedToRadiologist, 
-//    		DateTime interpretationInProgress,              
-//    		DateTime interpretationReadyForReview,          
-//    		DateTime interpretationReadyComplete,           
-//    		,boolean editable
+    		String hospitalName, String hospitalId, String contract, String accountSize
     		) {
         this.id = id;
         this.amiRequestJson = amiRequestJson;
         this.userName = userName;
         this.hospitalName = hospitalName;
         this.hospitalId =  hospitalId;
-        
-//        this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist; 
-//   		this.interpretationInProgress = interpretationInProgress ;              
-//   		this.interpretationReadyForReview = interpretationReadyForReview;          
-//   		this.interpretationReadyComplete = interpretationReadyComplete;           
-//   		this.editable   = editable;       
+        this.contract = contract;
+        this.accountSize = accountSize;
+    
     }
 
     public String getUserName() {
@@ -60,6 +47,14 @@ public class SaveAmiRequestAsDraftCmd {
 
 	public String getHospitalId() {
 		return hospitalId;
+	}
+
+	public String getContract() {
+		return contract;
+	}
+
+	public String getAccountSize() {
+		return accountSize;
 	}
 
 

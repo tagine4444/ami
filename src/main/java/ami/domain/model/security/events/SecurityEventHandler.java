@@ -89,4 +89,16 @@ private static final Logger log = LoggerFactory.getLogger(SecurityEventHandler.c
     public void handle(HospitalNotesUpdatedEvent event) throws JsonProcessingException  {
     	hospitalService.updateHospitalNotes(event.getHospitalId(), event.getNewNotes());
     }
+    
+    @EventHandler
+    public void handle(HospitalContractUpdatedEvent event) throws JsonProcessingException  {
+    	hospitalService.updateHospitalContract(event.getHospitalId(), event.getNewContract());
+    }
+    
+    
+    @EventHandler
+    public void handle(HospitalAccountSizeUpdatedEvent event) throws JsonProcessingException  {
+    	hospitalService.updateHospitalAccountSize(event.getHospitalId(), event.getNewAccountSize());
+    }
+    
 }

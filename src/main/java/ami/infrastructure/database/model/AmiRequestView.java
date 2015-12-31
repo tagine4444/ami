@@ -16,6 +16,13 @@ public class AmiRequestView {
 	private String hospitalName;
 	private String hospitalId;
 	
+	private String contract;
+	private String accountSize;
+	private String radiographicInterpretation; 	// ONLY in non contract long form
+	private String radiographicImpression;    	// both contract and non contract
+	private String recommendation;				// both contract and non contract
+	
+	
 	private String creationDateString ;
 	private DateTime creationDate ;
 	private String updateDateString ;
@@ -28,6 +35,7 @@ public class AmiRequestView {
 	private DateTime interpretationReadyComplete;
 	private boolean editable;
 	private List<FileUploadInfo> fileUploads ;
+	
 	
 	
 	public AmiRequestView( String caseNumber, AmiRequest amiRequest, String userName,
@@ -43,13 +51,17 @@ public class AmiRequestView {
 			List<FileUploadInfo> fileUploads,
 			String updateUser,
 			String updateDateString,
-			DateTime updateDate) {
+			DateTime updateDate, 
+			String contract,
+			String accountSize) {
 		
 		this.caseNumber = caseNumber;
 		this.amiRequest    = amiRequest;   
 		this.userName      = userName;     
 		this.hospitalId    = hospitalId;
 		this.hospitalName  = hospitalName; 
+		this.contract = contract;
+		this.accountSize = accountSize;
 		
 		this.editable =  editable;
 		this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist ;
@@ -67,29 +79,32 @@ public class AmiRequestView {
 	}
 	
 	
-	public void update(AmiRequestView updatedView, String updateDateString, String updateUser , DateTime updateDate){
-		
-		this.updateDate = updateDate;
-		this.updateDateString = updateDateString;
-		this.updateUser = updateUser;
-		
-		this.amiRequest    = updatedView.getAmiRequest();   
-		this.userName      = updatedView.getUserName();     
-		this.hospitalId    = updatedView.getHospitalId();
-		this.hospitalName  = updatedView.getHospitalName(); 
-		
-		this.editable =  updatedView.isEditable();
-		this.hasBeenSavedAndSubmittedToRadiologist = updatedView.getHasBeenSavedAndSubmittedToRadiologist() ;
-		this.interpretationInProgress = updatedView.getInterpretationInProgress() ;
-		this.interpretationReadyForReview = updatedView.getInterpretationReadyForReview() ;
-		this.interpretationReadyComplete =  updatedView.getInterpretationReadyComplete();
-		
-		this.creationDateString = updatedView.getCreationDateString();
-		this.fileUploads = updatedView.getFileUploads();
-		
-		
-		
-	}
+//	public void update(AmiRequestView updatedView, String updateDateString, String updateUser , DateTime updateDate){
+//		
+//		this.updateDate = updateDate;
+//		this.updateDateString = updateDateString;
+//		this.updateUser = updateUser;
+//		
+//		this.amiRequest    = updatedView.getAmiRequest();   
+//		this.userName      = updatedView.getUserName();     
+//		this.hospitalId    = updatedView.getHospitalId();
+//		this.hospitalName  = updatedView.getHospitalName(); 
+//		
+//		this.contract = updatedView.getContract();
+//		this.accountSize = updatedView.getAccountSize();
+//		
+//		this.editable =  updatedView.isEditable();
+//		this.hasBeenSavedAndSubmittedToRadiologist = updatedView.getHasBeenSavedAndSubmittedToRadiologist() ;
+//		this.interpretationInProgress = updatedView.getInterpretationInProgress() ;
+//		this.interpretationReadyForReview = updatedView.getInterpretationReadyForReview() ;
+//		this.interpretationReadyComplete =  updatedView.getInterpretationReadyComplete();
+//		
+//		this.creationDateString = updatedView.getCreationDateString();
+//		this.fileUploads = updatedView.getFileUploads();
+//		
+//		
+//		
+//	}
 
 	public AmiRequest getAmiRequest() {
 		return amiRequest;
@@ -155,6 +170,31 @@ public class AmiRequestView {
 
 	public String getCaseNumber() {
 		return caseNumber;
+	}
+
+
+	public String getContract() {
+		return contract;
+	}
+
+
+	public String getAccountSize() {
+		return accountSize;
+	}
+
+
+	public String getRadiographicInterpretation() {
+		return radiographicInterpretation;
+	}
+
+
+	public String getRadiographicImpression() {
+		return radiographicImpression;
+	}
+
+
+	public String getRecommendation() {
+		return recommendation;
 	}
 
 }

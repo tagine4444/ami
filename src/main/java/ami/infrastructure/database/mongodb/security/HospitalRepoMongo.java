@@ -260,4 +260,21 @@ public class HospitalRepoMongo implements HospitalRepository{
 				AMI_HOSPITAL_VIEW);
 		
 	}
+	@Override
+	public void updateHospitalContract(String hospitalId, String newContract) {
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.contract", newContract),
+				AMI_HOSPITAL_VIEW);
+		
+	}
+	@Override
+	public void updateHospitalAccountSize(String hospitalId,
+			String newAccountSize) {
+		mongo.updateFirst(
+				new Query(Criteria.where("hospital._id").is(hospitalId)),
+				Update.update("hospital.accountSize", newAccountSize),
+				AMI_HOSPITAL_VIEW);
+		
+	}
 }

@@ -27,7 +27,7 @@ import ami.web.ResumableInfoStorage;
 @Service
 public class UploadFileRepoMongo implements UploadFileRepository{
 	
-	public static final String UPLOAD_DIR = "uploads";
+	public static final String UPLOAD_DIR = "src/main/resources/public";
 	
 	@Autowired
 	private CommandGateway commandGateway;

@@ -45,5 +45,14 @@ public interface AmiServices {
 			String newValue);
 
 	void updateHospitalNotes(String hospitalId, String userName, String newValue);
+ 
+	void switchCaseToInProgress(String caseNumber, String userName,
+			DateTime dateTime) throws JsonProcessingException;
+
+	void updateHospitalContract(String hospitalId, String userName,
+			String newValue);
+
+	void updateHospitalAccountSize(String hospitalId, String userName,
+			String newValue);
 
 }
