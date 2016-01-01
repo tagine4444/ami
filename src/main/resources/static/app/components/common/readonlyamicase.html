@@ -1,9 +1,9 @@
 
 <div class="row">
 	<div class="col-sm-9">
-		<h4><span class="label label-default">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT</span> 
-	   		<span  ng-show="amiRequest.requestedServices.isInterpretationOnly" class="label label-primary">Interpretation Only</span> 
-	   		<span ng-show="!amiRequest.requestedServices.isInterpretationOnly" ng-repeat="aSevice in amiRequest.requestedServices.selectedServices" class="label label-primary">{{aSevice}} </span>
+		<h4><span class="label label-default">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span>&nbsp;
+	   		<span  ng-show="amiRequest.requestedServices.isInterpretationOnly" class="label label-primary">Interpretation Only </span>&nbsp;
+	   		<span ng-show="!amiRequest.requestedServices.isInterpretationOnly" ng-repeat="aSevice in amiRequest.requestedServices.selectedServices" class="label label-primary">{{aSevice}} </span> &nbsp;
 	    	<span class="label label-primary">Contract Type : {{amiCase.contract}}</span> 
 	    </h4>
 	</div>
@@ -34,8 +34,8 @@
 	</div>
 	
 	<div class="col-sm-4">
-		<b><span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null" class="label label-info">Requested Date: {{ amiCase.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
-		<b><span ng-show="amiCase.interpretationInProgress!=null" class="label label-info">In Progress Date: {{ amiCase.interpretationInProgress  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
+		<span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null">Requested Date: </span><b><span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null">{{ amiCase.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
+	<br/><span ng-show="amiCase.interpretationInProgress!=null">In Progress Date: </span><b><span ng-show="amiCase.interpretationInProgress!=null">{{ amiCase.interpretationInProgress  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
 		
 	</div>
 	
@@ -52,7 +52,7 @@
 
 	<div class="col-sm-12">
 		
-		<pre><b>Exam</b><br/>{{amiRequest.vetObservation.exam}}<br/> <span class="label label-primary" ng-show="amiRequest.vetObservation.anesthetized">anesthetized</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.sedated">sedated</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.fasted">fasted</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.enema">enema</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.painful">painful</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.fractious">fractious</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.shocky">shocky</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.dyspneic">dyspneic</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.died">died</span> <span class="label label-primary" ng-show="amiRequest.vetObservation.euthanized">euthanized</span></pre>
+		<pre><b>Exam</b><br/>{{amiRequest.vetObservation.exam}}<br/> <span style="color:red" ng-show="amiRequest.vetObservation.anesthetized">anesthetized</span> <span style="color:red" ng-show="amiRequest.vetObservation.sedated">sedated</span> <span style="color:red" ng-show="amiRequest.vetObservation.fasted">fasted</span> <span style="color:red" ng-show="amiRequest.vetObservation.enema">enema</span> <span style="color:red" ng-show="amiRequest.vetObservation.painful">painful</span> <span style="color:red" ng-show="amiRequest.vetObservation.fractious">fractious</span> <span style="color:red" ng-show="amiRequest.vetObservation.shocky">shocky</span> <span style="color:red" ng-show="amiRequest.vetObservation.dyspneic">dyspneic</span> <span style="color:red" ng-show="amiRequest.vetObservation.died">died</span> <span style="color:red" ng-show="amiRequest.vetObservation.euthanized">euthanized</span></pre>
 	</div>
 	<div class="col-sm-12">
 		<pre><b>Tentative Diagnosis</b><br/>{{amiRequest.vetObservation.tentativeDiagnosis}}</pre>
@@ -62,19 +62,20 @@
 <div class="row" ng-show="amiCase.contract!='Contract'"> 
 
 	<div class="col-sm-12">
-		<pre><b>Radiographic Interpretation</b><br/>{{amiCase.radiographicInterpretation}}</pre>
+		<pre><span class="label label-warning">Radiographic Interpretation</span><br/><br/>{{amiCase.radiographicInterpretation}}</pre>
 	</div>
 </div>
 
 <div class="row">
 
 	<div class="col-sm-12">
-		<pre><b>Radiographic Impression</b><br/>{{amiCase.radiographicImpression}}</pre>
+		
+		<pre><span class="label label-success">Radiographic Impression</span><br/><br/>{{amiCase.radiographicImpression}}</pre>
 	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
-		<pre><b>Recommendation</b><br/>{{amiCase.recommendation}}</pre>
+		<pre><span class="label label-info">Recommendation</span><br/><br/>{{amiCase.recommendation}}</pre>
 	</div>
 </div>
 	

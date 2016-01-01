@@ -13,20 +13,18 @@
 
 
 	<div class="row">
-		<div class="col-sm-3" ng-show="amiCase.contract!='Contract'">
-		   <button class="btn btn-primary" data-toggle="modal" data-target="#addRadiographicInterpretationModal" >Radiographic interpretation</button>
-			&nbsp;
+		<div class="col-sm-2" ng-show="amiCase.contract!='Contract'">
+		   <button class="btn btn-warning" data-toggle="modal" data-target="#addRadiographicInterpretationModal" >Radiographic interpretation</button>
 		</div>
-		<div class="col-sm-3" >
-		   <button class="btn btn-primary" data-toggle="modal" data-target="#addRadiographicImpressionModal" >Radiographic Impression</button>
-			&nbsp;
-		</div>
-		<div class="col-sm-3" >
-		   <button class="btn btn-primary" data-toggle="modal" data-target="#addRecommendationModal" >Recommendations</button>
+		<div class="col-sm-5" >
+		   <button class="btn btn-success" data-toggle="modal" data-target="#addRadiographicImpressionModal" >Radiographic Impression</button>
+		   <button class="btn btn-info" data-toggle="modal" data-target="#addRecommendationModal" >Recommendations</button>
 		</div>
 		<div class="col-sm-2" >
-		
-		   <button class="btn btn-danger" >Submit For Review</button>
+			 <button class="btn btn-primary" >Ready For Review <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span> </button>
+		</div>
+		<div class="col-sm-3" >
+			 <button class="btn btn-danger" >Close Case and Notify Client <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
 		</div>
 	</div>
 	
