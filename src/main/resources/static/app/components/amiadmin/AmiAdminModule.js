@@ -1,6 +1,6 @@
 (function(){
 	
-	var amiAdminModule = angular.module('AmiAdminModule',['ngDialog']);
+	var amiAdminModule = angular.module('AmiAdminModule',[]);
 	
 	// ============ Controller ===============
 	amiAdminModule.controller('CaseQueueCtrl', function ($scope, $http, $window,$location, pendingRequestsAllHospitals) {
@@ -15,33 +15,74 @@
 		
 		$scope.newCases = pendingRequestsAllHospitals.amiRequests;
 		$scope.statsAmiRequests = pendingRequestsAllHospitals.statsAmiRequests;
-		$scope.caseReadyForReview = [];
+//		$scope.caseReadyForReview = [];
 		$scope.caseCompletedToday = [];
 		
 	});
 	
 	// ============ Controller ===============
-	amiAdminModule.controller('CaseProcessingCtrl', function ($scope, $http, $window,$location, myCase,ngDialog) {
+	amiAdminModule.controller('CaseReviewQueueCtrl', function ($scope, $http, $window,$location, casesPendingReview) {
+		$scope.page = 'caseReview';
+		
+		console.log(casesPendingReview);
+		$scope.searchType = 'newCasesStat';
+		if(casesPendingReview.statsAmiRequests.length ==0){
+			$scope.searchType = 'newCases';
+		}else{
+			$scope.searchType = 'newCasesStat';
+		}
+		
+		$scope.newCases = casesPendingReview.amiRequests;
+		$scope.statsAmiRequests = casesPendingReview.statsAmiRequests;
+		
+		
+	
+		
+	});
+	
+	// ============ Controller ===============
+	amiAdminModule.controller('CaseProcessingCtrl', function ($scope, $http, $window,$location, myCase) {
 		$scope.page = 'readCases';
 		$scope.amiCase = myCase;
 		$scope.amiRequest = myCase.amiRequest;
 		
-		$scope.clickToOpen = function (aFile) {
-			alert('opening '+ aFile);
-			var myFile ="/"+aFile;
-	        ngDialog.open({ template: myFile });
-	    };
+		$scope.switchCaseToReadyForReview = function(){
+			
+			
+			
+			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: myCase.radiographicInterpretation , radiographicImpression: myCase.radiographicImpression, recommendation: myCase.recommendation};
+			
+			var res = $http.post('/ami/amiadmin/switchcasetoreadyforreview',data);
+			res.success(function(data, status, headers, config) {
+				$location.path('/hospitalAdminSubmittedRequests');
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "failure message: " + JSON.stringify({data: data}));
+			});	
+			
+		}
+		
+		$scope.closeCase = function(){
+			
+			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: myCase.radiographicInterpretation , radiographicImpression: myCase.radiographicImpression, recommendation: myCase.recommendation};
+			
+			var res = $http.post('/ami/amiadmin/closecase',data);
+			res.success(function(data, status, headers, config) {
+				$location.path('/hospitalAdminSubmittedRequests');
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "failure message: " + JSON.stringify({data: data}));
+			});	
+			
+		}
+	
+		
 	});
 	
-	amiAdminModule.controller('FileUploadViewCtrl', function ($scope, $http, $window,$location, $route,ngDialog) {
+	amiAdminModule.controller('FileUploadViewCtrl', function ($scope, $http, $window,$location, $route) {
 		$scope.imageName =  $route.current.params.file;
 		
 		
-//		$scope.clickToOpen = function (aFile) {
-//			alert('opening '+ aFile);
-//			var myFile ="/"+aFile;
-//	        ngDialog.open({ template: myFile });
-//	    };
 	});
 	
 	

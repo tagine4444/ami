@@ -1,10 +1,10 @@
 
 <div class="row">
 	<div class="col-sm-9">
-		<h4><span class="label label-default">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span>&nbsp;
-	   		<span  ng-show="amiRequest.requestedServices.isInterpretationOnly" class="label label-primary">Interpretation Only </span>&nbsp;
-	   		<span ng-show="!amiRequest.requestedServices.isInterpretationOnly" ng-repeat="aSevice in amiRequest.requestedServices.selectedServices" class="label label-primary">{{aSevice}} </span> &nbsp;
-	    	<span class="label label-primary">Contract Type : {{amiCase.contract}}</span> 
+		<h4><span class="label label-primary">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span>&nbsp;
+	   		<span  ng-show="amiRequest.requestedServices.isInterpretationOnly" class="label label-default">Interpretation Only </span>&nbsp;
+	   		<span ng-show="!amiRequest.requestedServices.isInterpretationOnly" ng-repeat="aSevice in amiRequest.requestedServices.selectedServices" class="label label-default">{{aSevice}} </span> &nbsp;
+	    	<span class="label label-default">Contract Type : {{amiCase.contract}}</span> 
 	    </h4>
 	</div>
 	<div class="col-sm-3">
@@ -35,11 +35,17 @@
 	
 	<div class="col-sm-4">
 		<span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null">Requested Date: </span><b><span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null">{{ amiCase.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
-	<br/><span ng-show="amiCase.interpretationInProgress!=null">In Progress Date: </span><b><span ng-show="amiCase.interpretationInProgress!=null">{{ amiCase.interpretationInProgress  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
+	<br/><span ng-show="amiCase.caseClosed!=null">Closed Date: </span><b><span ng-show="amiCase.caseClosed!=null">{{ amiCase.caseClosed  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
 		
 	</div>
 	
 </div>
+<div class="row">
+	<div class="col-sm-12">
+		<p>Notes:</p> <p><b>{{amiRequest.imagesAndDocuments.notes}}</b></p>
+	</div>
+</div>
+
 
 <br/>
 <div class="row">
@@ -62,20 +68,25 @@
 <div class="row" ng-show="amiCase.contract!='Contract'"> 
 
 	<div class="col-sm-12">
-		<pre><span class="label label-warning">Radiographic Interpretation</span><br/><br/>{{amiCase.radiographicInterpretation}}</pre>
+		<pre class="alert-warning"><b>Radiographic Interpretation</b><br/><br/>{{amiCase.radiographicInterpretation}}</pre>
 	</div>
 </div>
 
 <div class="row">
 
+
+<!-- 	<div class="alert alert-warning alert-dismissible" role="alert"> -->
+<!-- 	  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+<!-- 	  <strong>Warning!</strong> Better check yourself, you're not looking too good. -->
+<!-- 	</div> -->
+
 	<div class="col-sm-12">
-		
-		<pre><span class="label label-success">Radiographic Impression</span><br/><br/>{{amiCase.radiographicImpression}}</pre>
+		<pre class="alert-success"><b>Radiographic Impression</b><br/><br/>{{amiCase.radiographicImpression}}</pre>
 	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
-		<pre><span class="label label-info">Recommendation</span><br/><br/>{{amiCase.recommendation}}</pre>
+		<pre class="alert-info"><b>Recommendation</b><br/><br/>{{amiCase.recommendation}}</pre>
 	</div>
 </div>
 	

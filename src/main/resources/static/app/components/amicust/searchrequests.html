@@ -4,7 +4,7 @@
 		<ul class="nav nav-tabs">
 		  <li role="presentation" ng-class="{'active' : searchType=='draftRequests'}"><a href="#/searchRequest" ng-click="searchType = 'draftRequests'">Draft Requests <span class="badge">{{draftRequests.length}}</span></a></li>
 		  <li role="presentation" ng-class="{'active' : searchType=='pendingRequests'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pendingRequests'" >Pending Requests <span class="badge">{{pendingRequests.length}}</span></a></li>
-		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">Search Requests</a></li>
+		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">Search</a></li>
 		</ul>  
 		
 		<br/>         	  
@@ -22,7 +22,7 @@
 				   	<th>Animal</th>
 				   	<th>Species</th>
 				   	<th>Client</th>
-				   	<th>Date</th>
+				   	<th>Submitted Date</th>
 				   </tr>
 				  </thead>
 				  <tbody>
@@ -32,7 +32,8 @@
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aPendingRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-				   	<td>{{ aPendingRequest.updateDate  | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   	<td>{{ aPendingRequest.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   
 				   </tr>
 				   </tbody>
 			</table>
@@ -108,17 +109,19 @@
 				   	<th>Animal</th>
 				   	<th>Species</th>
 				   	<th>Client</th>
-				   	<th>Date</th>
+				   	<th>Submitted Date</th>
+				   	<th>Case Closed Date</th>
 				   </tr>
 				  </thead>
 				  <tbody>
 				   <tr ng-repeat="aSearchResult in searchResults">
-				   	<td><a href="#/editRequest/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">{{aSearchResult.caseNumber}}</a></td>
+				   	<td><a href="#/editRequest1/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">{{aSearchResult.caseNumber}}</a></td>
 				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.species}} - {{aSearchResult.amiRequest.patientInfo.breeds}}</td>
 				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aSearchResult.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-				   	<td>{{ aSearchResult.updateDate | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   	<td>{{ aSearchResult.hasBeenSavedAndSubmittedToRadiologist | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   	<td>{{ aSearchResult.caseClosed  | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
 				   </tr>
 				   </tbody>
 			</table>

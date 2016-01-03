@@ -29,6 +29,20 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 
 			return res;
 	 },
+	 getCasesPendingReviewAllHospitals: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amicusthome/amirequest/pendingreview/allhospitals');
+		 
+		 res.success(function(data, status, headers, config) {
+			 deferred.resolve();
+		 });
+		 res.error(function(data, status, headers, config) {
+			 deferred.reject('failure to get hospital');
+		 });	
+		 
+		 return res;
+	 },
 	 getAmiRequest: function(requestNumber){
 		 
 		 var deferred = $q.defer(); 
@@ -129,6 +143,21 @@ amiadmin.config(['$routeProvider','$httpProvider',
                                  }],
                        	   }
                     	
+                    }).
+                    when('/hospitalAdminReviewCases', {
+                    	templateUrl: '/app/components/amiadmin/casereviewqueue.html',
+                    	controller: 'CaseReviewQueueCtrl',
+                    	resolve: {
+                    		
+                    		casesPendingReview: ['amiadminFactory', function (amiadminFactory) {
+                    			return amiadminFactory.getCasesPendingReviewAllHospitals().then(
+                    					function(result){
+                    						return result.data;
+                    					}	
+                    			);
+                    		}],
+                    	}
+                    
                     }).
                     when('/hospitalAdminProcessCase/:caseNumber', {
                     	templateUrl: '/app/components/amiadmin/processCase.html',
