@@ -71,7 +71,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	
 	
-	@RequestMapping(value = "/ami/init/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/ami/init/users", method = RequestMethod.GET)
 	public String addUsers(Model model) {
 		
 		try {

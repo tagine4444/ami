@@ -27,6 +27,7 @@ public interface AmiRequestService {
 	String createCaseAsDraft(String caseNumber, AmiRequest req,
 			String userName, String hospitalName, String hospitalId,String contract, String accountSize);
 	String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException;
+	String findCaesPendingRevewForAllHospitals() throws JsonProcessingException;
 		
 
 }

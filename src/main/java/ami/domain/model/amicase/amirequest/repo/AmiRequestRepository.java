@@ -60,7 +60,13 @@ public interface AmiRequestRepository {
 	List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1,
 			String date2);
 	List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats);
-	void switchCaseToInProgress(DateTime dateTime, String id);
+	void switchCaseToInProgress(DateTime dateTime, String id,String userName);
+	void switchCaseToReadyForReview(DateTime dateTime, String id,
+			String userName, String radiographicInterpretation, 
+			String radiographicImpression,String recommendation);
+	void closeCase(DateTime dateTime, String id, String userName, String radiographicInterpretation, 
+			String radiographicImpression,String recommendation);
+	List<AmiRequestView> findCasesPendingReviewForAllHospitals(boolean b);
 	
 	
 

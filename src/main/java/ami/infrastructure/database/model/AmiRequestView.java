@@ -32,7 +32,7 @@ public class AmiRequestView {
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
-	private DateTime interpretationReadyComplete;
+	private DateTime caseClosed;
 	private boolean editable;
 	private List<FileUploadInfo> fileUploads ;
 	
@@ -44,7 +44,7 @@ public class AmiRequestView {
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
     		DateTime interpretationInProgress,              
     		DateTime interpretationReadyForReview,          
-    		DateTime interpretationReadyComplete,           
+    		DateTime caseClosed,           
     		boolean editable,
 			String creationDateString,
 			DateTime creationDate,
@@ -67,7 +67,7 @@ public class AmiRequestView {
 		this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist ;
 		this.interpretationInProgress = interpretationInProgress ;
 		this.interpretationReadyForReview = interpretationReadyForReview ;
-		this.interpretationReadyComplete =  interpretationReadyComplete;
+		this.caseClosed =  caseClosed;
 		this.creationDateString = creationDateString;
 		this.creationDate = creationDate;
 		this.fileUploads = fileUploads;
@@ -143,8 +143,8 @@ public class AmiRequestView {
 		return interpretationReadyForReview;
 	}
 
-	public DateTime getInterpretationReadyComplete() {
-		return interpretationReadyComplete;
+	public DateTime getCaseClosed() {
+		return caseClosed;
 	}
 
 	public List<FileUploadInfo> getFileUploads() {

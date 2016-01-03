@@ -84,7 +84,18 @@ public class AmiRequestEventHandler {
     
     @EventHandler
     public void handle(CaseSwitchedToInProgressEvent event) throws JsonProcessingException {
-    	amiServiceRequestRepo.switchCaseToInProgress(event.getDateTime() ,event.getId());
+    	amiServiceRequestRepo.switchCaseToInProgress(event.getDateTime() ,event.getId(), event.getUserName());
+    }
+    
+    @EventHandler
+    public void handle(CaseSwitchedToReadyForReviewEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.switchCaseToReadyForReview(event.getDateTime() ,event.getId(), event.getUserName(),
+    			event.getRadiographicInterpretation(), event.getRadiographicImpression(), event.getRecommendation());
+    }
+    @EventHandler
+    public void handle(CaseClosedEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.closeCase(event.getDateTime() ,event.getId(), event.getUserName(),
+    			event.getRadiographicInterpretation(), event.getRadiographicImpression(), event.getRecommendation());
     }
     
     

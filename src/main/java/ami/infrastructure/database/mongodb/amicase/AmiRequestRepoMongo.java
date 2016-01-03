@@ -170,7 +170,11 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		update.set("updateDate", updateDate);
 		update.set("updateUser", userName);
 		update.set("editable", editable);
-		update.set("hasBeenSavedAndSubmittedToRadiologist", hasBeenSavedAndSubmittedToRadiologist);
+		if( hasBeenSavedAndSubmittedToRadiologist!= null){
+			// need this if statement cause mongo throws a null pointer exception if you try to set
+			// hasBeenSavedAndSubmittedToRadiologist with a null value
+			update.set("hasBeenSavedAndSubmittedToRadiologist", hasBeenSavedAndSubmittedToRadiologist);
+		}
 		
 		AmiRequestView updatedView = mongo.findAndModify(query, update, AmiRequestView.class, AMIREQUEST_VIEW); 
 
@@ -201,12 +205,33 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
 	@Override
 	public List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1, String date2) {
+		
+		//DateTime aDate1 = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour);
+		
+		int firstSlah  = date1.indexOf("/");
+		int secondSlah = date1.lastIndexOf("/");
+		
+		int monthOfYear1 = Integer.valueOf(date1.substring(0, firstSlah)); 
+		int dayOfMonth1  = Integer.valueOf(date1.substring(firstSlah +1, secondSlah)); 
+		int year1 = Integer.valueOf(date1.substring(secondSlah+1, date1.length())); 
+		
+		firstSlah  = date2.indexOf("/");
+		 secondSlah = date2.lastIndexOf("/");
+		
+		int monthOfYear2 = Integer.valueOf(date2.substring(0, firstSlah)); 
+		int dayOfMonth2  = Integer.valueOf(date2.substring(firstSlah +1, secondSlah)); 
+		int year2 = Integer.valueOf(date2.substring(secondSlah+1, date2.length())); 
+		
+		DateTime aDate1 = new DateTime(year1, monthOfYear1, dayOfMonth1, 0, 0);
+		DateTime aDate2 = new DateTime(year2, monthOfYear2, dayOfMonth2, 23, 59);
+		
 		Query query = new Query();
+		
 		query.addCriteria(
 				Criteria.where("hasBeenSavedAndSubmittedToRadiologist").exists(true)
 				.andOperator(
-					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gt(date1),
-			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lt(date2)
+					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gt(aDate1),
+			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lt(aDate2)
 				)
 			);
 		
@@ -261,7 +286,9 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	   String hospitalId = userView.getHospitalId();
 		
 	   Query query =Query.query( Criteria.where("hospitalId").is(hospitalId)
-			      .andOperator(Criteria.where("editable").is(Boolean.FALSE)) 
+			      .andOperator(Criteria.where("editable").is(Boolean.FALSE)
+			    		  ,Criteria.where("caseClosed").is(null)
+			    		  ) 
 			   );
 	   
 	   query.with(new Sort(Sort.Direction.DESC, "time"));
@@ -275,7 +302,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats) {
 		
 		   Query query =Query.query( Criteria.where("editable").is(Boolean.FALSE)
-				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats)));
+				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats),Criteria.where("caseClosed").is(null))
+				   );
 		   query.with(new Sort(Sort.Direction.ASC, "time"));
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		   return amiRequestView;
@@ -305,13 +333,64 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	}
 
 	@Override
-	public void switchCaseToInProgress(DateTime dateTime, String caseNumber) {
+	public void switchCaseToInProgress(DateTime dateTime, String caseNumber, String userName) {
 	
 			mongo.updateFirst(
 		            new Query(Criteria.where("caseNumber").is(caseNumber)),
 		            Update.update("interpretationInProgress", dateTime),
 		            AMIREQUEST_VIEW);
 		
+	}
+
+	@Override
+	public void switchCaseToReadyForReview(DateTime dateTime, String caseNumber,
+			String userName,
+			String radiographicInterpretation,
+			String radiographicImpression, String recommendation) {
+
+		Update update = new Update();
+		update.set("interpretationReadyForReview", dateTime);
+		update.set("radiographicInterpretation", radiographicInterpretation);
+		update.set("radiographicImpression",radiographicImpression );
+		update.set("recommendation", recommendation );
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber)),
+	            update,
+	            AMIREQUEST_VIEW);
+		
+	}
+
+	@Override
+	public void closeCase(DateTime dateTime, String caseNumber, String userName,
+			String radiographicInterpretation,
+			String radiographicImpression, String recommendation) {
+
+		Update update = new Update();
+		update.set("caseClosed", dateTime);
+		update.set("editable", Boolean.FALSE);
+		
+		update.set("radiographicInterpretation", radiographicInterpretation);
+		update.set("radiographicImpression",radiographicImpression );
+		update.set("recommendation", recommendation );
+		
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber)),
+	            update,
+	            AMIREQUEST_VIEW);
+		
+	}
+
+	@Override
+	public List<AmiRequestView> findCasesPendingReviewForAllHospitals(boolean stats) {
+		Query query =Query.query( Criteria.where("caseClosed").is(null)
+				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats),
+						   Criteria.where("interpretationReadyForReview").ne(null))
+				   );
+		   query.with(new Sort(Sort.Direction.ASC, "time"));
+		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
+		   return amiRequestView;
 	}
 
 	

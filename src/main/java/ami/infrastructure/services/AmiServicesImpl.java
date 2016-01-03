@@ -7,7 +7,9 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ami.application.commands.amirequest.CloseCaseCmd;
 import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
+import ami.application.commands.amirequest.SwitchCaseToReadyForReviewCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.SwitchMasterUserCmd;
 import ami.application.commands.security.UpdateHospitalAccountSizeCmd;
@@ -113,9 +115,7 @@ public class AmiServicesImpl implements AmiServices  {
 	
 	@Override
 	public void switchCaseToInProgress(String caseNumber, String userName, DateTime dateTime) throws JsonProcessingException {
-		
 		commandGateway.sendAndWait(new SwitchCaseToInProgressCmd(  caseNumber,  userName,  dateTime));
-		
 	}
 
 	@Override
@@ -129,6 +129,23 @@ public class AmiServicesImpl implements AmiServices  {
 	public void updateHospitalAccountSize(String hospitalId, String userName,
 			String newAccountSize) {
 		commandGateway.sendAndWait(new UpdateHospitalAccountSizeCmd( hospitalId , userName, newAccountSize));
+		
+	}
+
+	@Override
+	public void switchCaseToReadyForReview(String caseNumber, String userName,
+			DateTime dateTime, 
+			String radiographicInterpretation, String radiographicImpression, String recommendation) {
+		commandGateway.sendAndWait(new SwitchCaseToReadyForReviewCmd(  caseNumber,  userName,  dateTime,  radiographicInterpretation, 
+				 radiographicImpression, recommendation));
+		
+	}
+
+	@Override
+	public void closeCase(String caseNumber, String userName, DateTime dateTime, String radiographicInterpretation, 
+			String radiographicImpression,String recommendation) {
+		commandGateway.sendAndWait(new CloseCaseCmd(  caseNumber,  userName,  dateTime,  radiographicInterpretation, 
+				 radiographicImpression, recommendation));
 		
 	}
 

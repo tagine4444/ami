@@ -55,4 +55,9 @@ public interface AmiServices {
 	void updateHospitalAccountSize(String hospitalId, String userName,
 			String newValue);
 
+	void switchCaseToReadyForReview(String caseNumber, String userName,
+			DateTime dateTime,  String radiographicInterpretation,String radiographicImpression, String recommendation);
+
+	void closeCase(String caseNumber, String userName, DateTime dateTime, String radiographicInterpretation,String radiographicImpression, String recommendation);
+
 }

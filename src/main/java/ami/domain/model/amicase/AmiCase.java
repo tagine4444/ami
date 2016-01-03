@@ -10,19 +10,23 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import org.joda.time.DateTime;
 
+import ami.application.commands.amirequest.CloseCaseCmd;
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
+import ami.application.commands.amirequest.SwitchCaseToReadyForReviewCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.events.AmiRequestSavedAsDraftEvent;
 import ami.domain.model.amicase.events.AmiRequestUpdatedAsDraftEvent;
+import ami.domain.model.amicase.events.CaseClosedEvent;
 import ami.domain.model.amicase.events.CaseIsAlreadyInProgressEvent;
 import ami.domain.model.amicase.events.CaseSwitchedToInProgressEvent;
+import ami.domain.model.amicase.events.CaseSwitchedToReadyForReviewEvent;
 import ami.domain.model.amicase.events.DraftAmiRequestSubmittedEvent;
 import ami.domain.model.amicase.events.NewAmiRequestSubmittedEvent;
 import ami.domain.model.amicase.events.UploadFileRequestedEvent;
@@ -45,7 +49,11 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
-	private DateTime interpretationReadyComplete;
+	private DateTime caseClosed;
+	
+	private String radiographicInterpretation;
+    private String radiographicImpression;
+    private String recommendation;
 	
 	// No-arg constructor, required by Axon
 	public AmiCase() {
@@ -136,7 +144,7 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	
 	
 	@CommandHandler
-	public void deleteUploadedFile(SwitchCaseToInProgressCmd command) {
+	public void switchCaseToInProgress(SwitchCaseToInProgressCmd command) {
 		if(interpretationInProgress!=null){
 			apply(new CaseIsAlreadyInProgressEvent(command.getId(),
 					command.getUserName(),  command.getDateTime()));
@@ -146,6 +154,33 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		}
 		
 	}
+	
+	@CommandHandler
+	public void switchCaseToReadyForReview(SwitchCaseToReadyForReviewCmd command) {
+		if(caseClosed!=null){
+			throw new RuntimeException("Case "+this.id+" is closed. Can't be switched to ready for review");
+		}else{
+			apply(new CaseSwitchedToReadyForReviewEvent(command.getId(),
+					command.getUserName(),  command.getDateTime(), command.getRadiographicInterpretation(), 
+					command.getRadiographicImpression(), command.getRecommendation()));
+		}
+	}
+	
+	@CommandHandler
+	public void closeCase(CloseCaseCmd command) {
+		if(caseClosed!=null){
+			throw new RuntimeException("Case "+this.id+" is already closed. Can't be closed again");
+		}else{
+			apply(new CaseClosedEvent(command.getId(),
+					command.getUserName(),  command.getDateTime(),
+					command.getRadiographicInterpretation(), 
+					command.getRadiographicImpression(), command.getRecommendation()));
+		}
+		
+	}
+	
+	
+	
 
 
 	// -==-=-=-=-=-=-=-=--=-=-=- EventSourceHandlers -==-=-=-=-=-=-=-=--=-=-=- 
@@ -239,6 +274,22 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	@EventSourcingHandler
 	public void on(CaseIsAlreadyInProgressEvent event) {
 		//nothing to do... 
+	}
+	
+	@EventSourcingHandler
+	public void on(CaseSwitchedToReadyForReviewEvent event) {
+		this.interpretationReadyForReview = event.getDateTime();
+		this.radiographicImpression = event.getRadiographicImpression();
+		this.radiographicInterpretation = event.getRadiographicInterpretation();
+		this.recommendation = event.getRecommendation();
+	}
+	
+	@EventSourcingHandler
+	public void on(CaseClosedEvent event) {
+		this.caseClosed = event.getDateTime();
+		this.radiographicImpression = event.getRadiographicImpression();
+		this.radiographicInterpretation = event.getRadiographicInterpretation();
+		this.recommendation = event.getRecommendation();
 	}
 	
 	private boolean hasBeenSavedAndSubmittedToRadiologist() {

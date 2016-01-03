@@ -88,6 +88,17 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		return amiRequestViewString;
 	}
 	
+	
+	@Override
+	public String findCaesPendingRevewForAllHospitals()  throws JsonProcessingException{
+		List<AmiRequestView> amiRequestViewNonStats = amiRequestRepo.findCasesPendingReviewForAllHospitals(false);
+		List<AmiRequestView> amiRequestViewStats = amiRequestRepo.findCasesPendingReviewForAllHospitals(true);
+		
+		PendingAmiCases pendingCases = new PendingAmiCases(amiRequestViewNonStats,amiRequestViewStats);
+		String amiRequestViewString = objectMapper.writeValueAsString(pendingCases);
+		return amiRequestViewString;
+	}
+	
 	@Override
 	public String findDraftAmiRequests() throws JsonProcessingException {
 		List<AmiRequestView> amiRequestView = amiRequestRepo.findDraftAmiRequest();
@@ -118,6 +129,9 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		String fileUploadsString = objectMapper.writeValueAsString(fileUploads);
 		return fileUploadsString;
 	}
+
+
+	
 
 	
 
