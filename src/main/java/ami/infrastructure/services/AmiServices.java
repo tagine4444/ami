@@ -58,6 +58,15 @@ public interface AmiServices {
 	void switchCaseToReadyForReview(String caseNumber, String userName,
 			DateTime dateTime,  String radiographicInterpretation,String radiographicImpression, String recommendation);
 
-	void closeCase(String caseNumber, String userName, DateTime dateTime, String radiographicInterpretation,String radiographicImpression, String recommendation);
+	void closeCase(String caseNumber, String userName, DateTime dateTime);
+
+	void updateRadiographicInterpretation(String caseNumber, String userName,
+			DateTime dateTime, String radiographicInterpretation);
+
+	void updateRadiographicImpression(String caseNumber, String userName,
+			DateTime dateTime, String radiographicInterpretation);
+
+	void updateRecommendation(String caseNumber, String userName,
+			DateTime dateTime, String radiographicInterpretation);
 
 }

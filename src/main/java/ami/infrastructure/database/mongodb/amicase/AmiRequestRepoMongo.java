@@ -113,30 +113,28 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 
 
 	@Override
-	public void createAmiRequestView(String caseNumber, AmiRequest amiRequestJson, String userName,
+	public void createAmiRequestView(String caseNumber, 
+			AmiRequest amiRequestJson, 
+			String userName,
 			String hospitalName, String hospitalid, 
 			DateTime hasBeenSavedAndSubmittedToRadiologist, 
 			DateTime interpretationInProgress,              
 			DateTime interpretationReadyForReview,           
 			DateTime interpretationReadyComplete,           
-			DateTime time, String contract, String accountSize) throws JsonProcessingException {
+			DateTime time, 
+			String contract, 
+			String accountSize) throws JsonProcessingException {
 		
-		
-		String creationDate = new DateTimeToStringConverter().convert(time);
-	    //String creationDate = AMI_DATE_FOMRATTER.print(time);
-	    
-		boolean editable = hasBeenSavedAndSubmittedToRadiologist==null;
 		
 		AmiRequestView  view = new AmiRequestView( caseNumber, amiRequestJson,  userName, hospitalName, 
 				hospitalid,
 				hasBeenSavedAndSubmittedToRadiologist,  
 				interpretationInProgress,
 				interpretationReadyForReview, 
-				interpretationReadyComplete, editable,
-				creationDate,
+				interpretationReadyComplete, 
 				time,
 				new ArrayList<FileUploadInfo>(),
-				null,null,time,
+				null,time,
 				contract,  accountSize);
 		
 		String amiRequestView = objectMapper.writeValueAsString(view);
@@ -174,6 +172,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			// need this if statement cause mongo throws a null pointer exception if you try to set
 			// hasBeenSavedAndSubmittedToRadiologist with a null value
 			update.set("hasBeenSavedAndSubmittedToRadiologist", hasBeenSavedAndSubmittedToRadiologist);
+			update.set("hasBeenSavedAndSubmittedToRadiologistString", hasBeenSavedAndSubmittedToRadiologist);
 		}
 		
 		AmiRequestView updatedView = mongo.findAndModify(query, update, AmiRequestView.class, AMIREQUEST_VIEW); 
@@ -204,8 +203,9 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	}
 	
 	@Override
-	public List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1, String date2) {
+	public List<AmiRequestView> findAmiRequestBySubmittedDateRange(String hospitalId, String date1, String date2) {
 		
+	
 		//DateTime aDate1 = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour);
 		
 		int firstSlah  = date1.indexOf("/");
@@ -228,10 +228,11 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		Query query = new Query();
 		
 		query.addCriteria(
-				Criteria.where("hasBeenSavedAndSubmittedToRadiologist").exists(true)
+				Criteria.where("hasBeenSavedAndSubmittedToRadiologistString").exists(true)
 				.andOperator(
-					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gt(aDate1),
-			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lt(aDate2)
+					Criteria.where("hasBeenSavedAndSubmittedToRadiologistString").gt(aDate1),
+			                Criteria.where("hasBeenSavedAndSubmittedToRadiologistString").lt(aDate2)
+//			                Criteria.where("hospitalId").is(hospitalId)
 				)
 			);
 		
@@ -362,17 +363,15 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	}
 
 	@Override
-	public void closeCase(DateTime dateTime, String caseNumber, String userName,
-			String radiographicInterpretation,
-			String radiographicImpression, String recommendation) {
+	public void closeCase(DateTime dateTime, String caseNumber, String userName) {
 
 		Update update = new Update();
 		update.set("caseClosed", dateTime);
 		update.set("editable", Boolean.FALSE);
 		
-		update.set("radiographicInterpretation", radiographicInterpretation);
-		update.set("radiographicImpression",radiographicImpression );
-		update.set("recommendation", recommendation );
+//		update.set("radiographicInterpretation", radiographicInterpretation);
+//		update.set("radiographicImpression",radiographicImpression );
+//		update.set("recommendation", recommendation );
 		
 		
 		mongo.updateFirst(
@@ -391,6 +390,44 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		   query.with(new Sort(Sort.Direction.ASC, "time"));
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		   return amiRequestView;
+	}
+
+	@Override
+	public void updateRadiographicInterpretation(DateTime dateTime, String caseNumber,
+			String userName, String radiographicInterpretation) {
+		Update update = new Update();
+		update.set("radiographicInterpretation", radiographicInterpretation);
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber)),
+	            update,
+	            AMIREQUEST_VIEW);
+		
+	}
+
+	@Override
+	public void updateRadiographicImpression(DateTime dateTime, String caseNumber,
+			String userName, String radiographicImpression) {
+		Update update = new Update();
+		update.set("radiographicImpression",radiographicImpression );
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber)),
+	            update,
+	            AMIREQUEST_VIEW);
+	}
+
+	@Override
+	public void updateRecommendation(DateTime dateTime, String caseNumber,
+			String userName, String recommendation) {
+		
+		Update update = new Update();
+		update.set("recommendation", recommendation );
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber)),
+	            update,
+	            AMIREQUEST_VIEW);
 	}
 
 	

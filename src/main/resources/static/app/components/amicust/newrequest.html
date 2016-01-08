@@ -1,8 +1,16 @@
-
 <div class="row">
 
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
-	<br/>
+
+	<div class="row" ng-show="hasBeenSaved()">
+		<div class="col-sm-9" >
+			<h4><span class="label label-primary">Case# {{caseNumber}}</span>
+		    </h4>
+		</div>
+		<div class="col-sm-3">
+		</div>
+	</div>	
+	
 	
    
 	<form name="newRequestForm" ng-submit="saveNewRequest()"   >
@@ -18,7 +26,7 @@
    		</div>
    	</div>
    	<br/>
-   	<p ng-show="hasBeenSaved()" >Your Request Number is {{caseNumber}} </p>
+<!--    	<p ng-show="hasBeenSaved()" >Your Request Number is {{caseNumber}} </p> -->
    	<p ng-show="isEditable==false"> <span class="label label-danger">**Read Only Request**</span>  This request can no longer be edited as it has been submitted to the radiologist</p>
    	
 	<div class="panel panel-default">
@@ -26,43 +34,51 @@
 	  <div class="panel-body">
 	    <!--  Veterinarian and Lab Row -->
 	    
+	 	    
 	    <div class="row">
-		    
-		     <div class="col-sm-4" ng-show="!userEmailIsHospitalEmail">
-			    <span >Send the report to your own email? </span> &nbsp;
-			    
+		     <div class="col-sm-5" ng-show="!userEmailIsHospitalEmail">
+			    Send the report to <span style="font-weight: bold;">my email? </span>  &nbsp; <a href =""  data-toggle="modal" data-target="#myEmailModal" >(Click for help)</a> &nbsp;
+			  
 			    <label class="radio-inline">
 				  <input  type="radio"  id="emailRadio1" ng-click='sendRequestToPersonalEmail(true)' ng-model="newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail" ng-checked="newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail" >Yes
 				</label>
 				<label class="radio-inline">
 				  <input type="radio"  id="emailRadio2"  ng-click='sendRequestToPersonalEmail(false)' ng-checked="!newRequest.hospitalAndClientInfo.isRequestSentToPersonalEmail" >No
 				</label>
+				
 			</div>
 			
-			<div class="col-sm-3" >
-				<a href =""  data-toggle="modal" data-target="#myEmailModal" >See who this report is emailed to</a>
+			<div class="col-sm-4">
+			    <span >Is the client an employee? </span> &nbsp;
+			
+			    <label class="radio-inline">
+				  <input  type="radio"  id="empoyeeRadio1" ng-click='isEmployee(true)' ng-model="newRequest.hospitalAndClientInfo.isEmployee" ng-checked="newRequest.hospitalAndClientInfo.isEmployee" >Yes
+				</label>
+				<label class="radio-inline">
+				  <input type="radio"  id="empoyeeRadio2"  ng-click='isEmployee(false)' ng-checked="!newRequest.hospitalAndClientInfo.isEmployee" >No
+				</label>
 			</div>
 			
 		</div>
-	    <div class="row">
-		    <div class="col-sm-4">
-		    	<div class="input-group input-group-sm" ng-class="{ 'has-error' : newRequestForm.vetId.$invalid }">
-				   <span class="input-group-addon" id="vetRequiredIcon"> <span class="glyphicon glyphicon-asterisk" aria-hidden="true" id="vetRequiredIconSpan"></span></span>
-				  <input aria-describedby="vetRequiredIcon" type="text" name="vetId" class="form-control" id="vet" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
-				</div>
-		    </div>
-		</div>
+		
 		<br/>
-		<!--  Clients  Row -->
-		<div class="row">
-		    <div class="col-sm-2">
+		
+	    <div class="row">
+		    <div class="col-sm-3">
+		    	<div class="form-group" ng-class="{ 'has-error' : newRequestForm.vetId.$invalid }">
+				  <input autofocus="autofocus" type="text" name="vetId" class="form-control" id="vetId" ng-model='newRequest.hospitalAndClientInfo.vet' placeholder="Veterinarian" ng-required='isSubmit()'>
+				</div>
+				
+		    </div>
+
+		    <div class="col-sm-3">
 			    <div class="form-group" ng-class="{ 'has-error' : newRequestForm.clientFirstName.$invalid && !newRequestForm.clientFirstName.$pristine }">
 				    <input type="text" name="clientFirstName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientFirstName" placeholder="Client's First Name" ng-required='isSubmit()'  >
 				    <p ng-show="newRequestForm.clientFirstName.$invalid && !newRequestForm.clientFirstName.$pristine" class="help-block">required field</p>
 				</div>
 		    </div>
 		    
-		    <div class="col-sm-2">
+		    <div class="col-sm-3">
 		    	
 		    	<div class="form-group" ng-class="{ 'has-error' : newRequestForm.clientLastName.$invalid && !newRequestForm.clientLastName.$pristine }">
 				    <input type="text" name="clientLastName" class="form-control" ng-model="newRequest.hospitalAndClientInfo.clientLastName" placeholder="Client's Last Name" ng-required='isSubmit()'>
@@ -74,16 +90,7 @@
 		    <div class="col-sm-2">
 		      <input type="text" class="form-control" id="labActId" ng-model= "newRequest.hospitalAndClientInfo.clientId" placeholder="Client's Id">
 		    </div>
-		    
-		    <div class="col-sm-4">
-			    <span >Is the client an employee? </span> &nbsp;
-			    <label class="radio-inline">
-				  <input  type="radio"  id="empoyeeRadio1" ng-click='isEmployee(true)' ng-model="newRequest.hospitalAndClientInfo.isEmployee" ng-checked="newRequest.hospitalAndClientInfo.isEmployee" >Yes
-				</label>
-				<label class="radio-inline">
-				  <input type="radio"  id="empoyeeRadio2"  ng-click='isEmployee(false)' ng-checked="!newRequest.hospitalAndClientInfo.isEmployee" >No
-				</label>
-			</div>
+
 		</div>
 	  </div>
 	</div> <!-- End of 1st pannel -->
@@ -416,7 +423,7 @@
 		          </div>
 		          
 		          <div class="col-md-12" ng-show="!userEmailIsHospitalEmail">
-		          	<p>Check <strong>Yes</strong> to <strong>Send the report to your own email?</strong>, and a notification will also be sent to your email: <strong>{{userEmail}}</strong></p>
+		          	<p>If you check <strong>Yes</strong>, a notification will also be sent to your email: <strong>{{userEmail}}</strong></p>
 		          </div>
 		        </div>
 	      </div>

@@ -22,17 +22,23 @@ public class AmiRequestView {
 	private String radiographicImpression;    	// both contract and non contract
 	private String recommendation;				// both contract and non contract
 	
-	
-	private String creationDateString ;
-	private DateTime creationDate ;
-	private String updateDateString ;
-	private DateTime updateDate ;
 	private String updateUser;
 	
+	private DateTime creationDate ;
+	private DateTime updateDate ;
 	private DateTime hasBeenSavedAndSubmittedToRadiologist;
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
 	private DateTime caseClosed;
+	
+	private String creationDateString ;
+	private String updateDateString ;
+	private String hasBeenSavedAndSubmittedToRadiologistString;
+	private String interpretationInProgressString;
+	private String interpretationReadyForReviewString;
+	private String caseClosedString;
+	
+	
 	private boolean editable;
 	private List<FileUploadInfo> fileUploads ;
 	
@@ -45,12 +51,9 @@ public class AmiRequestView {
     		DateTime interpretationInProgress,              
     		DateTime interpretationReadyForReview,          
     		DateTime caseClosed,           
-    		boolean editable,
-			String creationDateString,
 			DateTime creationDate,
 			List<FileUploadInfo> fileUploads,
 			String updateUser,
-			String updateDateString,
 			DateTime updateDate, 
 			String contract,
 			String accountSize) {
@@ -63,49 +66,42 @@ public class AmiRequestView {
 		this.contract = contract;
 		this.accountSize = accountSize;
 		
-		this.editable =  editable;
+		this.editable 		=  hasBeenSavedAndSubmittedToRadiologist==null;
+		this.fileUploads = fileUploads;
+		this.updateUser = null;
+		
+		this.creationDate = creationDate;
+		this.updateDate = updateDate;
 		this.hasBeenSavedAndSubmittedToRadiologist = hasBeenSavedAndSubmittedToRadiologist ;
 		this.interpretationInProgress = interpretationInProgress ;
 		this.interpretationReadyForReview = interpretationReadyForReview ;
 		this.caseClosed =  caseClosed;
-		this.creationDateString = creationDateString;
-		this.creationDate = creationDate;
-		this.fileUploads = fileUploads;
 		
-		this.updateDateString = updateDateString;
-		this.updateDate = updateDate;
-		this.updateUser = null;
-		
+		 if(creationDate!=null){
+			 this.creationDateString = creationDate.toString();
+		 }
+		 
+		 if(updateDate!=null){
+			 this.updateDateString = updateDate.toString();
+		 }
+		 
+		 if(hasBeenSavedAndSubmittedToRadiologist!=null){
+			 this.hasBeenSavedAndSubmittedToRadiologistString = hasBeenSavedAndSubmittedToRadiologist.toString();
+		 }
+        
+		 if(interpretationInProgress!=null){
+			 this.interpretationInProgressString = interpretationInProgress.toString();
+		 }
+		 if(interpretationReadyForReview!=null){
+			 this.interpretationReadyForReviewString = interpretationReadyForReview.toString();
+		 }
+		 if(caseClosed!=null){
+			 this.caseClosedString = caseClosed.toString();
+		 }
+		 
 	}
 	
 	
-//	public void update(AmiRequestView updatedView, String updateDateString, String updateUser , DateTime updateDate){
-//		
-//		this.updateDate = updateDate;
-//		this.updateDateString = updateDateString;
-//		this.updateUser = updateUser;
-//		
-//		this.amiRequest    = updatedView.getAmiRequest();   
-//		this.userName      = updatedView.getUserName();     
-//		this.hospitalId    = updatedView.getHospitalId();
-//		this.hospitalName  = updatedView.getHospitalName(); 
-//		
-//		this.contract = updatedView.getContract();
-//		this.accountSize = updatedView.getAccountSize();
-//		
-//		this.editable =  updatedView.isEditable();
-//		this.hasBeenSavedAndSubmittedToRadiologist = updatedView.getHasBeenSavedAndSubmittedToRadiologist() ;
-//		this.interpretationInProgress = updatedView.getInterpretationInProgress() ;
-//		this.interpretationReadyForReview = updatedView.getInterpretationReadyForReview() ;
-//		this.interpretationReadyComplete =  updatedView.getInterpretationReadyComplete();
-//		
-//		this.creationDateString = updatedView.getCreationDateString();
-//		this.fileUploads = updatedView.getFileUploads();
-//		
-//		
-//		
-//	}
-
 	public AmiRequest getAmiRequest() {
 		return amiRequest;
 	}
@@ -195,6 +191,26 @@ public class AmiRequestView {
 
 	public String getRecommendation() {
 		return recommendation;
+	}
+
+
+	public String getHasBeenSavedAndSubmittedToRadiologistString() {
+		return hasBeenSavedAndSubmittedToRadiologistString;
+	}
+
+
+	public String getInterpretationInProgressString() {
+		return interpretationInProgressString;
+	}
+
+
+	public String getInterpretationReadyForReviewString() {
+		return interpretationReadyForReviewString;
+	}
+
+
+	public String getCaseClosedString() {
+		return caseClosedString;
 	}
 
 }

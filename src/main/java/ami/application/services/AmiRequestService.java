@@ -16,7 +16,7 @@ public interface AmiRequestService {
 	String findAmiRequest(String requestNumber) throws JsonProcessingException ;
 	String findAmiRequestByAnimalName(String animalName) throws JsonProcessingException;
 	String findAmiRequestByClientLastName(String clientlastname) throws JsonProcessingException;
-	String findAmiRequestBySubmittedDateRange(String date1, String date2) throws JsonProcessingException;
+	String findAmiRequestBySubmittedDateRange(String hospitalId, String date1, String date2) throws JsonProcessingException;
 	String findAmiRequestByLast50Records() throws JsonProcessingException;
 	String findPendigAmiRequests() throws JsonProcessingException;
 	String findDraftAmiRequests() throws JsonProcessingException;

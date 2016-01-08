@@ -7,19 +7,17 @@ public class CaseClosedEvent {
     private final String id;
     private final String userName;
     private final DateTime dateTime;
-    private final String radiographicInterpretation;
-    private final String radiographicImpression;
-    private final String recommendation;
+//    private final String radiographicInterpretation;
+//    private final String radiographicImpression;
+//    private final String recommendation;
 	
-    public CaseClosedEvent(String id, String userName, DateTime dateTime,
-    		String radiographicInterpretation, 
-			String radiographicImpression,String recommendation) {
+    public CaseClosedEvent(String id, String userName, DateTime dateTime) {
         this.id = id;
         this.userName = userName;
         this.dateTime = dateTime;
-        this.radiographicImpression = radiographicImpression;
-        this.radiographicInterpretation = radiographicInterpretation;
-        this.recommendation = recommendation;
+//        this.radiographicImpression = radiographicImpression;
+//        this.radiographicInterpretation = radiographicInterpretation;
+//        this.recommendation = recommendation;
     }
 
 	public String getId() {
@@ -34,16 +32,16 @@ public class CaseClosedEvent {
 		return dateTime;
 	}
 
-	public String getRadiographicInterpretation() {
-		return radiographicInterpretation;
-	}
-
-	public String getRadiographicImpression() {
-		return radiographicImpression;
-	}
-
-	public String getRecommendation() {
-		return recommendation;
-	}
+//	public String getRadiographicInterpretation() {
+//		return radiographicInterpretation;
+//	}
+//
+//	public String getRadiographicImpression() {
+//		return radiographicImpression;
+//	}
+//
+//	public String getRecommendation() {
+//		return recommendation;
+//	}
 
 }

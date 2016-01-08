@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import ami.application.commands.amirequest.CloseCaseCmd;
 import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
 import ami.application.commands.amirequest.SwitchCaseToReadyForReviewCmd;
+import ami.application.commands.amirequest.UpdateRadiographicImpressionCmd;
+import ami.application.commands.amirequest.UpdateRadiographicInterpretationCmd;
+import ami.application.commands.amirequest.RecommendationUpdatedEvent;
+import ami.application.commands.amirequest.UpdateRecommendationCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.SwitchMasterUserCmd;
 import ami.application.commands.security.UpdateHospitalAccountSizeCmd;
@@ -142,10 +146,30 @@ public class AmiServicesImpl implements AmiServices  {
 	}
 
 	@Override
-	public void closeCase(String caseNumber, String userName, DateTime dateTime, String radiographicInterpretation, 
-			String radiographicImpression,String recommendation) {
-		commandGateway.sendAndWait(new CloseCaseCmd(  caseNumber,  userName,  dateTime,  radiographicInterpretation, 
-				 radiographicImpression, recommendation));
+	public void closeCase(String caseNumber, String userName, DateTime dateTime) {
+		commandGateway.sendAndWait(new CloseCaseCmd( caseNumber,  userName,  dateTime));
+		
+	}
+
+	@Override
+	public void updateRadiographicInterpretation(String caseNumber,
+			String userName, DateTime dateTime,
+			String radiographicInterpretation) {
+		commandGateway.sendAndWait(new UpdateRadiographicInterpretationCmd(  caseNumber,  userName,  dateTime,  radiographicInterpretation));
+		
+	}
+
+	@Override
+	public void updateRadiographicImpression(String caseNumber,
+			String userName, DateTime dateTime,
+			String radiographicImpression) {
+		commandGateway.sendAndWait(new UpdateRadiographicImpressionCmd(  caseNumber,  userName,  dateTime,  radiographicImpression));
+	}
+
+	@Override
+	public void updateRecommendation(String caseNumber, String userName,
+			DateTime dateTime, String recommendation) {
+		commandGateway.sendAndWait(new UpdateRecommendationCmd(  caseNumber,  userName,  dateTime,  recommendation));
 		
 	}
 

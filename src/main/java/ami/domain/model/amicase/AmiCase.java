@@ -18,6 +18,9 @@ import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
 import ami.application.commands.amirequest.SwitchCaseToReadyForReviewCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.UpdateRadiographicImpressionCmd;
+import ami.application.commands.amirequest.UpdateRadiographicInterpretationCmd;
+import ami.application.commands.amirequest.UpdateRecommendationCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
@@ -29,6 +32,9 @@ import ami.domain.model.amicase.events.CaseSwitchedToInProgressEvent;
 import ami.domain.model.amicase.events.CaseSwitchedToReadyForReviewEvent;
 import ami.domain.model.amicase.events.DraftAmiRequestSubmittedEvent;
 import ami.domain.model.amicase.events.NewAmiRequestSubmittedEvent;
+import ami.domain.model.amicase.events.RadiographicImpressionUpdatedEvent;
+import ami.domain.model.amicase.events.RadiographicInterpretationUpdatedEvent;
+import ami.domain.model.amicase.events.RecommendationUpdatedEvent;
 import ami.domain.model.amicase.events.UploadFileRequestedEvent;
 import ami.domain.model.amicase.events.UploadedFileDeletedEvent;
 
@@ -172,16 +178,38 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 			throw new RuntimeException("Case "+this.id+" is already closed. Can't be closed again");
 		}else{
 			apply(new CaseClosedEvent(command.getId(),
-					command.getUserName(),  command.getDateTime(),
-					command.getRadiographicInterpretation(), 
-					command.getRadiographicImpression(), command.getRecommendation()));
+					command.getUserName(),  command.getDateTime()
+//					,command.getRadiographicInterpretation(), command.getRadiographicImpression(), command.getRecommendation()
+					));
 		}
 		
 	}
 	
+	@CommandHandler
+	public void updateRadiographicInterpretation(UpdateRadiographicInterpretationCmd command) {
+			apply(new RadiographicInterpretationUpdatedEvent(command.getId(),
+					command.getUserName(),  command.getDateTime(),
+					command.getRadiographicInterpretation()));
+	}
 	
+	@CommandHandler
+	public void updateRadiographicImpression(UpdateRadiographicImpressionCmd command) {
 	
-
+			apply(new RadiographicImpressionUpdatedEvent(command.getId(),
+					command.getUserName(),  command.getDateTime(),
+					command.getRadiographicImpression()));
+		
+	}
+	
+	@CommandHandler
+	public void updateRecommendation(UpdateRecommendationCmd command) {
+		
+		apply(new RecommendationUpdatedEvent(command.getId(),
+				command.getUserName(),  command.getDateTime(),
+				command.getRecommendation()));
+		
+	}
+	
 
 	// -==-=-=-=-=-=-=-=--=-=-=- EventSourceHandlers -==-=-=-=-=-=-=-=--=-=-=- 
 	
@@ -287,8 +315,21 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	@EventSourcingHandler
 	public void on(CaseClosedEvent event) {
 		this.caseClosed = event.getDateTime();
-		this.radiographicImpression = event.getRadiographicImpression();
+//		this.radiographicImpression = event.getRadiographicImpression();
+//		this.radiographicInterpretation = event.getRadiographicInterpretation();
+//		this.recommendation = event.getRecommendation();
+	}
+	
+	@EventSourcingHandler
+	public void on(RadiographicInterpretationUpdatedEvent event) {
 		this.radiographicInterpretation = event.getRadiographicInterpretation();
+	}
+	@EventSourcingHandler
+	public void on(RadiographicImpressionUpdatedEvent event) {
+		this.radiographicImpression = event.getRadiographicImpression();
+	}
+	@EventSourcingHandler
+	public void on(RecommendationUpdatedEvent event) {
 		this.recommendation = event.getRecommendation();
 	}
 	

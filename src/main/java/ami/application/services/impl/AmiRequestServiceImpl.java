@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ami.application.services.AmiRequestService;
@@ -57,8 +58,9 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	}
 
 	@Override
-	public String findAmiRequestBySubmittedDateRange(String date1, String date2) throws JsonProcessingException {
-		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestBySubmittedDateRange( date1,  date2);
+	public String findAmiRequestBySubmittedDateRange(String hospitalId, String date1, String date2) throws JsonProcessingException {
+		
+		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestBySubmittedDateRange( hospitalId, date1,  date2);
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}

@@ -126,7 +126,7 @@
 		
 		// ============ Controller ===============
 		app.controller('CasePendingCtrl', function ($scope, $http, $window,$location, myCase) {
-			$scope.page = 'newRequest';
+			$scope.page = 'searchRequests';
 			$scope.amiCase = myCase;
 			$scope.amiRequest = myCase.amiRequest;
 			

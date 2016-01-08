@@ -1,11 +1,15 @@
-
+<div class="row">
+	<div class="col-sm-12">
+		<h4><span class="label label-danger">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span></h4>
+	</div>
+</div>
+<hr/>
 <div class="row">
 	<div class="col-sm-9">
-		<h4><span class="label label-primary">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span>&nbsp;
-	   		<span  ng-show="amiRequest.requestedServices.isInterpretationOnly" class="label label-default">Interpretation Only </span>&nbsp;
-	   		<span ng-show="!amiRequest.requestedServices.isInterpretationOnly" ng-repeat="aSevice in amiRequest.requestedServices.selectedServices" class="label label-default">{{aSevice}} </span> &nbsp;
-	    	<span class="label label-default">Contract Type : {{amiCase.contract}}</span> 
-	    </h4>
+	   		<span style="font-weight: bold;" ng-show="amiRequest.requestedServices.isInterpretationOnly" >Interpretation Only </span>
+	   		<ul ng-show="!amiRequest.requestedServices.isInterpretationOnly"  ng-repeat="aSevice in amiRequest.requestedServices.selectedServices"  >
+	   			<li>{{aSevice}} &nbsp;</li>
+			</ul>
 	</div>
 	<div class="col-sm-3">
 	</div>
@@ -35,19 +39,44 @@
 	
 	<div class="col-sm-4">
 		<span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null">Requested Date: </span><b><span ng-show="amiCase.hasBeenSavedAndSubmittedToRadiologist!=null">{{ amiCase.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
-	<br/><span ng-show="amiCase.caseClosed!=null">Closed Date: </span><b><span ng-show="amiCase.caseClosed!=null">{{ amiCase.caseClosed  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
-		
+		<br/><span ng-show="amiCase.caseClosed!=null">Closed Date: </span><b><span ng-show="amiCase.caseClosed!=null">{{ amiCase.caseClosed  | jsonDate: 'dd MMM yyyy, h:mm a' }}</span> </b>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="col-sm-12" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">
+				<span style="color:red;"> {{amiCase.fileUploads.length}} images uploaded</span>
+			</div>
+			<div class="col-sm-12" ng-show="!amiRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">
+				<span>No images uploaded</span>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="col-sm-6" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">
+				<span style="color:red;">Documents delivered by carrier</span>
+			</div>
+			<div class="col-sm-6" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">
+				<span>Lab:</span> <span>  <b>{{amiRequest.imagesAndDocuments.labs}}</b> </span>&nbsp;
+				<span> Lab Account:</span> <span>  <b>{{amiRequest.imagesAndDocuments.labAccount}}</b></span>
+			</div>
+			
+			<div class="col-sm-6" ng-show="!amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">
+				<span>No documents delivered by carrier</span>
+			</div>
+		</div>
+	</div>
+	
+	<hr/>
+	
+	
+	<div class="col-sm-12">
+		 <pre><b>Notes</b><br/>{{amiRequest.imagesAndDocuments.notes}}</pre>
 	</div>
 	
 </div>
-<div class="row">
-	<div class="col-sm-12">
-		<p>Notes:</p> <p><b>{{amiRequest.imagesAndDocuments.notes}}</b></p>
-	</div>
-</div>
 
-
-<br/>
+<!-- <br/> -->
 <div class="row">
 
 	<div class="col-sm-12">
@@ -75,11 +104,6 @@
 <div class="row">
 
 
-<!-- 	<div class="alert alert-warning alert-dismissible" role="alert"> -->
-<!-- 	  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-<!-- 	  <strong>Warning!</strong> Better check yourself, you're not looking too good. -->
-<!-- 	</div> -->
-
 	<div class="col-sm-12">
 		<pre class="alert-success"><b>Radiographic Impression</b><br/><br/>{{amiCase.radiographicImpression}}</pre>
 	</div>
@@ -91,27 +115,31 @@
 </div>
 	
 <div class="row">
-	
-	<div class="col-sm-12">
-		<p></p>
-		<p><b>Images</b></p>
-<!-- 		<ul ng-repeat="aFileUpload in amiCase.fileUploads"> -->
-		
-<!-- 			<li><a href="http://localhost:8080/{{aFileUpload.fileName}}" download>{{aFileUpload.fileName}}</a></li> -->
-<!-- 		</ul> -->
-		
-		<table class="table">
-			<tr ng-repeat="aFileUpload in amiCase.fileUploads" >
-				<td>
-					{{$index+1}}
-				</td>
-				<td >
-					<a href="http://localhost:8080/{{aFileUpload.fileName}}" download>{{aFileUpload.fileName}}</a>
-				</td>
-			</tr>
-		</table>
-		
+	<div class="col-sm-12" ng-show="amiCase.fileUploads.length==0">
+		<p><b>No Images uploaded</b> <span ng-show="amiRequest.requestedServices.isInterpretationOnly">, The images have been sent by carrier.</span></p>
 	</div>
+	<div class="col-sm-12" ng-show="amiCase.fileUploads.length>0">
+	
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+		  Toggle {{amiCase.fileUploads.length}} Images
+		</button>
+		<div class="collapse" id="collapseExample">
+			  <div class="well">
+				<p><b>Images</b></p>
+				<table class="table">
+					<tr ng-repeat="aFileUpload in amiCase.fileUploads" >
+						<td>
+							{{$index+1}}
+						</td>
+						<td >
+							<a href="http://localhost:8080/{{aFileUpload.fileName}}" download>{{aFileUpload.fileName}}</a>
+						</td>
+					</tr>
+				</table>
+			 </div>
+	   </div>
+		<p></p>
+  </div>
 	
 </div>
 

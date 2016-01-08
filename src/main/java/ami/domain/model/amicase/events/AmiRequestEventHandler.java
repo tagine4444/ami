@@ -94,9 +94,25 @@ public class AmiRequestEventHandler {
     }
     @EventHandler
     public void handle(CaseClosedEvent event) throws JsonProcessingException {
-    	amiServiceRequestRepo.closeCase(event.getDateTime() ,event.getId(), event.getUserName(),
-    			event.getRadiographicInterpretation(), event.getRadiographicImpression(), event.getRecommendation());
+    	amiServiceRequestRepo.closeCase(event.getDateTime() ,event.getId(), event.getUserName());
     }
     
+    
+    @EventHandler
+    public void handle(RadiographicInterpretationUpdatedEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.updateRadiographicInterpretation(event.getDateTime() ,event.getId(), event.getUserName(),
+    			event.getRadiographicInterpretation());
+    }
+    
+    @EventHandler
+    public void handle(RadiographicImpressionUpdatedEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.updateRadiographicImpression(event.getDateTime() ,event.getId(), event.getUserName(),
+    			 event.getRadiographicImpression());
+    }
+    @EventHandler
+    public void handle(RecommendationUpdatedEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.updateRecommendation(event.getDateTime() ,event.getId(), event.getUserName(),
+    			 event.getRecommendation());
+    }
     
 }

@@ -46,9 +46,43 @@
 		$scope.amiCase = myCase;
 		$scope.amiRequest = myCase.amiRequest;
 		
+		
+		$scope.saveRadiographicInterpretation = function(){
+			
+			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: $scope.amiCase.radiographicInterpretation};
+			
+			var res = $http.post('/ami/amiadmin/updateRadiographicInterpretation',data);
+			res.success(function(data, status, headers, config) {
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "Radiographic Interpretation not updated, failure message: " + JSON.stringify({data: data}));
+			});	
+			
+		}
+		$scope.saveRadiographicImpression = function(){
+			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicImpression: $scope.amiCase.radiographicImpression};
+			
+			var res = $http.post('/ami/amiadmin/updateRadiographicImpression',data);
+			res.success(function(data, status, headers, config) {
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "Radiographic Impression not updated, failure message: " + JSON.stringify({data: data}));
+			});	
+		}
+		$scope.saveRecommendation = function(){
+			var data = {caseNumber:$scope.amiCase.caseNumber , recommendation: $scope.amiCase.recommendation};
+			
+			var res = $http.post('/ami/amiadmin/updateRecommendation',data);
+			res.success(function(data, status, headers, config) {
+				
+			});
+			res.error(function(data, status, headers, config) {
+				alert( "Recommendation not updated, failure message: " + JSON.stringify({data: data}));
+			});	
+		}
 		$scope.switchCaseToReadyForReview = function(){
-			
-			
 			
 			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: myCase.radiographicInterpretation , radiographicImpression: myCase.radiographicImpression, recommendation: myCase.recommendation};
 			
@@ -64,6 +98,7 @@
 		
 		$scope.closeCase = function(){
 			
+			//var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: myCase.radiographicInterpretation , radiographicImpression: myCase.radiographicImpression, recommendation: myCase.recommendation};
 			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: myCase.radiographicInterpretation , radiographicImpression: myCase.radiographicImpression, recommendation: myCase.recommendation};
 			
 			var res = $http.post('/ami/amiadmin/closecase',data);

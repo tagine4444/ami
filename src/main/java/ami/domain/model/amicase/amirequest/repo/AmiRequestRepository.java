@@ -57,16 +57,21 @@ public interface AmiRequestRepository {
 
 	void deleteUploadedFile(String fileName, String requestNumber, DateTime time)
 			throws JsonProcessingException;
-	List<AmiRequestView> findAmiRequestBySubmittedDateRange(String date1,
+	List<AmiRequestView> findAmiRequestBySubmittedDateRange(String hospitalId, String date1,
 			String date2);
 	List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats);
 	void switchCaseToInProgress(DateTime dateTime, String id,String userName);
 	void switchCaseToReadyForReview(DateTime dateTime, String id,
 			String userName, String radiographicInterpretation, 
 			String radiographicImpression,String recommendation);
-	void closeCase(DateTime dateTime, String id, String userName, String radiographicInterpretation, 
-			String radiographicImpression,String recommendation);
+	void closeCase(DateTime dateTime, String id, String userName);
 	List<AmiRequestView> findCasesPendingReviewForAllHospitals(boolean b);
+	void updateRadiographicInterpretation(DateTime dateTime, String id,
+			String userName, String radiographicInterpretation);
+	void updateRadiographicImpression(DateTime dateTime, String id,
+			String userName, String radiographicImpression);
+	void updateRecommendation(DateTime dateTime, String id, String userName,
+			String recommendation);
 	
 	
 

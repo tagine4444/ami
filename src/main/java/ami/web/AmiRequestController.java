@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ami.application.services.AmiRequestService;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.security.AmiAuthtorities;
+import ami.domain.model.security.amiusers.AmiUserRepository;
+import ami.infrastructure.database.model.AmiUserView;
 import ami.infrastructure.services.AmiServices;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -45,6 +47,8 @@ public class AmiRequestController {
 	@Autowired
 	private AmiServices amiServices;
 	
+	@Autowired
+	private AmiUserRepository userService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -76,6 +80,45 @@ public class AmiRequestController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/updateRadiographicInterpretation", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateRadiographicInterpretation(@RequestBody String data) throws JsonProcessingException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		final String radiographicInterpretation = (String) dbObject.get("radiographicInterpretation");
+		
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		amiServices.updateRadiographicInterpretation(caseNumber, userName, new DateTime(), radiographicInterpretation);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/updateRadiographicImpression", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateRadiographicImpression(@RequestBody String data) throws JsonProcessingException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		final String radiographicImpression = (String) dbObject.get("radiographicImpression");
+		
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		amiServices.updateRadiographicImpression(caseNumber, userName, new DateTime(), radiographicImpression);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/updateRecommendation", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateRecommendation(@RequestBody String data) throws JsonProcessingException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		final String recommendation = (String) dbObject.get("recommendation");
+		
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		amiServices.updateRecommendation(caseNumber, userName, new DateTime(), recommendation);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amiadmin/closecase",method = RequestMethod.POST)
 	@ResponseBody
 	public void closeCase(@RequestBody String data) throws JsonProcessingException {
@@ -88,7 +131,7 @@ public class AmiRequestController {
 		
 		
 		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		amiServices.closeCase(caseNumber, userName, new DateTime(), radiographicInterpretation, radiographicImpression,recommendation);
+		amiServices.closeCase(caseNumber, userName, new DateTime());
 	}
 	
 	
@@ -118,7 +161,11 @@ public class AmiRequestController {
 	@RequestMapping(value = "/ami/amicusthome/amirequest/byreqdaterange", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
-		return amiRequestService.findAmiRequestBySubmittedDateRange(  date1,   date2);
+		
+		String hospitalName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(hospitalName);
+		final String hospitalId = anAmiUserView.getHospitalId();
+		return amiRequestService.findAmiRequestBySubmittedDateRange( hospitalId, date1,   date2);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
