@@ -1,0 +1,75 @@
+<div class="row">
+	<div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
+	
+	<div class="row">
+		<div class="col-sm-12">
+		
+		<div class="panel panel-primary" >
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">Step 3 Update Quickbook</div>
+		  <div class="panel-body">
+		     <table class="table">
+			     <thead>
+				   <tr>
+				   	<th>Case</th>
+				   	<th>Hospital</th>
+				   	<th>Veterinarian</th>
+				   	<th>Submitted On</th>
+				   	<th>Closed On</th>
+				   	<th>Contract</th>
+				   	<th>Client</th>
+				   	<th>Animal</th>
+				   	<th></th>
+				   </tr>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="aNewCase in casesPendingAccounting">
+				   
+				   	<td><a href =""  ng-click="selectCaseToSee(aNewCase)" data-toggle="modal" data-target="#caseViewModal" ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> {{aNewCase.caseNumber}}</a></td>
+				   	<td>{{aNewCase.hospitalName}}</td>
+				   	<td>{{aNewCase.amiRequest.hospitalAndClientInfo.vet}}</td>
+				   	<td>{{aNewCase.hasBeenSavedAndSubmittedToRadiologist | jsonDate: 'dd MMM yyyy, h:mm a'}}</td>
+				   	<td>{{aNewCase.caseClosed | jsonDate: 'dd MMM yyyy, h:mm a'}}</td>
+				   	<td>{{aNewCase.contract}}</td>
+				   	<td>{{aNewCase.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aNewCase.amiRequest.hospitalAndClientInfo.clientLastName}}<br/>
+				   	<span ng-show="aNewCase.amiRequest.hospitalAndClientInfo.isEmployee" class="label label-danger">is an employee</span></td>
+				   	<td>{{aNewCase.amiRequest.patientInfo.animalName}}</td>
+				   
+				   <td><button type="button" class="btn btn-primary"  ng-click="doAccounting(aNewCase)"> Up to date</button></td>
+				   </tr>
+				   </tbody>
+			</table>
+		  </div>
+		</div>
+	</div>
+	
+	</div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="caseViewModal" tabindex="-1" role="dialog" 
+	aria-labelledby="caseViewModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	      	<h5>Read Only Case</h5>
+	      </div>
+	      <div class="modal-body">
+		     	<div ng-include="'/app/components/common/readonlyamicase.html'"></div>
+		      
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+	    </div>
+	  </div>
+</div>
+</div>
+
+<!-- <div id="caseViewModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"> -->
+<!--   <div class="modal-dialog modal-lg"> -->
+<!--     <div class="modal-content"> -->
+<!--      	<div ng-include="'/app/components/common/readonlyamicase.html'"></div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->
+

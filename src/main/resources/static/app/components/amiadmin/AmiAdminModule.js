@@ -20,10 +20,46 @@
 		
 	});
 	
-	// ============ Controller ===============
-	amiAdminModule.controller('CaseReviewQueueCtrl', function ($scope, $http, $window,$location, casesPendingReview) {
-		$scope.page = 'caseReview';
-		
+		// ============ Controller ===============
+		amiAdminModule.controller('AccountingCtrl', function ($scope, $http, $window,$location, casesPendingAccounting) {
+			$scope.page = 'accounting';
+			
+			$scope.casesPendingAccounting = casesPendingAccounting;
+			
+			$scope.selectCaseToSee = function(amiCase){
+				
+				$scope.amiCase = amiCase;
+				$scope.amiRequest = amiCase.amiRequest;
+				
+			}
+			
+			$scope.doAccounting = function(amiCase){
+				
+				
+				var data = {caseNumber:amiCase.caseNumber };
+				
+				var res = $http.post('/ami/amiadmin/doaccounting',data).then(function successCallback(result) {
+					$scope.casesPendingAccounting  = result.data;
+				  }, function errorCallback(response) {
+					  alert( "AccountingDone, not updated, failure message: " + JSON.stringify({data: data}));
+				  });
+				
+//				var res = $http.post('/ami/amiadmin/doaccounting',data);
+//				res.success(function(data, status, headers, config) {
+//					$scope.casesPendingAccounting  = result.data;
+//				});
+//				res.error(function(data, status, headers, config) {
+//					alert( "AccountingDone, not updated, failure message: " + JSON.stringify({data: data}));
+//				});	
+				
+			}
+		});
+	
+	
+		// ============ Controller ===============
+		amiAdminModule.controller('CaseReviewQueueCtrl', function ($scope, $http, $window,$location, casesPendingReview) {
+			$scope.page = 'caseReview';
+			
 		console.log(casesPendingReview);
 		$scope.searchType = 'newCasesStat';
 		if(casesPendingReview.statsAmiRequests.length ==0){
@@ -84,7 +120,7 @@
 		}
 		$scope.switchCaseToReadyForReview = function(){
 			
-			var data = {caseNumber:$scope.amiCase.caseNumber , radiographicInterpretation: myCase.radiographicInterpretation , radiographicImpression: myCase.radiographicImpression, recommendation: myCase.recommendation};
+			var data = {caseNumber:$scope.amiCase.caseNumber};
 			
 			var res = $http.post('/ami/amiadmin/switchcasetoreadyforreview',data);
 			res.success(function(data, status, headers, config) {

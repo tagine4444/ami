@@ -43,6 +43,21 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 		 
 		 return res;
 	 },
+	 getCasesPendingAccounting: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/casespendingaccounting');
+		 
+		 res.success(function(data, status, headers, config) {
+			 deferred.resolve();
+		 });
+		 res.error(function(data, status, headers, config) {
+			 deferred.reject('failure to get hospital');
+		 });	
+		 
+		 return res;
+	 },
+	 
 	 getAmiRequest: function(requestNumber){
 		 
 		 var deferred = $q.defer(); 
@@ -151,6 +166,21 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     		
                     		casesPendingReview: ['amiadminFactory', function (amiadminFactory) {
                     			return amiadminFactory.getCasesPendingReviewAllHospitals().then(
+                    					function(result){
+                    						return result.data;
+                    					}	
+                    			);
+                    		}],
+                    	}
+                    
+                    }).
+                    when('/hospitalAdminAccounting', {
+                    	templateUrl: '/app/components/amiadmin/accounting.html',
+                    	controller: 'AccountingCtrl',
+                    	resolve: {
+                    		
+                    		casesPendingAccounting: ['amiadminFactory', function (amiadminFactory) {
+                    			return amiadminFactory.getCasesPendingAccounting().then(
                     					function(result){
                     						return result.data;
                     					}	
