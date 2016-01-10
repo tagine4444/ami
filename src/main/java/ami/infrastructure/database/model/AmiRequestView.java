@@ -1,9 +1,11 @@
 package ami.infrastructure.database.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 
@@ -30,6 +32,7 @@ public class AmiRequestView {
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
 	private DateTime caseClosed;
+	private DateTime accountingDone;
 	
 	private String creationDateString ;
 	private String updateDateString ;
@@ -37,10 +40,12 @@ public class AmiRequestView {
 	private String interpretationInProgressString;
 	private String interpretationReadyForReviewString;
 	private String caseClosedString;
+	private String accountingDoneString;
 	
 	
 	private boolean editable;
 	private List<FileUploadInfo> fileUploads ;
+	private List<Amendment> amendments ;
 	
 	
 	
@@ -56,7 +61,8 @@ public class AmiRequestView {
 			String updateUser,
 			DateTime updateDate, 
 			String contract,
-			String accountSize) {
+			String accountSize,
+			DateTime accountingDone) {
 		
 		this.caseNumber = caseNumber;
 		this.amiRequest    = amiRequest;   
@@ -76,6 +82,7 @@ public class AmiRequestView {
 		this.interpretationInProgress = interpretationInProgress ;
 		this.interpretationReadyForReview = interpretationReadyForReview ;
 		this.caseClosed =  caseClosed;
+		this.amendments = new ArrayList<Amendment>();
 		
 		 if(creationDate!=null){
 			 this.creationDateString = creationDate.toString();
@@ -97,6 +104,9 @@ public class AmiRequestView {
 		 }
 		 if(caseClosed!=null){
 			 this.caseClosedString = caseClosed.toString();
+		 }
+		 if(accountingDone!=null){
+			 this.accountingDoneString = accountingDone.toString();
 		 }
 		 
 	}
@@ -211,6 +221,21 @@ public class AmiRequestView {
 
 	public String getCaseClosedString() {
 		return caseClosedString;
+	}
+
+
+	public DateTime getAccountingDone() {
+		return accountingDone;
+	}
+
+
+	public String getAccountingDoneString() {
+		return accountingDoneString;
+	}
+
+
+	public List<Amendment> getAmendments() {
+		return amendments;
 	}
 
 }

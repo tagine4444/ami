@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.application.services.AmiRequestService;
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.security.AmiAuthtorities;
 import ami.domain.model.security.amiusers.AmiUserRepository;
@@ -71,12 +72,13 @@ public class AmiRequestController {
 			
 		DBObject dbObject = (DBObject)JSON.parse(data);
 			final String caseNumber = (String) dbObject.get("caseNumber");
-			final String radiographicInterpretation = (String) dbObject.get("radiographicInterpretation");
-			final String radiographicImpression = (String) dbObject.get("radiographicImpression");
-			final String recommendation = (String) dbObject.get("recommendation");
+			
+//			final String radiographicInterpretation = (String) dbObject.get("radiographicInterpretation");
+//			final String radiographicImpression = (String) dbObject.get("radiographicImpression");
+//			final String recommendation = (String) dbObject.get("recommendation");
 			
 		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		amiServices.switchCaseToReadyForReview(caseNumber, userName, new DateTime(), radiographicInterpretation, radiographicImpression,recommendation);
+		amiServices.switchCaseToReadyForReview(caseNumber, userName, new DateTime());
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
@@ -125,16 +127,48 @@ public class AmiRequestController {
 		
 		DBObject dbObject = (DBObject)JSON.parse(data);
 		final String caseNumber = (String) dbObject.get("caseNumber");
-		final String radiographicInterpretation = (String) dbObject.get("radiographicInterpretation");
-		final String radiographicImpression = (String) dbObject.get("radiographicImpression");
-		final String recommendation = (String) dbObject.get("recommendation");
-		
 		
 		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		amiServices.closeCase(caseNumber, userName, new DateTime());
 	}
 	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/doaccounting",method = RequestMethod.POST)
+	@ResponseBody
+	public String doAccounting(@RequestBody String data) throws JsonProcessingException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		amiServices.doAccounting(caseNumber, userName, new DateTime());
+		return amiRequestService.findCasesPendingAccounting();
+	}
 	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/casespendingaccounting",method = RequestMethod.GET)
+	@ResponseBody
+	public String findCasesPendingAccounting() throws JsonProcessingException {
+		return amiRequestService.findCasesPendingAccounting();
+	}
+	
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/addAmendment",method = RequestMethod.POST)
+	@ResponseBody
+	public void addAmendmentAdmin(@RequestBody String data) throws JsonProcessingException {
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(userName);
+		
+		DateTime creationDate = new DateTime();  
+		String firstName = anAmiUserView.getAmiUser().getFirstName(); 
+		String lastName  =  anAmiUserView.getAmiUser().getLastName();
+		
+		Amendment amendment = new Amendment(creationDate, userName, firstName, lastName);
+		amiServices.amend(caseNumber, amendment);
+	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.GET)
@@ -162,8 +196,8 @@ public class AmiRequestController {
 	@ResponseBody
 	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
 		
-		String hospitalName = SecurityContextHolder.getContext().getAuthentication().getName();
-		AmiUserView anAmiUserView = userService.findAmiUser(hospitalName);
+		String useName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(useName);
 		final String hospitalId = anAmiUserView.getHospitalId();
 		return amiRequestService.findAmiRequestBySubmittedDateRange( hospitalId, date1,   date2);
 	}
@@ -172,7 +206,11 @@ public class AmiRequestController {
 	@RequestMapping(value = "/ami/amicusthome/amirequest/bylastnrecords", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByLast50Records() throws JsonProcessingException {
-		return amiRequestService.findAmiRequestByLast50Records();
+		SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		String useName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(useName);
+		return amiRequestService.findAmiRequestByLast50Records(anAmiUserView.getHospitalId());
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")

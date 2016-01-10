@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.infrastructure.database.model.AmiRequestView;
@@ -19,7 +20,8 @@ public interface AmiRequestRepository {
 	List<AmiRequestView> findAmiRequestByClientLastName(String clientLastName);
 	List<AmiRequestView> findPendingAmiRequest();
 	List<AmiRequestView> findDraftAmiRequest();
-	List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords);
+	List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords, String hospitalId);
+	List<AmiRequestView> findAmiRequestByLastNRecordsAdmin(String nRecords);
 	
 	
 	
@@ -30,7 +32,8 @@ public interface AmiRequestRepository {
     		DateTime interpretationInProgress,              
     		DateTime interpretationReadyForReview,          
     		DateTime interpretationReadyComplete,           
-    		DateTime time,String contract, String accountSize) throws JsonProcessingException;
+    		DateTime time,String contract, String accountSize,
+    		DateTime accountingDone) throws JsonProcessingException;
 
 	void submitAmiRequestToRadiologist(String caseNumber,AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId, String contract, String accountSize);
 	
@@ -62,8 +65,7 @@ public interface AmiRequestRepository {
 	List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats);
 	void switchCaseToInProgress(DateTime dateTime, String id,String userName);
 	void switchCaseToReadyForReview(DateTime dateTime, String id,
-			String userName, String radiographicInterpretation, 
-			String radiographicImpression,String recommendation);
+			String userName);
 	void closeCase(DateTime dateTime, String id, String userName);
 	List<AmiRequestView> findCasesPendingReviewForAllHospitals(boolean b);
 	void updateRadiographicInterpretation(DateTime dateTime, String id,
@@ -72,6 +74,9 @@ public interface AmiRequestRepository {
 			String userName, String radiographicImpression);
 	void updateRecommendation(DateTime dateTime, String id, String userName,
 			String recommendation);
+	void amendCase(String caseNumber, Amendment amendment);
+	void updateAccountingDone(String id, DateTime dateTime, String userName);
+	List<AmiRequestView> findCasesPendingAccounting();
 	
 	
 

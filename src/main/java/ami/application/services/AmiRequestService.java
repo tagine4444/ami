@@ -17,7 +17,8 @@ public interface AmiRequestService {
 	String findAmiRequestByAnimalName(String animalName) throws JsonProcessingException;
 	String findAmiRequestByClientLastName(String clientlastname) throws JsonProcessingException;
 	String findAmiRequestBySubmittedDateRange(String hospitalId, String date1, String date2) throws JsonProcessingException;
-	String findAmiRequestByLast50Records() throws JsonProcessingException;
+	String findAmiRequestByLast50Records(String hospitalId) throws JsonProcessingException;
+	String findAmiRequestByLast50RecordsAdmin() throws JsonProcessingException;
 	String findPendigAmiRequests() throws JsonProcessingException;
 	String findDraftAmiRequests() throws JsonProcessingException;
 	String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException;
@@ -28,6 +29,7 @@ public interface AmiRequestService {
 			String userName, String hospitalName, String hospitalId,String contract, String accountSize);
 	String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException;
 	String findCaesPendingRevewForAllHospitals() throws JsonProcessingException;
+	String findCasesPendingAccounting() throws JsonProcessingException;
 		
 
 }

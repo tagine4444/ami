@@ -10,8 +10,10 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import org.joda.time.DateTime;
 
+import ami.application.commands.amirequest.AmendCaseCmd;
 import ami.application.commands.amirequest.CloseCaseCmd;
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
+import ami.application.commands.amirequest.DoAccountingCmd;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
@@ -24,8 +26,10 @@ import ami.application.commands.amirequest.UpdateRecommendationCmd;
 import ami.application.commands.amirequest.UploadFileCommand;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
+import ami.domain.model.amicase.events.AccountingDoneEvent;
 import ami.domain.model.amicase.events.AmiRequestSavedAsDraftEvent;
 import ami.domain.model.amicase.events.AmiRequestUpdatedAsDraftEvent;
+import ami.domain.model.amicase.events.CaseAmendedEvent;
 import ami.domain.model.amicase.events.CaseClosedEvent;
 import ami.domain.model.amicase.events.CaseIsAlreadyInProgressEvent;
 import ami.domain.model.amicase.events.CaseSwitchedToInProgressEvent;
@@ -45,6 +49,7 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	
 	//private String amiRequest;
 	private AmiRequest amiRequest;
+	private List<Amendment> amendments = new ArrayList<Amendment>();
 	private String userName;
 	private String hospitalName;
 	private String contract;
@@ -56,6 +61,7 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	private DateTime interpretationInProgress;
 	private DateTime interpretationReadyForReview;
 	private DateTime caseClosed;
+	private DateTime accountingDone;
 	
 	private String radiographicInterpretation;
     private String radiographicImpression;
@@ -167,8 +173,7 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 			throw new RuntimeException("Case "+this.id+" is closed. Can't be switched to ready for review");
 		}else{
 			apply(new CaseSwitchedToReadyForReviewEvent(command.getId(),
-					command.getUserName(),  command.getDateTime(), command.getRadiographicInterpretation(), 
-					command.getRadiographicImpression(), command.getRecommendation()));
+					command.getUserName(),  command.getDateTime()));
 		}
 	}
 	
@@ -208,6 +213,16 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 				command.getUserName(),  command.getDateTime(),
 				command.getRecommendation()));
 		
+	}
+	@CommandHandler
+	public void amendCase(AmendCaseCmd command) {
+		
+		apply(new CaseAmendedEvent(command.getId(), command.getAmendment()));
+	}
+	@CommandHandler
+	public void amendCase(DoAccountingCmd command) {
+		
+		apply(new AccountingDoneEvent(command.getId(), command.getUserName(), command.getDateTime()));
 	}
 	
 
@@ -307,9 +322,6 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	@EventSourcingHandler
 	public void on(CaseSwitchedToReadyForReviewEvent event) {
 		this.interpretationReadyForReview = event.getDateTime();
-		this.radiographicImpression = event.getRadiographicImpression();
-		this.radiographicInterpretation = event.getRadiographicInterpretation();
-		this.recommendation = event.getRecommendation();
 	}
 	
 	@EventSourcingHandler
@@ -331,6 +343,15 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	@EventSourcingHandler
 	public void on(RecommendationUpdatedEvent event) {
 		this.recommendation = event.getRecommendation();
+	}
+	
+	@EventSourcingHandler
+	public void on(CaseAmendedEvent event) {
+		this.amendments.add(event.getAmendment());
+	}
+	@EventSourcingHandler
+	public void on(AccountingDoneEvent event) {
+		this.accountingDone = event.getDateTime();
 	}
 	
 	private boolean hasBeenSavedAndSubmittedToRadiologist() {

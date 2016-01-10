@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.security.hospitals.Address;
 import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
@@ -55,8 +56,7 @@ public interface AmiServices {
 	void updateHospitalAccountSize(String hospitalId, String userName,
 			String newValue);
 
-	void switchCaseToReadyForReview(String caseNumber, String userName,
-			DateTime dateTime,  String radiographicInterpretation,String radiographicImpression, String recommendation);
+	void switchCaseToReadyForReview(String caseNumber, String userName,DateTime dateTime);
 
 	void closeCase(String caseNumber, String userName, DateTime dateTime);
 
@@ -68,5 +68,9 @@ public interface AmiServices {
 
 	void updateRecommendation(String caseNumber, String userName,
 			DateTime dateTime, String radiographicInterpretation);
+
+	void doAccounting(String caseNumber, String userName, DateTime dateTime);
+
+	void amend(String caseNumber, Amendment amendment);
 
 }

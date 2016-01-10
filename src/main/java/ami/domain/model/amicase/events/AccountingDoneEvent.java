@@ -2,13 +2,14 @@ package ami.domain.model.amicase.events;
 
 import org.joda.time.DateTime;
 
-public class CaseSwitchedToReadyForReviewEvent {
-	
-    private final String id;
+public class AccountingDoneEvent {
+
+	private final String id;
     private final String userName;
-    private final DateTime dateTime;
+    private DateTime dateTime;
 	
-    public CaseSwitchedToReadyForReviewEvent(String id, String userName, DateTime dateTime) {
+    public AccountingDoneEvent(String id, String userName, DateTime dateTime) {
+    	
         this.id = id;
         this.userName = userName;
         this.dateTime = dateTime;
@@ -25,5 +26,4 @@ public class CaseSwitchedToReadyForReviewEvent {
 	public DateTime getDateTime() {
 		return dateTime;
 	}
-
 }

@@ -24,7 +24,7 @@ public class AmiRequestEventHandler {
     			event.getHospitalName(), event.getHospitalId(), 
     			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
     			null,null,
-    			time, event.getContract(), event.getAccountSize());
+    			time, event.getContract(), event.getAccountSize(),null);
     	
 //    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
 //                                         event.getId(),
@@ -41,7 +41,7 @@ public class AmiRequestEventHandler {
     	amiServiceRequestRepo.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null, null,null,null,
-    			time, event.getContract(), event.getAccountSize());
+    			time, event.getContract(), event.getAccountSize(),null);
     	
     	
     }
@@ -89,8 +89,7 @@ public class AmiRequestEventHandler {
     
     @EventHandler
     public void handle(CaseSwitchedToReadyForReviewEvent event) throws JsonProcessingException {
-    	amiServiceRequestRepo.switchCaseToReadyForReview(event.getDateTime() ,event.getId(), event.getUserName(),
-    			event.getRadiographicInterpretation(), event.getRadiographicImpression(), event.getRecommendation());
+    	amiServiceRequestRepo.switchCaseToReadyForReview(event.getDateTime() ,event.getId(), event.getUserName());
     }
     @EventHandler
     public void handle(CaseClosedEvent event) throws JsonProcessingException {
@@ -113,6 +112,15 @@ public class AmiRequestEventHandler {
     public void handle(RecommendationUpdatedEvent event) throws JsonProcessingException {
     	amiServiceRequestRepo.updateRecommendation(event.getDateTime() ,event.getId(), event.getUserName(),
     			 event.getRecommendation());
+    }
+    @EventHandler
+    public void handle(CaseAmendedEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.amendCase(event.getId(), event.getAmendment());
+    }
+    
+    @EventHandler
+    public void handle(AccountingDoneEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.updateAccountingDone(event.getId(), event.getDateTime(), event.getUserName());
     }
     
 }

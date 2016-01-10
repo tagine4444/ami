@@ -7,12 +7,13 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ami.application.commands.amirequest.AmendCaseCmd;
 import ami.application.commands.amirequest.CloseCaseCmd;
+import ami.application.commands.amirequest.DoAccountingCmd;
 import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
 import ami.application.commands.amirequest.SwitchCaseToReadyForReviewCmd;
 import ami.application.commands.amirequest.UpdateRadiographicImpressionCmd;
 import ami.application.commands.amirequest.UpdateRadiographicInterpretationCmd;
-import ami.application.commands.amirequest.RecommendationUpdatedEvent;
 import ami.application.commands.amirequest.UpdateRecommendationCmd;
 import ami.application.commands.security.CreateHospitalCmd;
 import ami.application.commands.security.SwitchMasterUserCmd;
@@ -28,6 +29,7 @@ import ami.application.commands.security.UpdateMasterUserFirstNameCmd;
 import ami.application.commands.security.UpdateMasterUserLastNameCmd;
 import ami.application.commands.security.UpdateMasterUserOccupationCmd;
 import ami.application.commands.security.UpdateMasterUserPwdCmd;
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.security.hospitals.Address;
 import ami.domain.model.security.hospitals.Email;
 import ami.domain.model.security.hospitals.Hospital;
@@ -137,11 +139,8 @@ public class AmiServicesImpl implements AmiServices  {
 	}
 
 	@Override
-	public void switchCaseToReadyForReview(String caseNumber, String userName,
-			DateTime dateTime, 
-			String radiographicInterpretation, String radiographicImpression, String recommendation) {
-		commandGateway.sendAndWait(new SwitchCaseToReadyForReviewCmd(  caseNumber,  userName,  dateTime,  radiographicInterpretation, 
-				 radiographicImpression, recommendation));
+	public void switchCaseToReadyForReview(String caseNumber, String userName,DateTime dateTime) {
+		commandGateway.sendAndWait(new SwitchCaseToReadyForReviewCmd(  caseNumber,  userName,  dateTime));
 		
 	}
 
@@ -170,6 +169,18 @@ public class AmiServicesImpl implements AmiServices  {
 	public void updateRecommendation(String caseNumber, String userName,
 			DateTime dateTime, String recommendation) {
 		commandGateway.sendAndWait(new UpdateRecommendationCmd(  caseNumber,  userName,  dateTime,  recommendation));
+		
+	}
+	
+	@Override
+	public void doAccounting(String caseNumber, String userName,
+			DateTime dateTime) {
+		commandGateway.sendAndWait(new DoAccountingCmd(  caseNumber,  userName,  dateTime));
+		
+	}
+	@Override
+	public void amend(String caseNumber, Amendment amendment) {
+		commandGateway.sendAndWait(new AmendCaseCmd(  caseNumber,  amendment));
 		
 	}
 

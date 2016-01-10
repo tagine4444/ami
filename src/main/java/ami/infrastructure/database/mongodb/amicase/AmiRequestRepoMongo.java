@@ -22,6 +22,7 @@ import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.UpdateAmiRequestAsDraftCmd;
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
@@ -29,7 +30,6 @@ import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.infrastructure.database.model.AmiRequestView;
 import ami.infrastructure.database.model.AmiUserView;
-import ami.infrastructure.database.model.HospitalView;
 import ami.web.converters.DateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -123,7 +123,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			DateTime interpretationReadyComplete,           
 			DateTime time, 
 			String contract, 
-			String accountSize) throws JsonProcessingException {
+			String accountSize,
+			DateTime accountingDone) throws JsonProcessingException {
 		
 		
 		AmiRequestView  view = new AmiRequestView( caseNumber, amiRequestJson,  userName, hospitalName, 
@@ -135,7 +136,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 				time,
 				new ArrayList<FileUploadInfo>(),
 				null,time,
-				contract,  accountSize);
+				contract,  accountSize,accountingDone);
 		
 		String amiRequestView = objectMapper.writeValueAsString(view);
 		
@@ -157,11 +158,10 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		  
 //	    String updateDateString = AMI_DATE_FOMRATTER.print(updateDate);
 	    String updateDateString = new DateTimeToStringConverter().convert(updateDate);
-	    final String requestNumberJson = "caseNumber";
 		
 	    boolean editable = hasBeenSavedAndSubmittedToRadiologist ==null;
 	    
-		Query query = new Query(Criteria.where(requestNumberJson).is(caseNumber));
+		Query query = new Query(Criteria.where("caseNumber").is(caseNumber));
 		Update update = new Update() ;
 		update.set("amiRequest", amiRequest);
 		update.set("updateDateString", updateDateString);
@@ -242,10 +242,25 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
 	
 	@Override
-	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords) {
+	public List<AmiRequestView> findAmiRequestByLastNRecordsAdmin(String nRecords) {
 		Query query = new Query();
 		query.limit(Integer.parseInt(nRecords));
 		query.with(new Sort(Sort.Direction.DESC, "creationDate"));
+		
+		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestViews;
+	}
+	
+	@Override
+	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords, String hospitalId) {
+		Query query = new Query();
+		query.limit(Integer.parseInt(nRecords));
+		query.with(new Sort(Sort.Direction.DESC, "creationDate"));
+		
+		query.addCriteria(
+				Criteria.where("hospitalId").is(hospitalId)
+			);
+		
 		
 		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestViews;
@@ -303,7 +318,10 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findPendigAmiRequestsForAllHospitals(boolean stats) {
 		
 		   Query query =Query.query( Criteria.where("editable").is(Boolean.FALSE)
-				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats),Criteria.where("caseClosed").is(null))
+				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats),
+						   Criteria.where("caseClosed").is(null),
+						   Criteria.where("interpretationReadyForReview").is(null))
+						   
 				   );
 		   query.with(new Sort(Sort.Direction.ASC, "time"));
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
@@ -345,15 +363,10 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 
 	@Override
 	public void switchCaseToReadyForReview(DateTime dateTime, String caseNumber,
-			String userName,
-			String radiographicInterpretation,
-			String radiographicImpression, String recommendation) {
+			String userName) {
 
 		Update update = new Update();
 		update.set("interpretationReadyForReview", dateTime);
-		update.set("radiographicInterpretation", radiographicInterpretation);
-		update.set("radiographicImpression",radiographicImpression );
-		update.set("recommendation", recommendation );
 		
 		mongo.updateFirst(
 	            new Query(Criteria.where("caseNumber").is(caseNumber)),
@@ -367,13 +380,9 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 
 		Update update = new Update();
 		update.set("caseClosed", dateTime);
+		update.set("caseClosedString", dateTime.toString());
 		update.set("editable", Boolean.FALSE);
-		
-//		update.set("radiographicInterpretation", radiographicInterpretation);
-//		update.set("radiographicImpression",radiographicImpression );
-//		update.set("recommendation", recommendation );
-		
-		
+
 		mongo.updateFirst(
 	            new Query(Criteria.where("caseNumber").is(caseNumber)),
 	            update,
@@ -428,6 +437,40 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	            new Query(Criteria.where("caseNumber").is(caseNumber)),
 	            update,
 	            AMIREQUEST_VIEW);
+	}
+
+	@Override
+	public void amendCase( String caseNumber, Amendment amendment) {
+		 
+		Query query1 = new Query(Criteria.where("caseNumber").is(caseNumber));
+		Update update = new Update() ;
+		update.push("amendments", amendment);
+		
+		mongo.updateFirst(query1, update, AmiRequestView.class, AMIREQUEST_VIEW); 
+		
+	}
+
+	@Override
+	public void updateAccountingDone(String caseNumber, DateTime dateTime,
+			String userName) {
+		Update update = new Update();
+		update.set("accountingDone", dateTime);
+		update.set("accountingDoneString", dateTime.toString());
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber)),
+	            update,
+	            AMIREQUEST_VIEW);
+	}
+
+	@Override
+	public List<AmiRequestView> findCasesPendingAccounting() {
+		
+		  Query query = Query.query( Criteria.where("accountingDone").is(null)
+				   .andOperator(Criteria.where("caseClosed").ne(null)) );
+		   query.with(new Sort(Sort.Direction.ASC, "time"));
+		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
+		   return amiRequestView;
 	}
 
 	

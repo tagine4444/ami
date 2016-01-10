@@ -1,14 +1,17 @@
-package ami.domain.model.amicase.events;
+package ami.application.commands.amirequest;
 
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.joda.time.DateTime;
 
-public class CaseSwitchedToReadyForReviewEvent {
+public class DoAccountingCmd {
 	
+	@TargetAggregateIdentifier
     private final String id;
     private final String userName;
-    private final DateTime dateTime;
+    private DateTime dateTime;
 	
-    public CaseSwitchedToReadyForReviewEvent(String id, String userName, DateTime dateTime) {
+    public DoAccountingCmd(String id, String userName, DateTime dateTime) {
+    	
         this.id = id;
         this.userName = userName;
         this.dateTime = dateTime;

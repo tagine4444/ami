@@ -9,20 +9,12 @@ public class SwitchCaseToReadyForReviewCmd {
     private final String id;
     private final String userName;
     private DateTime dateTime;
-    private final String radiographicInterpretation; 
-	private final String radiographicImpression;
-	private String recommendation;
 	
-    public SwitchCaseToReadyForReviewCmd(String id, String userName, DateTime dateTime,
-    		String radiographicInterpretation, 
-			String radiographicImpression,String recommendation) {
+    public SwitchCaseToReadyForReviewCmd(String id, String userName, DateTime dateTime) {
     	
         this.id = id;
         this.userName = userName;
         this.dateTime = dateTime;
-        this.radiographicImpression = radiographicImpression;
-        this.radiographicInterpretation = radiographicInterpretation;
-        this.recommendation = recommendation;
     }
 
 	public String getId() {
@@ -35,18 +27,6 @@ public class SwitchCaseToReadyForReviewCmd {
 
 	public DateTime getDateTime() {
 		return dateTime;
-	}
-
-	public String getRadiographicInterpretation() {
-		return radiographicInterpretation;
-	}
-
-	public String getRadiographicImpression() {
-		return radiographicImpression;
-	}
-
-	public String getRecommendation() {
-		return recommendation;
 	}
 
 }
