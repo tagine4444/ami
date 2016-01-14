@@ -3,7 +3,7 @@
 	var amiAdminModule = angular.module('AmiAdminModule',[]);
 	
 	// ============ Controller ===============
-	amiAdminModule.controller('CaseQueueCtrl', function ($scope, $http, $window,$location, pendingRequestsAllHospitals) {
+	amiAdminModule.controller('CaseQueueCtrl', function ($scope, $http, $window,$location, pendingRequestsAllHospitals, amendedCases) {
 		$scope.page = 'readCases';
 		
 		$scope.searchType = 'newCasesStat';
@@ -13,6 +13,7 @@
 			$scope.searchType = 'newCasesStat';
 		}
 		
+		$scope.anAmendedCases = amendedCases;
 		$scope.newCases = pendingRequestsAllHospitals.amiRequests;
 		$scope.statsAmiRequests = pendingRequestsAllHospitals.statsAmiRequests;
 //		$scope.caseReadyForReview = [];
@@ -44,14 +45,19 @@
 					  alert( "AccountingDone, not updated, failure message: " + JSON.stringify({data: data}));
 				  });
 				
-//				var res = $http.post('/ami/amiadmin/doaccounting',data);
-//				res.success(function(data, status, headers, config) {
-//					$scope.casesPendingAccounting  = result.data;
-//				});
-//				res.error(function(data, status, headers, config) {
-//					alert( "AccountingDone, not updated, failure message: " + JSON.stringify({data: data}));
-//				});	
+			}
+			
+			$scope.addAmendment = function(newAmendment){ 
 				
+				var data = { caseNumber: $scope.amiCase.caseNumber, newAmendment: newAmendment};
+				
+				var res = $http.post('/ami/amiadmin/addAmendmentAdmin',data).then(
+					function(response) {
+						$scope.amiCase.amendments = response.data;
+					},
+					function(response) {
+						alert('error capturing the amendment' );
+					});
 			}
 		});
 	
@@ -81,7 +87,6 @@
 		$scope.page = 'readCases';
 		$scope.amiCase = myCase;
 		$scope.amiRequest = myCase.amiRequest;
-		
 		
 		$scope.saveRadiographicInterpretation = function(){
 			
@@ -145,6 +150,19 @@
 				alert( "failure message: " + JSON.stringify({data: data}));
 			});	
 			
+		}
+		
+		$scope.addAmendment = function(newAmendment){ 
+			
+			var data = { caseNumber: $scope.amiCase.caseNumber, newAmendment: newAmendment};
+			
+			var res = $http.post('/ami/amiadmin/addAmendmentAdmin',data).then(
+				function(response) {
+					$scope.amiCase.amendments = response.data;
+				},
+				function(response) {
+					alert('error capturing the amendment' );
+				});
 		}
 	
 		

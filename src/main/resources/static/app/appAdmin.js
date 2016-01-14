@@ -29,6 +29,22 @@ amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 
 			return res;
 	 },
+	 
+	 getAmendedCases: function(){ 
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/amendedcases');
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get amended cases');
+			});	
+
+			return res;
+	 },
+	 
 	 getCasesPendingReviewAllHospitals: function(){ 
 		 
 		 var deferred = $q.defer();
@@ -155,6 +171,13 @@ amiadmin.config(['$routeProvider','$httpProvider',
                              				return result.data;
                              			}	
                              		);
+                                 }],
+                                 amendedCases: ['amiadminFactory', function (amiadminFactory) {
+                                	 return amiadminFactory.getAmendedCases().then(
+                                			 function(result){
+                                				 return result.data;
+                                			 }	
+                                	 );
                                  }],
                        	   }
                     	

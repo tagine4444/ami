@@ -1,7 +1,13 @@
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-sm-7">
 		<h4><span class="label label-warning">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span></h4>
 	</div>
+	
+	<div class="col-sm-2">
+		<button class="btn btn-info" data-toggle="modal" data-target="#addAmendmentModal" >Add Amendments</button>
+	</div>
+	
+	
 </div>
 <hr/>
 <div class="row">
@@ -113,6 +119,26 @@
 		<pre class="alert-info"><b>Recommendation</b><br/><br/>{{amiCase.recommendation}}</pre>
 	</div>
 </div>
+<div class="row" >
+	<div class="col-sm-12" ng-show="amiCase.amendments.length>0">
+	
+		<table style="width:100%">
+			<tr>
+				<th>Amendments</th>
+			</tr>
+			
+			<tr ng-repeat="anAmendment in amiCase.amendments" >
+				<td>
+					<pre class="alert-danger"><span  style="font-weight: bold;">{{$index+1}}: <span ng-show="anAmendment.customerAmendment" class="label label-danger">{{anAmendment.hospitalName}}</span><span ng-show="!anAmendment.customerAmendment" class="label label-primary"> {{anAmendment.hospitalName}}</span>{{anAmendment.firstName}} {{anAmendment.lastName}}, {{anAmendment.occupation}}, {{anAmendment.creationDate  | jsonDate: 'dd MMM yy, h:mm a' }}</span><br/>{{anAmendment.newAmendment}}</pre>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+	<div class="col-sm-12" ng-show="amiCase.amendments.length==0">
+		<span style="color:red; font-weight: bold;">No Amendments</span>
+	</div>
+</div>
 	
 <div class="row">
 	<div class="col-sm-12" ng-show="amiCase.fileUploads.length==0">
@@ -143,4 +169,27 @@
 	
 </div>
 
+
+<div class="modal fade bs-example-modal-lg" id="addAmendmentModal" tabindex="-1" role="dialog" 
+	aria-labelledby="addAmendmentModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="addAmendmentModalLabel">Add Amendment</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12">
+					    
+					    <textarea class="form-control" rows="5" ng-model="newAmendment" placeholder="Add Amendment here" ></textarea>
+		          </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addAmendment(newAmendment)" >Save</button>
+	      </div>
+	    </div>
+	  </div>
+</div>
 

@@ -126,10 +126,24 @@
 		
 		// ============ Controller ===============
 		app.controller('CasePendingCtrl', function ($scope, $http, $window,$location, myCase) {
+			
 			$scope.page = 'searchRequests';
 			$scope.amiCase = myCase;
 			$scope.amiRequest = myCase.amiRequest;
+			 
 			
+			$scope.addAmendment = function(newAmendment){ 
+				
+				var data = { caseNumber: $scope.amiCase.caseNumber, newAmendment: newAmendment};
+				
+				var res = $http.post('/ami/amiadmin/addAmendmentCust',data).then(
+					function(response) {
+						$scope.amiCase.amendments = response.data;
+					},
+					function(response) {
+						alert('error capturing the amendment' );
+					});
+			}
 		});
 		
 		// ============ NewRequest ===============
