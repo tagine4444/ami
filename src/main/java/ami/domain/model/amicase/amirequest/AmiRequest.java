@@ -1,7 +1,5 @@
 package ami.domain.model.amicase.amirequest;
 
-import org.springframework.util.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)

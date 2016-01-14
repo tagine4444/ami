@@ -1,11 +1,14 @@
 package ami.domain.model.amicase.events;
 
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ami.application.commands.amirequest.SendAmendNotificationCmd;
+import ami.domain.model.amicase.AmendmentNotification;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 
@@ -16,7 +19,11 @@ public class AmiRequestEventHandler {
 
 	@Autowired
 	private AmiRequestRepository amiServiceRequestRepo;
-
+	
+	@Autowired
+	private CommandGateway commandGateway;
+	
+	
     @EventHandler
     public void handle(NewAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
        
@@ -113,10 +120,15 @@ public class AmiRequestEventHandler {
     	amiServiceRequestRepo.updateRecommendation(event.getDateTime() ,event.getId(), event.getUserName(),
     			 event.getRecommendation());
     }
+    
     @EventHandler
     public void handle(CaseAmendedEvent event) throws JsonProcessingException {
     	amiServiceRequestRepo.amendCase(event.getId(), event.getAmendment());
+    	
+    	AmendmentNotification notification = new  AmendmentNotification(event.getId(), event.getAmendment());
+    	commandGateway.sendAndWait(new SendAmendNotificationCmd(notification));
     }
+    
     
     @EventHandler
     public void handle(AccountingDoneEvent event) throws JsonProcessingException {

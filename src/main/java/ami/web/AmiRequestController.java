@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.application.services.AmiRequestService;
+import ami.application.services.impl.AmendmentNotificationService;
 import ami.domain.model.amicase.Amendment;
+import ami.domain.model.amicase.AmiCaseNumberGeneratorRepository;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.security.AmiAuthtorities;
 import ami.domain.model.security.amiusers.AmiUserRepository;
@@ -50,6 +52,14 @@ public class AmiRequestController {
 	
 	@Autowired
 	private AmiUserRepository userService;
+	
+	@Autowired
+	private AmendmentNotificationService amendmentNotificationService;
+	
+	@Autowired
+	private AmiCaseNumberGeneratorRepository amiCaseNumberGeneratorRepository;
+	
+	
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -152,22 +162,62 @@ public class AmiRequestController {
 		return amiRequestService.findCasesPendingAccounting();
 	}
 	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/amendedcases",method = RequestMethod.GET)
+	@ResponseBody
+	public String getAmendmentNotificationsForAdmin() throws JsonProcessingException {
+		return amendmentNotificationService.getAmendmentNotificationsForAdmin();
+	}
+	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/addAmendment",method = RequestMethod.POST)
+	@RequestMapping(value = "/ami/amiadmin/addAmendmentAdmin",method = RequestMethod.POST)
 	@ResponseBody
-	public void addAmendmentAdmin(@RequestBody String data) throws JsonProcessingException {
+	public String addAmendmentAdmin(@RequestBody String data) throws JsonProcessingException {
 		DBObject dbObject = (DBObject)JSON.parse(data);
 		final String caseNumber = (String) dbObject.get("caseNumber");
+		final String newAmendment = (String) dbObject.get("newAmendment");
 		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		AmiUserView anAmiUserView = userService.findAmiUser(userName);
 		
 		DateTime creationDate = new DateTime();  
-		String firstName = anAmiUserView.getAmiUser().getFirstName(); 
-		String lastName  =  anAmiUserView.getAmiUser().getLastName();
+		String firstName   = anAmiUserView.getAmiUser().getFirstName(); 
+		String lastName    =  anAmiUserView.getAmiUser().getLastName();
+		String occupation  = anAmiUserView.getAmiUser().getOccupation();
+		String hospitalName = anAmiUserView.getHospitalName();
+		String hospitalId = anAmiUserView.getHospitalId();
 		
-		Amendment amendment = new Amendment(creationDate, userName, firstName, lastName);
+		
+		int nextAmendmentId = amiCaseNumberGeneratorRepository.getNextAmendmentId();
+		Amendment amendment = new Amendment(nextAmendmentId, newAmendment, creationDate, userName, firstName, lastName, 
+				occupation,hospitalName, hospitalId,false);
 		amiServices.amend(caseNumber, amendment);
+		return amiRequestService.findAmiAmendments(caseNumber);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')")
+	@RequestMapping(value = "/ami/amiadmin/addAmendmentCust",method = RequestMethod.POST)
+	@ResponseBody
+	public String addAmendmentCustomer(@RequestBody String data) throws JsonProcessingException {
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		final String newAmendment = (String) dbObject.get("newAmendment");
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(userName);
+		
+		DateTime creationDate = new DateTime();  
+		String firstName   = anAmiUserView.getAmiUser().getFirstName(); 
+		String lastName    =  anAmiUserView.getAmiUser().getLastName();
+		String occupation  = anAmiUserView.getAmiUser().getOccupation();
+		String hospitalName = anAmiUserView.getHospitalName();
+		String hospitalId = anAmiUserView.getHospitalId();
+		
+		int nextAmendmentId = amiCaseNumberGeneratorRepository.getNextAmendmentId();
+		
+		Amendment amendment = new Amendment(nextAmendmentId,newAmendment, creationDate, userName, firstName, lastName, 
+				occupation,hospitalName, hospitalId,true);
+		amiServices.amend(caseNumber, amendment);
+		return amiRequestService.findAmiAmendments(caseNumber);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")

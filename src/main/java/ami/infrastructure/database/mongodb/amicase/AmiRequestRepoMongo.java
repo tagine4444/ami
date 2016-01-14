@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
+	public final static String AMENDMENT_NOTIFICATION_VIEW = "viewAmendmentNotification";
 	public final static String AMIREQUEST_VIEW = "viewAmirequest";
 	public final static String DATE_FORMAT     = "yyyy-MM-dd HH:mm:ss";
 	//public final DateTimeFormatter AMI_DATE_FOMRATTER = DateTimeFormat.forPattern(DATE_FORMAT); 
@@ -447,7 +448,6 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		update.push("amendments", amendment);
 		
 		mongo.updateFirst(query1, update, AmiRequestView.class, AMIREQUEST_VIEW); 
-		
 	}
 
 	@Override
@@ -472,8 +472,6 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		   return amiRequestView;
 	}
-
-	
 
 
 }

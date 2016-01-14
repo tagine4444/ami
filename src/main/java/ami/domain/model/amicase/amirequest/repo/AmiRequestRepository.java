@@ -5,6 +5,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import ami.domain.model.amicase.Amendment;
+import ami.domain.model.amicase.AmendmentNotification;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.infrastructure.database.model.AmiRequestView;
@@ -77,7 +78,6 @@ public interface AmiRequestRepository {
 	void amendCase(String caseNumber, Amendment amendment);
 	void updateAccountingDone(String id, DateTime dateTime, String userName);
 	List<AmiRequestView> findCasesPendingAccounting();
-	
 	
 
 }

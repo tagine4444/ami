@@ -1,15 +1,16 @@
 package ami.application.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ami.application.services.AmiRequestService;
+import ami.domain.model.amicase.Amendment;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
@@ -39,6 +40,18 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	public String findAmiRequest(String requestNumber) throws JsonProcessingException {
 		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(requestNumber);
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+		return amiRequestViewString;
+	}
+	
+	@Override
+	public String findAmiAmendments(String caseNumber) throws JsonProcessingException {
+		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(caseNumber);
+		List<Amendment> amendments = amiRequestView.getAmendments();
+		if(amendments == null){
+			amendments = new ArrayList<Amendment>();
+		}
+		
+		String amiRequestViewString = objectMapper.writeValueAsString(amendments);
 		return amiRequestViewString;
 	}
 	

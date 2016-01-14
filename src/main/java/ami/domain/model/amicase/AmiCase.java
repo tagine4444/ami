@@ -15,6 +15,7 @@ import ami.application.commands.amirequest.CloseCaseCmd;
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.DoAccountingCmd;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
+import ami.application.commands.amirequest.SendAmendNotificationCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
 import ami.application.commands.amirequest.SwitchCaseToInProgressCmd;
@@ -27,6 +28,7 @@ import ami.application.commands.amirequest.UploadFileCommand;
 import ami.domain.model.amicase.amirequest.AmiRequest;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.events.AccountingDoneEvent;
+import ami.domain.model.amicase.events.AmendmentNotificationSentEvent;
 import ami.domain.model.amicase.events.AmiRequestSavedAsDraftEvent;
 import ami.domain.model.amicase.events.AmiRequestUpdatedAsDraftEvent;
 import ami.domain.model.amicase.events.CaseAmendedEvent;
@@ -67,6 +69,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
     private String radiographicImpression;
     private String recommendation;
 	
+    private List<AmendmentNotification> amendmentNotifications = new ArrayList<AmendmentNotification>();
+    
 	// No-arg constructor, required by Axon
 	public AmiCase() {
 	}
@@ -224,6 +228,17 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		
 		apply(new AccountingDoneEvent(command.getId(), command.getUserName(), command.getDateTime()));
 	}
+	@CommandHandler
+	public void sendAmendmentNotification(SendAmendNotificationCmd command) {
+		
+		if(isAmendmentNotificationAlreadySent(command.getAmendmentNotification().getAmendmentId())){
+			
+			//just ignore notification that have already been sent. Just in case of a replay (of events).
+			return;
+		}
+		
+		apply(new AmendmentNotificationSentEvent(command.getAmendmentNotification()));
+	}
 	
 
 	// -==-=-=-=-=-=-=-=--=-=-=- EventSourceHandlers -==-=-=-=-=-=-=-=--=-=-=- 
@@ -352,6 +367,21 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	@EventSourcingHandler
 	public void on(AccountingDoneEvent event) {
 		this.accountingDone = event.getDateTime();
+	}
+	
+	@EventSourcingHandler
+	public void on(AmendmentNotificationSentEvent event) {
+		this.amendmentNotifications.add(event.getAmendmentNotification());
+	}
+	
+	
+	private boolean isAmendmentNotificationAlreadySent(int amendmentId){
+		for (AmendmentNotification amendmentNotification : amendmentNotifications) {
+			if(amendmentNotification.getAmendmentId() == amendmentId){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private boolean hasBeenSavedAndSubmittedToRadiologist() {

@@ -18,6 +18,16 @@ public class AmiCaseNumberGeneratorRepoMongo implements AmiCaseNumberGeneratorRe
 	private MongoTemplate mongo;
 
 	@Override
+	public int getNextAmendmentId() {
+		Counter counter = mongo.findAndModify(
+				query(where("_id").is("amendmentsequence")),
+				new Update().inc("seq", 1), options().returnNew(true),
+				Counter.class);
+
+		return counter.getSeq();
+	}
+	
+	@Override
 	public int getNextAmiCase() {
 		Counter counter = mongo.findAndModify(
 				query(where("_id").is("amirequestsequence")),

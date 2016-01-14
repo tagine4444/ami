@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 
 public class Amendment {
 
+	private int id;
+	private String newAmendment;
 	private DateTime creationDate ;
 	private String creationDateString ;
 	
@@ -11,11 +13,23 @@ public class Amendment {
 	private String   firstName ;
 	private String   lastName ;
 	
-	public Amendment(DateTime creationDate, String userName,  String firstName,  String lastName) {
-		this.creationDate 		= creationDate;    
+	private String occupation;
+	private String hospitalName;
+	private String hospitalId;
+	private boolean customerAmendment; // customerAmendment is the one from the customer vs the one from admin (like AMI).
+	
+	public Amendment(int id, String newAmendment, DateTime creationDate, String userName,  String firstName,  String lastName,
+			String occupation,String hospitalName, String hospitalId, boolean customerAmendment) {
+		this.id = id;
+		this.newAmendment     = newAmendment;
+		this.creationDate 	  = creationDate;    
 		this.userName         = userName; 
 		this.firstName        = firstName; 
-		this.lastName         =lastName; 
+		this.lastName         = lastName; 
+		this.occupation		  = occupation;  
+		this.hospitalName	  = hospitalName;
+		this.hospitalId		  = hospitalId;  
+		this.customerAmendment = customerAmendment;
 		
 		 if(creationDate!=null){
 			 this.creationDateString = creationDate.toString();
@@ -40,5 +54,29 @@ public class Amendment {
 
 	public String getLastName() {
 		return lastName;
+	}
+
+	public String getNewAmendment() {
+		return newAmendment;
+	}
+
+	public String getOccupation() {
+		return occupation;
+	}
+
+	public String getHospitalName() {
+		return hospitalName;
+	}
+
+	public String getHospitalId() {
+		return hospitalId;
+	}
+
+	public boolean isCustomerAmendment() {
+		return customerAmendment;
+	}
+
+	public int getId() {
+		return id;
 	}
 }

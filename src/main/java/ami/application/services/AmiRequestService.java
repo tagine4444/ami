@@ -30,6 +30,7 @@ public interface AmiRequestService {
 	String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException;
 	String findCaesPendingRevewForAllHospitals() throws JsonProcessingException;
 	String findCasesPendingAccounting() throws JsonProcessingException;
+	String findAmiAmendments(String caseNumber) throws JsonProcessingException;
 		
 
 }
