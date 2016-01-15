@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ami.domain.model.security.AmiAuthtorities;
@@ -51,6 +52,21 @@ public class UserController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	
+	@RequestMapping(value = "/ami/amiuser", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String findUserByUserName(@RequestParam String userName) throws JsonProcessingException {
+		
+		AmiUser amiUser = amiUserService.findAmiUser(userName).getAmiUser();
+		amiUser.blurPassword();
+		
+		String amiUserString = objectMapper.writeValueAsString(amiUser);
+		
+		log.debug("Found "+amiUserString);
+		
+		return amiUserString;
+			
+	}
 	
 	@RequestMapping(value = "/ami/getuserid", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody

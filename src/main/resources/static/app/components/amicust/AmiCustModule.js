@@ -124,6 +124,12 @@
 			
 		});
 		
+		
+		app.controller('EditUserCtrl', function ($scope, $http, $window,$location, myAmiUser) {
+				
+			$scope.myAmiUser = myAmiUser;
+					
+		});
 		// ============ Controller ===============
 		app.controller('CasePendingCtrl', function ($scope, $http, $window,$location, myCase) {
 			

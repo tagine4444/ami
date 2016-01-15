@@ -12,6 +12,25 @@ amicust.filter('jsonDate', ['$filter', function ($filter) {
 }]);
 
 
+amicust.service('userService', function( $http, $q) {
+	
+	this.getUser = function(userName) {
+		
+		var deferred = $q.defer();
+		var res = $http.get('/ami/amiuser?userName='+userName);
+		
+		res.success(function(data, status, headers, config) {
+			deferred.resolve();
+		});
+		res.error(function(data, status, headers, config) {
+			deferred.reject('failure to get user name');
+		});	
+		
+		return res.then( function(result){return result.data;} );
+    }
+	
+});
+
 amicust.factory('newUserFactory', function($http,$q, $routeParams) {return {
 		getNewUser: function(){ 
 			var newUser ={
@@ -27,6 +46,9 @@ amicust.factory('newUserFactory', function($http,$q, $routeParams) {return {
 		}
 	}
 });
+
+
+
 
 amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 	getNewAmiRequest: function(){ 
@@ -425,7 +447,18 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                         }).
                         when('/newUser', {
                         	templateUrl: '/app/components/amicust/newuser.html',
-                        	controller: 'NewUserCtrl',
+                        	controller: 'NewUserCtrl'
+                        }).
+                        when('/editUser/:userId', {
+                        	templateUrl: '/app/components/amicust/edituser.html',
+                        	controller: 'EditUserCtrl',
+                        	resolve: {
+                        		
+                        		myAmiUser: ['userService','$route', function (userService, $route) {
+                             		var userId = $route.current.params.userId;
+	                             	return userService.getUser(userId);
+                                 }]
+                        	}
                         }).
                         when('/help', {
                         	templateUrl: '/app/components/amicust/help.html',

@@ -1,0 +1,48 @@
+<div class="row">
+	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	
+	
+	
+	<div class="row">
+	
+<!-- </div>	  		 -->
+	<div class="panel panel-primary">
+	  <div class="panel-heading"><strong>Update User</strong></div>
+	  <div class="panel-body">
+	  		
+	  	<div class="col-sm-12">
+			<table class="table">
+				<thead>
+					<tr>
+					
+						<th>User Name</th>
+						<th><a ng-click="updatemyAmiUserPwd()" href =""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Password</a></th>
+						<th><a ng-click="updatemyAmiUserEmail()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
+						<th><a ng-click="updatemyAmiUserFirstName()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>First Name</a></th>
+						<th><a ng-click="updatemyAmiUserLastName()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Last Name</a></th>
+						<th><a ng-click="updatemyAmiUserOccupation()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Occupation</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{myAmiUser.user}}</td>
+						<td>{{myAmiUser.pwd}}</td>
+						<td>{{myAmiUser.email}}</td>
+						<td>{{myAmiUser.firstName}}</td>
+						<td>{{myAmiUser.lastName}}</td>
+						<td>{{myAmiUser.occupation}}</td>
+					
+					</tr>
+				</tbody>
+				
+			</table>
+	    </div>
+	    <div class="col-sm-1">
+   			<button  data-toggle="modal" data-target="#swtichmyAmiUserModal" class="btn btn-primary" >Switch Master User</button>
+   		</div>
+	  
+	  </div>
+	</div>
+	</div>
+	
+</div>

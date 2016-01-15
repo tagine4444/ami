@@ -36,9 +36,12 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 	public AmiUserView findAmiUser(String userName)  {
 		
 		AmiUserView  view = mongo.findOne(Query.query(Criteria.where("amiUser.user").is(userName)), AmiUserView.class,AMI_USER_VIEW);
+		
 		if(view==null){
 			throw new RuntimeException("User not found");
 		}
+		
+		view.getAmiUser().blurPassword();
 		return view;
 	}
 	
