@@ -16,17 +16,17 @@
 					<tr>
 					
 						<th>User Name</th>
-						<th><a ng-click="updatemyAmiUserPwd()" href =""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Password</a></th>
-						<th><a ng-click="updatemyAmiUserEmail()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
-						<th><a ng-click="updatemyAmiUserFirstName()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>First Name</a></th>
-						<th><a ng-click="updatemyAmiUserLastName()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Last Name</a></th>
-						<th><a ng-click="updatemyAmiUserOccupation()" href=""  data-toggle="modal" data-target="#updatemyAmiUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Occupation</a></th>
+						<th><a ng-click="updateUserPwd()" href =""  data-toggle="modal" data-target="#updateUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Password</a></th>
+						<th><a ng-click="updateUserEmail()" href=""  data-toggle="modal" data-target="#updateUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Email</a></th>
+						<th><a ng-click="updateUserFirstName()" href=""  data-toggle="modal" data-target="#updateUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>First Name</a></th>
+						<th><a ng-click="updateUserLastName()" href=""  data-toggle="modal" data-target="#updateUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Last Name</a></th>
+						<th><a ng-click="updateUserOccupation()" href=""  data-toggle="modal" data-target="#updateUserModal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Occupation</a></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>{{myAmiUser.user}}</td>
-						<td>{{myAmiUser.pwd}}</td>
+						<td>{{bluredPwd}}</td>
 						<td>{{myAmiUser.email}}</td>
 						<td>{{myAmiUser.firstName}}</td>
 						<td>{{myAmiUser.lastName}}</td>
@@ -45,4 +45,35 @@
 	</div>
 	</div>
 	
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="updateUserModal" tabindex="-1" role="dialog" 
+	aria-labelledby="updateMasterUserModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="updateMasterUserModalLabel">{{modalLabel}}</h4>
+	      </div>
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-12">
+					    <p><strong>{{modalCurrentLabel}}:</strong> {{modalCurrentValue}}</p>
+		          </div>
+		          <div class="col-md-12">
+		          		<input type="text"  class="form-control" id="updateId" 
+		          		ng-model='userUpdateValue' placeholder="{{modalNewValuePlaceHolder}}" >
+		          </div>
+		          <div class="col-md-12">
+				    <p ng-show="showPwdHintInModal" class="help-block">Must be at least 5 characters</p>
+				    <p ng-show="showEmptyFieldHintInModal" class="help-block">{{modalNewValuePlaceHolder}} cannot be empty</p>
+				  </div>
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="cancelUserUpdateModal()" >Cancel</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-disabled="isEditUserSaveBtnEnabled()"  ng-click="updateUser()" >Save</button>
+	      </div>
+	    </div>
+	  </div>
 </div>

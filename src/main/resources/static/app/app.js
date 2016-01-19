@@ -69,7 +69,7 @@ amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 		patientInfo.animalAgeYears 	= '';
 		patientInfo.animalAgeMonths = '';
 		patientInfo.ageLabel		= '';
-		patientInfo.species 		= 'Select Species';
+		patientInfo.species 		= '';
 		patientInfo.breeds 			= '';
 		
 		var requestedServices = {};
@@ -204,35 +204,35 @@ amicust.factory('animalService', function($http,$q, $routeParams){return {
 			return res;
 	 },
 	 
-	 getAnimals: function(){ 
-		 
-		 var deferred = $q.defer();
-		 var res = $http.get('/ami/animals');
-		 
-		 res.success(function(data, status, headers, config) {
-				deferred.resolve();
-			});
-			res.error(function(data, status, headers, config) {
-				deferred.reject('failure to get animals');
-			});	
-
-			return res;
-	 },
+//	 getAnimals: function(){ 
+//		 
+//		 var deferred = $q.defer();
+//		 var res = $http.get('/ami/animals');
+//		 
+//		 res.success(function(data, status, headers, config) {
+//				deferred.resolve();
+//			});
+//			res.error(function(data, status, headers, config) {
+//				deferred.reject('failure to get animals');
+//			});	
+//
+//			return res;
+//	 },
 	 
-	 getSpecies: function(){ 
-		 
-		 var deferred = $q.defer();
-		 var res = $http.get('/ami/animals/species');
-		 
-		 res.success(function(data, status, headers, config) {
-				deferred.resolve();
-			});
-			res.error(function(data, status, headers, config) {
-				deferred.reject('failure to get species');
-			});	
-
-			return res;
-	 },
+//	 getSpecies: function(){ 
+//		 
+//		 var deferred = $q.defer();
+//		 var res = $http.get('/ami/animals/species');
+//		 
+//		 res.success(function(data, status, headers, config) {
+//				deferred.resolve();
+//			});
+//			res.error(function(data, status, headers, config) {
+//				deferred.reject('failure to get species');
+//			});	
+//
+//			return res;
+//	 },
 	 
 	 getAmiServices: function(){
 		 
@@ -311,20 +311,20 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                                 	 return amiRequestFactory.getNewAmiRequest();
                                  }],
                             	
-                            	animals: ['animalService', function (animalService) {
-                            		return animalService.getAnimals().then(
-                            			function(result){
-                            				return result.data;
-                            			}	
-                            		);
-                                }],
-                                species: ['animalService', function (animalService) {
-                            		return animalService.getSpecies().then(
-                            			function(result){
-                            				return result.data;
-                            			}	
-                            		);
-                                }],
+//                            	animals: ['animalService', function (animalService) {
+//                            		return animalService.getAnimals().then(
+//                            			function(result){
+//                            				return result.data;
+//                            			}	
+//                            		);
+//                                }],
+//                                species: ['animalService', function (animalService) {
+//                            		return animalService.getSpecies().then(
+//                            			function(result){
+//                            				return result.data;
+//                            			}	
+//                            		);
+//                                }],
                                 amiServices:  ['animalService', function (animalService) {
                             		return animalService.getAmiServices().then(
                                 			function(result){
@@ -358,21 +358,20 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                              		);
                                  }],
                                  
-                                 
-                              	animals: ['animalService', function (animalService) {
-                            		return animalService.getAnimals().then(
-                            			function(result){
-                            				return result.data;
-                            			}	
-                            		);
-                                }],
-                                species: ['animalService', function (animalService) {
-                            		return animalService.getSpecies().then(
-                            			function(result){
-                            				return result.data;
-                            			}	
-                            		);
-                                }],
+//                              	animals: ['animalService', function (animalService) {
+//                            		return animalService.getAnimals().then(
+//                            			function(result){
+//                            				return result.data;
+//                            			}	
+//                            		);
+//                                }],
+//                                species: ['animalService', function (animalService) {
+//                            		return animalService.getSpecies().then(
+//                            			function(result){
+//                            				return result.data;
+//                            			}	
+//                            		);
+//                                }],
                                 amiServices:  ['animalService', function (animalService) {
                             		return animalService.getAmiServices().then(
                                 			function(result){

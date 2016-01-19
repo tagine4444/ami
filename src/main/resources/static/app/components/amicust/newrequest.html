@@ -151,15 +151,18 @@
 			
 			<div class="row">
 			     <div class="col-sm-4">
-				    <select class="form-control" ng-model="newRequest.patientInfo.species" ng-change="updateBreedListBox()">
-						 <option  ng-repeat="aSpecies in speciesList">{{aSpecies}}</option>
-					</select>
+<!-- 				    <select class="form-control" ng-model="newRequest.patientInfo.species" ng-change="updateBreedListBox()"> -->
+<!-- 						 <option  ng-repeat="aSpecies in speciesList">{{aSpecies}}</option> -->
+<!-- 					</select> -->
+					<input type="text" class="form-control" id="speciesId" ng-model="newRequest.patientInfo.species" placeholder="Species">
 			    </div>
 			    
 			    <div class="col-sm-4">
-				      <select class="form-control" ng-model="newRequest.patientInfo.breeds" ng-disabled ="disableBreedList" >
-						   <option ng-repeat="aBreed in breedsList">{{aBreed}}</option>
-						</select>
+<!-- 				      <select class="form-control" ng-model="newRequest.patientInfo.breeds" ng-disabled ="disableBreedList" > -->
+<!-- 						   <option ng-repeat="aBreed in breedsList">{{aBreed}}</option> -->
+<!-- 						</select> -->
+
+						<input type="text" class="form-control" id="speciesId" ng-model="newRequest.patientInfo.breeds" placeholder="Breeds">
 			    </div>
 			</div>
 		

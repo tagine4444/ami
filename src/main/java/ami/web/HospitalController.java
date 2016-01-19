@@ -49,7 +49,7 @@ public class HospitalController {
 	                                                      
 	
 	
-	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+	private static final Logger log = LoggerFactory.getLogger(HospitalController.class);
 	
 	@Autowired
 	private HospitalRepository hospitalService;

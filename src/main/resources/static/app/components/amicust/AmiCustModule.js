@@ -128,6 +128,137 @@
 		app.controller('EditUserCtrl', function ($scope, $http, $window,$location, myAmiUser) {
 				
 			$scope.myAmiUser = myAmiUser;
+			$scope.userUpdateValue = "";
+			$scope.userUpdateAction ="";
+			$scope.bluredPwd = "**********";
+			
+			var userUpdateType = {
+					pwd:		{'myPwd': 'updatePwd'   },
+					email:		{'myEmail': 'updateEmail' },
+					firstName:	{'myFirstName': 'updateFirstName' },
+					lastName:	{'myLastName': 'updateLastName' },
+					occupation: {'myOccupation': 'updateOccupation'}
+				}
+			
+			$scope.updateUserEmail = function(){
+				$scope.modalLabel = "Update Email";
+				$scope.modalCurrentLabel = "Current Email";
+				$scope.modalCurrentValue = $scope.myAmiUser.email;
+				$scope.modalNewValuePlaceHolder = "New Email";
+				$scope.userUpdateAction = userUpdateType.email.myEmail;
+			}
+			
+			$scope.updateUserPwd = function(){
+				$scope.modalLabel = "Update Password";
+				$scope.modalCurrentLabel = "Current Password";
+				$scope.modalCurrentValue = $scope.bluredPwd;
+				$scope.modalNewValuePlaceHolder = "New Password";
+				$scope.userUpdateAction = userUpdateType.pwd.myPwd;
+			}
+			$scope.updateUserFirstName = function(){
+				$scope.modalLabel = "Update First Name";
+				$scope.modalCurrentLabel = "Current First Name";
+				$scope.modalCurrentValue = $scope.myAmiUser.firstName;
+				$scope.modalNewValuePlaceHolder = "New First Name";
+				$scope.userUpdateAction = userUpdateType.firstName.myFirstName;
+			}
+			
+			$scope.updateUserLastName = function(){
+				$scope.modalLabel = "Update Last Name";
+				$scope.modalCurrentLabel = "Current Last Name";
+				$scope.modalCurrentValue = $scope.myAmiUser.lastName;
+				$scope.modalNewValuePlaceHolder = "New Last Name";
+				$scope.userUpdateAction = userUpdateType.lastName.myLastName;
+			}
+			
+			$scope.updateUserOccupation = function(){
+				$scope.modalLabel = "Update Occupation";
+				$scope.modalCurrentLabel = "Current Occupation";
+				$scope.modalCurrentValue = $scope.myAmiUser.occupation;
+				$scope.modalNewValuePlaceHolder = "New Occupation";
+				$scope.userUpdateAction = userUpdateType.occupation.myOccupation;
+			}
+			
+			$scope.isEditUserSaveBtnEnabled = function(){
+				
+				if ( $scope.userUpdateAction == userUpdateType.pwd.myPwd ){
+					$scope.showEmptyFieldHintInModal = false;
+					if( $scope.userUpdateValue.length <5 ){
+						 $scope.showPwdHintInModal = true;
+						 return true;
+					}
+					$scope.showPwdHintInModal = false;
+					return false;
+				}
+				
+				$scope.showPwdHintInModal = false;
+				if( $scope.userUpdateValue.length <2 ){
+					 $scope.showEmptyFieldHintInModal = true;
+					 return true;
+				}
+				$scope.showEmptyFieldHintInModal = false;
+				return false;
+			}
+			
+			$scope.cancelUserUpdateModal = function(){
+				clearModal();
+			}
+			
+			var clearModal = function(){
+				$scope.modalLabel = "";
+				$scope.modalCurrentLabel = "";
+				$scope.modalCurrentValue = "";
+				$scope.modalNewValuePlaceHolder = "";
+				$scope.userUpdateAction ="";
+				$scope.userUpdateValue = "";
+				
+				
+				$scope.newHospitalUpdatePlaceHolderValue = "";
+				$scope.hospitalUpdateAction = "";
+				$scope.newHospitalUpdateValue= "";
+				$scope.hospitalStringCurrentValue ="";
+			}
+			
+			
+			$scope.updateUser = function(){
+				
+				var url = '/ami/amicusthome/hospital/edituser';
+				var data = {userName: $scope.myAmiUser.user, hospitalId: $scope.myAmiUser.hospitalId, value: $scope.userUpdateValue, 'action': $scope.userUpdateAction};
+				var res = $http.post(url,data);
+				
+				//alert('$scope.userUpdateAction: ' + $scope.userUpdateAction);
+				
+				res.success(function(data, status, headers, config) {
+					
+					if( $scope.userUpdateAction == userUpdateType.pwd.myPwd){
+						$scope.myAmiUser.pwd = $scope.userUpdateValue;
+						//alert(' doing pwd' );
+					}
+					else if($scope.userUpdateAction == userUpdateType.email.myEmail){
+						$scope.myAmiUser.email = $scope.userUpdateValue;
+						//alert(' doing email' );
+					}
+					else if($scope.userUpdateAction == userUpdateType.firstName.myFirstName){
+						$scope.myAmiUser.firstName = $scope.userUpdateValue;
+						//alert(' doing first name' );
+					}
+					else if($scope.userUpdateAction == userUpdateType.lastName.myLastName){
+						$scope.myAmiUser.lastName = $scope.userUpdateValue;
+						//alert(' doing last name' );
+					}
+					else if($scope.userUpdateAction == userUpdateType.occupation.myOccupation){
+						$scope.myAmiUser.occupation = $scope.userUpdateValue;
+						//alert(' doing occupation' );
+					}
+					
+					clearModal();
+					
+				});
+				res.error(function(data, status, headers, config) {
+					alert( $scope.userUpdateAction + " failed: " + JSON.stringify({data: data}));
+				});	
+				
+			}
 					
 		});
 		// ============ Controller ===============
@@ -153,7 +284,7 @@
 		});
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService,animals,species, amiServices,animalService, myAmiRequest, myHospital) {
+		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService, amiServices,animalService, myAmiRequest, myHospital) {
 			
 			$scope.page = 'newRequest';
 			
@@ -182,59 +313,59 @@
 			var ZeroMonths = '0 months';
 			
 			// ----- End of Set the species -----
-			for (var i in animals) {
-			
-			  var anAnimal = animals[i];
-			  var aSpecies = anAnimal.name;
-			  
-			  var anAnimalBreed = anAnimal.breeds;
-				
-			  if(aSpecies== 'Canine'){
-				  $scope.breedsCanine =  anAnimalBreed;
-			  }else if(aSpecies== 'Feline' ){
-					$scope.breedsFeline =  anAnimalBreed;
-			  }else if(aSpecies == 'Bovine'){
-					$scope.breedsBovine =  anAnimalBreed;
-			  }
-			  else if(aSpecies == 'Birds'){
-				$scope.breedsBirds  =  anAnimalBreed;
-				
-			  } else if( aSpecies == 'Others'){
-					$scope.breedsOthers =  anAnimalBreed;
-			  }
-			  
-			}
-			$scope.speciesList = species;
-			$scope.speciesList.splice (0,0, 'Select Species');
+//			for (var i in animals) {
+//			
+//			  var anAnimal = animals[i];
+//			  var aSpecies = anAnimal.name;
+//			  
+//			  var anAnimalBreed = anAnimal.breeds;
+//				
+//			  if(aSpecies== 'Canine'){
+//				  $scope.breedsCanine =  anAnimalBreed;
+//			  }else if(aSpecies== 'Feline' ){
+//					$scope.breedsFeline =  anAnimalBreed;
+//			  }else if(aSpecies == 'Bovine'){
+//					$scope.breedsBovine =  anAnimalBreed;
+//			  }
+//			  else if(aSpecies == 'Birds'){
+//				$scope.breedsBirds  =  anAnimalBreed;
+//				
+//			  } else if( aSpecies == 'Others'){
+//					$scope.breedsOthers =  anAnimalBreed;
+//			  }
+//			  
+//			}
+//			$scope.speciesList = species;
+//			$scope.speciesList.splice (0,0, 'Select Species');
 			// ----- End of Set the species -----
 			
 			
 			// ----- Set the breeds -----
-			var speciesValue        = $scope.newRequest.patientInfo.species;
-			
-			$scope.disableBreedList = false;
-			var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
-			var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
-			var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
-			var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
-			var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
-			
-			if(isCanine){
-				$scope.breedsList  = $scope.breedsCanine;
-			}else if( isFeline){
-				$scope.breedsList  = $scope.breedsFeline;
-			}else if(isBovine){
-				$scope.breedsList  = $scope.breedsBovine;
-			}else if(isBirds){
-				$scope.breedsList  = $scope.breedsBirds;
-			}
-			else if(isOthers){
-				$scope.breedsList  = $scope.breedsOthers;
-			}
-			else{
-				$scope.breedsList  = ['Select Breed'];
-				$scope.disableBreedList = true;
-			}
+//			var speciesValue        = $scope.newRequest.patientInfo.species;
+//			
+//			$scope.disableBreedList = false;
+//			var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
+//			var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
+//			var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
+//			var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
+//			var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
+//			
+//			if(isCanine){
+//				$scope.breedsList  = $scope.breedsCanine;
+//			}else if( isFeline){
+//				$scope.breedsList  = $scope.breedsFeline;
+//			}else if(isBovine){
+//				$scope.breedsList  = $scope.breedsBovine;
+//			}else if(isBirds){
+//				$scope.breedsList  = $scope.breedsBirds;
+//			}
+//			else if(isOthers){
+//				$scope.breedsList  = $scope.breedsOthers;
+//			}
+//			else{
+//				$scope.breedsList  = ['Select Breed'];
+//				$scope.disableBreedList = true;
+//			}
 			// ----- End of Set the breeds -----
 			
 			
@@ -386,33 +517,33 @@
 				}
 				
 			}
-			$scope.updateBreedListBox = function(){
-				var speciesValue        = $scope.newRequest.patientInfo.species;
-				
-				$scope.disableBreedList = false;
-				var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
-				var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
-				var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
-				var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
-				var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
-				
-				if(isCanine){
-					$scope.breedsList  = $scope.breedsCanine;
-				}else if( isFeline){
-					$scope.breedsList  = $scope.breedsFeline;
-				}else if(isBovine){
-					$scope.breedsList  = $scope.breedsBovine;
-				}else if(isBirds){
-					$scope.breedsList  = $scope.breedsBirds;
-				}
-				else if(isOthers){
-					$scope.breedsList  = $scope.breedsOthers;
-				}
-				else{
-					$scope.breedsList  = ['Select Breed'];
-					$scope.disableBreedList = true;
-				}
-			}
+//			$scope.updateBreedListBox = function(){
+//				var speciesValue        = $scope.newRequest.patientInfo.species;
+//				
+//				$scope.disableBreedList = false;
+//				var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
+//				var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
+//				var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
+//				var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
+//				var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
+//				
+//				if(isCanine){
+//					$scope.breedsList  = $scope.breedsCanine;
+//				}else if( isFeline){
+//					$scope.breedsList  = $scope.breedsFeline;
+//				}else if(isBovine){
+//					$scope.breedsList  = $scope.breedsBovine;
+//				}else if(isBirds){
+//					$scope.breedsList  = $scope.breedsBirds;
+//				}
+//				else if(isOthers){
+//					$scope.breedsList  = $scope.breedsOthers;
+//				}
+//				else{
+//					$scope.breedsList  = ['Select Breed'];
+//					$scope.disableBreedList = true;
+//				}
+//			}
 			
 			$scope.updateAnimalYearsLabel =function(){
 
