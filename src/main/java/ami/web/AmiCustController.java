@@ -87,21 +87,21 @@ public class AmiCustController {
 		Amendment amendment = new Amendment(nextAmendmentId,newAmendment, creationDate, userName, firstName, lastName, 
 				occupation,hospitalName, hospitalId,true);
 		amiServices.amend(caseNumber, amendment);
-		return amiRequestService.findAmiAmendments(caseNumber);
+		return amiRequestService.findAmiAmendments(caseNumber, false);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequest(@RequestParam String requestNumber) throws JsonProcessingException {
-		return amiRequestService.findAmiRequest(requestNumber);
+		return amiRequestService.findAmiRequest(requestNumber, false );
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amicusthome/amirequest/byanimals", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByAnimalName(@RequestParam String animalName) throws JsonProcessingException {
-		return amiRequestService.findAmiRequestByAnimalName(animalName) ;
+		return amiRequestService.findAmiRequestByAnimalName(animalName, false) ;
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
@@ -155,7 +155,7 @@ public class AmiCustController {
 	@ResponseBody
 	public String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException {
 		
-		return amiRequestService.getUploadedFiles(requestNumber);
+		return amiRequestService.getUploadedFiles(requestNumber, false);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")

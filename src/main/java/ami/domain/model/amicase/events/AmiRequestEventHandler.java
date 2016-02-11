@@ -1,5 +1,7 @@
 package ami.domain.model.amicase.events;
 
+import java.io.IOException;
+
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventhandling.annotation.Timestamp;
@@ -11,6 +13,8 @@ import ami.application.commands.amirequest.SendAmendNotificationCmd;
 import ami.domain.model.amicase.AmendmentNotification;
 import ami.domain.model.amicase.amirequest.FileUploadInfo;
 import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
+import ami.domain.services.PdfGeneratorService;
+import ami.infrastructure.database.model.AmiRequestView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -23,15 +27,18 @@ public class AmiRequestEventHandler {
 	@Autowired
 	private CommandGateway commandGateway;
 	
+	@Autowired
+	private PdfGeneratorService pdfGeneratorService;
+	
 	
     @EventHandler
-    public void handle(NewAmiRequestSubmittedEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    public void handle(NewAmiRequestSubmittedEvent event) throws JsonProcessingException {
        
     	amiServiceRequestRepo.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(), 
     			event.getHospitalName(), event.getHospitalId(), 
     			event.getHasBeenSavedAndSubmittedToRadiologist(), null,
     			null,null,
-    			time, event.getContract(), event.getAccountSize(),null);
+    			new  DateTime(), event.getContract(), event.getAccountSize(),null);
     	
 //    	System.out.println(String.format("We've got an AMI Request which id is: %s (created at %s)",
 //                                         event.getId(),
@@ -43,12 +50,12 @@ public class AmiRequestEventHandler {
     }
     
     @EventHandler
-    public void handle(AmiRequestSavedAsDraftEvent event, @Timestamp DateTime time) throws JsonProcessingException {
+    public void handle(AmiRequestSavedAsDraftEvent event) throws JsonProcessingException {
     	
     	amiServiceRequestRepo.createAmiRequestView(event.getId(), event.getAmiRequestJson(), event.getUserName(),
     			event.getHospitalName(), event.getHospitalId(),
     			null, null,null,null,
-    			time, event.getContract(), event.getAccountSize(),null);
+    			new DateTime(), event.getContract(), event.getAccountSize(),null);
     	
     	
     }
@@ -101,6 +108,14 @@ public class AmiRequestEventHandler {
     @EventHandler
     public void handle(CaseClosedEvent event) throws JsonProcessingException {
     	amiServiceRequestRepo.closeCase(event.getDateTime() ,event.getId(), event.getUserName());
+    	
+    	AmiRequestView amiRequestView = amiServiceRequestRepo.findAmiRequest(event.getId(),true);
+    	try {
+			pdfGeneratorService.generatePdf(amiRequestView);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     

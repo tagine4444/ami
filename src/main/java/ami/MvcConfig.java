@@ -54,6 +54,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
           List<Converter<?, ?>> converters = new ArrayList<Converter<?, ?>>();
           converters.add(new StringToDateTimeConverter());
           converters.add(new DateTimeToStringConverter());
+          
+//          converters.add(new DateToStringConverter());
+//          converters.add(new StringToDateConverter());
+          
           return new CustomConversions(converters);
       }
 
@@ -63,6 +67,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
           DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory());
           MappingMongoConverter mongoConverter = new MappingMongoConverter(dbRefResolver, mappingContext);
           mongoConverter.setCustomConversions(customConversions());
+          mongoConverter.afterPropertiesSet();
           return mongoConverter;
       }
       

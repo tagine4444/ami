@@ -37,15 +37,15 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public String findAmiRequest(String requestNumber) throws JsonProcessingException {
-		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(requestNumber);
+	public String findAmiRequest(String requestNumber, boolean isAdmin) throws JsonProcessingException {
+		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(requestNumber, isAdmin);
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
 	
 	@Override
-	public String findAmiAmendments(String caseNumber) throws JsonProcessingException {
-		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(caseNumber);
+	public String findAmiAmendments(String caseNumber, boolean isAdmin) throws JsonProcessingException {
+		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(caseNumber, isAdmin);
 		List<Amendment> amendments = amiRequestView.getAmendments();
 		if(amendments == null){
 			amendments = new ArrayList<Amendment>();
@@ -57,8 +57,8 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	
 
 	@Override
-	public String findAmiRequestByAnimalName(String animalName) throws JsonProcessingException {
-		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestByAnimalName(animalName);
+	public String findAmiRequestByAnimalName(String animalName, boolean isAdmin) throws JsonProcessingException {
+		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestByAnimalName(animalName, isAdmin);
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
@@ -85,10 +85,16 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
+//	@Override
+//	public String findAmiRequestByLast50Records(int nRecords) throws JsonProcessingException{
+//		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestByLastNRecords( String.valueOf(nRecords));
+//		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
+//		return amiRequestViewString;
+//	}
 	@Override
-	public String findAmiRequestByLast50RecordsAdmin() throws JsonProcessingException{
-		final String nRecords = "50";
-		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestByLastNRecordsAdmin( nRecords);
+	public String findAmiRequestByLast50RecordsAdmin(int nRecords) throws JsonProcessingException{
+		//final String nRecords = "50";
+		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestByLastNRecordsAdmin( String.valueOf(nRecords) );
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
@@ -143,9 +149,9 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	}
 
 	@Override
-	public String getUploadedFiles(String requestNumber)
+	public String getUploadedFiles(String requestNumber,boolean isAdmin)
 			throws JsonProcessingException {
-		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest( requestNumber);
+		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest( requestNumber,isAdmin);
 		List<FileUploadInfo> fileUploads = amiRequestView.getFileUploads();
 		
 		String fileUploadsString = objectMapper.writeValueAsString(fileUploads);

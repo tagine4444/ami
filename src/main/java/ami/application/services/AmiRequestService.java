@@ -13,15 +13,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public interface AmiRequestService {
 	
 	
-	String findAmiRequest(String requestNumber) throws JsonProcessingException ;
-	String findAmiRequestByAnimalName(String animalName) throws JsonProcessingException;
+	String findAmiRequest(String requestNumber, boolean isAdmin) throws JsonProcessingException ;
+	String findAmiRequestByAnimalName(String animalName, boolean isAdmin) throws JsonProcessingException;
 	String findAmiRequestByClientLastName(String clientlastname) throws JsonProcessingException;
 	String findAmiRequestBySubmittedDateRange(String hospitalId, String date1, String date2) throws JsonProcessingException;
 	String findAmiRequestByLast50Records(String hospitalId) throws JsonProcessingException;
-	String findAmiRequestByLast50RecordsAdmin() throws JsonProcessingException;
+	String findAmiRequestByLast50RecordsAdmin(int nRecords) throws JsonProcessingException;
 	String findPendigAmiRequests() throws JsonProcessingException;
 	String findDraftAmiRequests() throws JsonProcessingException;
-	String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException;
+	String getUploadedFiles(String requestNumber, boolean isAdmin) throws JsonProcessingException;
 	String submitAmiRequestToRadiologist(String caseNumber,
 			AmiRequest amiRequest1, String userName, String hospitalName,
 			String hospitalId, String contract, String accountSize);
@@ -30,7 +30,8 @@ public interface AmiRequestService {
 	String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException;
 	String findCaesPendingRevewForAllHospitals() throws JsonProcessingException;
 	String findCasesPendingAccounting() throws JsonProcessingException;
-	String findAmiAmendments(String caseNumber) throws JsonProcessingException;
+	String findAmiAmendments(String caseNumber,boolean isAdmin) throws JsonProcessingException;
+	//String findAmiRequestByLast50Records(int nRecords) throws JsonProcessingException;
 		
 
 }

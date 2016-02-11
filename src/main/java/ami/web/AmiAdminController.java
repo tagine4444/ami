@@ -61,13 +61,57 @@ public class AmiAdminController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/amirequest/bylastnrecords", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestByLast50Records(@RequestParam String limit) throws JsonProcessingException {
+		int numOfCases = Integer.valueOf(limit);
+		return amiRequestService.findAmiRequestByLast50RecordsAdmin(numOfCases);
+	}
+	
+	
+	//=======================================
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/amirequest", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequest(@RequestParam String requestNumber) throws JsonProcessingException {
+		return amiRequestService.findAmiRequest(requestNumber, true);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/amirequest/byanimals", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestByAnimalName(@RequestParam String animalName) throws JsonProcessingException {
+		return amiRequestService.findAmiRequestByAnimalName(animalName, true) ;
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/amirequest/byclientlastname", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestByClientLastName(@RequestParam String clientlastname) throws JsonProcessingException {
+		return amiRequestService.findAmiRequestByClientLastName(clientlastname);
+	}
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amiadmin/amirequest/byreqdaterange", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
+		
+		String useName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(useName);
+		final String hospitalId = anAmiUserView.getHospitalId();
+		return amiRequestService.findAmiRequestBySubmittedDateRange( hospitalId, date1,   date2);
+	}
+	
+	//===================================
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
 	@RequestMapping(value = "/ami/amiadmin/switchcasetoinprogress", method = RequestMethod.GET)
 	@ResponseBody
 	public String switchCaseToInProgressAndReturnCase(@RequestParam String caseNumber) throws JsonProcessingException {
 		
 		final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		amiServices.switchCaseToInProgress(caseNumber, userName, new DateTime());
-		return amiRequestService.findAmiRequest(caseNumber);
+		return amiRequestService.findAmiRequest(caseNumber, true);
 	}
 	
 
@@ -188,7 +232,7 @@ public class AmiAdminController {
 		Amendment amendment = new Amendment(nextAmendmentId, newAmendment, creationDate, userName, firstName, lastName, 
 				occupation,hospitalName, hospitalId,false);
 		amiServices.amend(caseNumber, amendment);
-		return amiRequestService.findAmiAmendments(caseNumber);
+		return amiRequestService.findAmiAmendments(caseNumber, true);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")

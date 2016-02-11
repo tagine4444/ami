@@ -16,8 +16,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public interface AmiRequestRepository {
 	
 	
-	AmiRequestView findAmiRequest(String requestNumber);
-	List<AmiRequestView> findAmiRequestByAnimalName(String animalName);
+	AmiRequestView findAmiRequest(String requestNumber, boolean isAdminSearch);
+	List<AmiRequestView> findAmiRequestByAnimalName(String animalName,boolean isAdminSearch);
 	List<AmiRequestView> findAmiRequestByClientLastName(String clientLastName);
 	List<AmiRequestView> findPendingAmiRequest();
 	List<AmiRequestView> findDraftAmiRequest();
@@ -78,6 +78,7 @@ public interface AmiRequestRepository {
 	void amendCase(String caseNumber, Amendment amendment);
 	void updateAccountingDone(String id, DateTime dateTime, String userName);
 	List<AmiRequestView> findCasesPendingAccounting();
+	List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords);
 	
 
 }

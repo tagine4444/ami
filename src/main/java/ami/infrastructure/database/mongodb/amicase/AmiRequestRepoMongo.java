@@ -2,6 +2,7 @@ package ami.infrastructure.database.mongodb.amicase;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -9,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -139,9 +141,10 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 				null,time,
 				contract,  accountSize,accountingDone);
 		
-		String amiRequestView = objectMapper.writeValueAsString(view);
+		//String amiRequestView = objectMapper.writeValueAsString(view);
 		
-		mongo.save(amiRequestView, AMIREQUEST_VIEW);
+		//mongo.save(amiRequestView, AMIREQUEST_VIEW);
+		mongo.save(view, AMIREQUEST_VIEW);
 		
 	}
 	
@@ -182,17 +185,50 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	}
 
 	@Override
-	public AmiRequestView findAmiRequest(String requestNumber) {
+	public AmiRequestView findAmiRequest(String requestNumber,boolean isAdminSearch) {
+		AmiRequestView amiRequestView = null;
+		if(!isAdminSearch){
+			
+			String userName =SecurityContextHolder.getContext().getAuthentication().getName();
+			AmiUserView userView = amiUserService.findAmiUser(userName);
+			String hospitalId = userView.getHospitalId();
+			Query query = new Query();
+			
+			query.addCriteria(Criteria.where("caseNumber").is(requestNumber)
+					.andOperator(Criteria.where("hospitalId").is(hospitalId)) );
+			
+			 amiRequestView = mongo.findOne(query, AmiRequestView.class,AMIREQUEST_VIEW);
+		}else{
+			 amiRequestView = mongo.findOne(Query.query(Criteria.where("caseNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
+		}
 		
-		AmiRequestView amiRequestView = mongo.findOne(Query.query(Criteria.where("caseNumber").is(requestNumber)), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestView;
 	}
 	
 	
 	@Override
-	public List<AmiRequestView> findAmiRequestByAnimalName(String animalName) {
+	public List<AmiRequestView> findAmiRequestByAnimalName(String animalName, boolean isAdminSearch) {
 		
-		List<AmiRequestView> amiRequestViews = mongo.find(Query.query(Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))), AmiRequestView.class,AMIREQUEST_VIEW);
+		List<AmiRequestView> amiRequestViews =null;
+		if(!isAdminSearch){
+			
+			String userName =SecurityContextHolder.getContext().getAuthentication().getName();
+			AmiUserView userView = amiUserService.findAmiUser(userName);
+			String hospitalId = userView.getHospitalId();
+			Query query = new Query();
+			
+			query.addCriteria(Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))
+					.andOperator(Criteria.where("hospitalId").is(hospitalId)) );
+			
+			amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
+			 
+			 
+		}
+		else{
+			 amiRequestViews = mongo.find(Query.query(Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))), AmiRequestView.class,AMIREQUEST_VIEW);
+		}
+		
+		
 		return amiRequestViews;
 	}
 	
@@ -223,16 +259,16 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		int dayOfMonth2  = Integer.valueOf(date2.substring(firstSlah +1, secondSlah)); 
 		int year2 = Integer.valueOf(date2.substring(secondSlah+1, date2.length())); 
 		
-		DateTime aDate1 = new DateTime(year1, monthOfYear1, dayOfMonth1, 0, 0);
-		DateTime aDate2 = new DateTime(year2, monthOfYear2, dayOfMonth2, 23, 59);
+		DateTime aDate1 = new DateTime(year1, monthOfYear1, dayOfMonth1, 0, 0, DateTimeZone.forID("America/Los_Angeles"));
+		DateTime aDate2 = new DateTime(year2, monthOfYear2, dayOfMonth2, 23, 59, DateTimeZone.forID("America/Los_Angeles"));
 		
 		Query query = new Query();
 		
 		query.addCriteria(
-				Criteria.where("hasBeenSavedAndSubmittedToRadiologistString").exists(true)
+				Criteria.where("hasBeenSavedAndSubmittedToRadiologist").exists(true)
 				.andOperator(
-					Criteria.where("hasBeenSavedAndSubmittedToRadiologistString").gt(aDate1),
-			                Criteria.where("hasBeenSavedAndSubmittedToRadiologistString").lt(aDate2)
+					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gt(aDate1),
+			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lt(aDate2)
 //			                Criteria.where("hospitalId").is(hospitalId)
 				)
 			);
@@ -246,7 +282,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findAmiRequestByLastNRecordsAdmin(String nRecords) {
 		Query query = new Query();
 		query.limit(Integer.parseInt(nRecords));
-		query.with(new Sort(Sort.Direction.DESC, "creationDate"));
+		query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 		
 		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestViews;
@@ -256,12 +292,21 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords, String hospitalId) {
 		Query query = new Query();
 		query.limit(Integer.parseInt(nRecords));
-		query.with(new Sort(Sort.Direction.DESC, "creationDate"));
+		query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 		
 		query.addCriteria(
 				Criteria.where("hospitalId").is(hospitalId)
 			);
 		
+		
+		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
+		return amiRequestViews;
+	}
+	@Override
+	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords) {
+		Query query = new Query();
+		query.limit(Integer.parseInt(nRecords));
+		query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 		
 		List<AmiRequestView>  amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestViews;
@@ -308,7 +353,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			    		  ) 
 			   );
 	   
-	   query.with(new Sort(Sort.Direction.DESC, "time"));
+	   query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 	
 	   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		return amiRequestView;
