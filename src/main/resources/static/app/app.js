@@ -311,20 +311,6 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                                 	 return amiRequestFactory.getNewAmiRequest();
                                  }],
                             	
-//                            	animals: ['animalService', function (animalService) {
-//                            		return animalService.getAnimals().then(
-//                            			function(result){
-//                            				return result.data;
-//                            			}	
-//                            		);
-//                                }],
-//                                species: ['animalService', function (animalService) {
-//                            		return animalService.getSpecies().then(
-//                            			function(result){
-//                            				return result.data;
-//                            			}	
-//                            		);
-//                                }],
                                 amiServices:  ['animalService', function (animalService) {
                             		return animalService.getAmiServices().then(
                                 			function(result){

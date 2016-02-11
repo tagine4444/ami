@@ -1,0 +1,73 @@
+<div class="row">
+	<div ng-include="'/app/components/toolbar/toolbaradmin.html'"></div>
+	
+
+	
+	<div class="panel panel-primary" >
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">Search for requests by criteria</div>
+		  <div class="panel-body">
+		  <div class="navbar-form navbar-left" role="search">
+			  <div class="form-group">
+			    <select class="form-control" ng-model="searchBy" ng-change="updateSearchInputDisplay()"> 
+				          <option ng-selected="true">Search By</option>
+				          <option>Request Number</option>
+				          <option>Animal Name</option>
+				          <option>Client Last Name</option>
+				          <option>Request Submitted Date</option>
+				          <option>Last N Cases</option>
+ 					   </select>
+ 					   
+ 					   <input ng-disabled="!isSearchAllowed" type="text" class="form-control" ng-model="searchByInput1"  placeholder="{{searchByPlaceHolder1}}" ng-show ="searchByInput1Visible">
+ 					   <input type="text" class="form-control" ng-model="searchByInput2"  placeholder="{{searchByPlaceHolder2}}" ng-show ="searchByInput2Visible">
+			 		    <select class="form-control" ng-model="numOfCases"  ng-show ="numOfCasesVisible"> 
+				          <option>10</option>
+				          <option>25</option>
+				          <option>50</option>
+				          <option>100</option>
+				          <option>200</option>
+				          <option>500</option>
+ 					   </select>
+			 
+			  </div>
+			  
+			  <button ng-disabled="!isSearchAllowed" type="submit" class="btn btn-default" ng-click="doSearch()">Search</button>
+		   </div>
+		  </div>
+		
+		  <!-- Table -->
+		  <br/><br/>
+		 
+		  
+		  <table class="table">
+			     <thead>
+			       <tr>
+			       <td> <input type="text" class="form-control" ng-model="searchFilter"  placeholder="Filter table" ></td>
+			       </tr>
+				   <tr>
+				   	<th>Request Number</th>
+				   	<th>Hospital Name</th>
+				   	<th>Veterinarian</th>
+				   	<th>Animal</th>
+				   	<th>Species</th>
+				   	<th>Client</th>
+				   	<th>Submitted Date</th>
+				   	<th>Case Closed Date</th>
+				   </tr>
+				  </thead>
+				  <tbody>
+				   <tr ng-repeat="aSearchResult in searchResults | filter: searchFilter">
+				   	<td><a href="#/editRequest1/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">{{aSearchResult.caseNumber}}</a></td>
+				   	<td>{{aSearchResult.hospitalName}}</td>
+				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.vet}}</td>
+				   	<td>{{aSearchResult.amiRequest.patientInfo.animalName}}</td>
+				   	<td>{{aSearchResult.amiRequest.patientInfo.species}} - {{aSearchResult.amiRequest.patientInfo.breeds}}</td>
+				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aSearchResult.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
+				   	<td>{{ aSearchResult.hasBeenSavedAndSubmittedToRadiologist | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   	<td>{{ aSearchResult.caseClosed  | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   </tr>
+				   </tbody>
+			</table>
+		</div>
+			
+</div>

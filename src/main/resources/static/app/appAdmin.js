@@ -15,6 +15,78 @@ amiadmin.filter('jsonDate', ['$filter', function ($filter) {
 
 amiadmin.factory('amiadminFactory', function($http,$q, $routeParams){return {
 
+	getAmiRequestByLastNRecords: function(limit){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/amirequest/bylastnrecords?limit='+ limit);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By last n records');
+			});	
+
+			return res;
+	 },
+	 
+	 getAmiRequestForAdmin: function(requestNumber){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/amirequest?requestNumber='+requestNumber);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By request number');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestByAnimalName: function(animalName){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/amirequest/byanimals?animalName='+animalName);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By animal names');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestByClientLastName: function(clientlastname){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/amirequest/byclientlastname?clientlastname='+clientlastname);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By client last names');
+			});	
+
+			return res;
+	 },
+	 getAmiRequestBySubmittedDateRange: function(date1, date2){
+		 
+		 var deferred = $q.defer();
+		 var res = $http.get('/ami/amiadmin/amirequest/byreqdaterange?date1='+date1 +'&date2='+date2);
+		 
+		 res.success(function(data, status, headers, config) {
+				deferred.resolve();
+			});
+			res.error(function(data, status, headers, config) {
+				deferred.reject('failure to get AmiRequests By submitted date range');
+			});	
+
+			return res;
+	 },
+	 
 	getPendingRequestsAllHospitals: function(){ 
 		 
 		 var deferred = $q.defer();
@@ -210,6 +282,11 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     			);
                     		}],
                     	}
+                    
+                    }).
+                    when('/hospitalAdminSearchCases', {
+                    	templateUrl: '/app/components/amiadmin/searchCase.html',
+                    	controller: 'CaseSearchCtrl',
                     
                     }).
                     when('/hospitalAdminProcessCase/:caseNumber', {

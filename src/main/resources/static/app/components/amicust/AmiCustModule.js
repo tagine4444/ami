@@ -797,6 +797,7 @@
 		
 		// ============ SearchRequest ===============
 		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests, draftRequests, amiRequestFactory) {
+			$scope.searchFilter ='';
 			$scope.page = 'searchRequests';
 			$scope.searchType = 'all';
 			$scope.pendingRequests = pendingRequests;

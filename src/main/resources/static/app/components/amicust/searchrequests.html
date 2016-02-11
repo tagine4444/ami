@@ -32,7 +32,7 @@
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.clientFirstName}} {{aPendingRequest.amiRequest.hospitalAndClientInfo.clientLastName}}</td>
-				   	<td>{{ aPendingRequest.hasBeenSavedAndSubmittedToRadiologist  | jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
+				   	<td>{{ aPendingRequest.hasBeenSavedAndSubmittedToRadiologist  |  jsonDate: 'dd MMM yyyy, h:mm a' }} </td>
 				   
 				   </tr>
 				   </tbody>
@@ -100,9 +100,13 @@
 		
 		  <!-- Table -->
 		  <br/><br/>
+		 
 		  
 		  <table class="table">
 			     <thead>
+			       <tr>
+			       <td> <input type="text" class="form-control" ng-model="searchFilter"  placeholder="Filter table" ></td>
+			       </tr>
 				   <tr>
 				   	<th>Request Number</th>
 				   	<th>Veterinarian</th>
@@ -114,7 +118,7 @@
 				   </tr>
 				  </thead>
 				  <tbody>
-				   <tr ng-repeat="aSearchResult in searchResults">
+				   <tr ng-repeat="aSearchResult in searchResults | filter: searchFilter">
 				   	<td><a href="#/editRequest1/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">{{aSearchResult.caseNumber}}</a></td>
 				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.animalName}}</td>

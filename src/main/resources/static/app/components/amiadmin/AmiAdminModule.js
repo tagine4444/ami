@@ -83,9 +83,157 @@
 	});
 	
 	// ============ Controller ===============
+	amiAdminModule.controller('CaseSearchCtrl', function ($scope, $http, $window,$location, amiadminFactory) {
+		$scope.page = 'caseSearch';
+		$scope.searchFilter ='';
+		
+		$scope.searchBy = 'Search By';
+		$scope.searchByPlaceHolder1 = 'Enter Criteria';
+		$scope.searchByPlaceHolder2 = '';
+		$scope.searchByInput1Visible = true;
+		$scope.searchByInput2Visible = false;
+		$scope.isSearchAllowed = false;
+		$scope.searchResults = [];
+		
+		$scope.isSearchBySearchBy = false;
+		$scope.isSearchByRequestNumber = false;
+		$scope.isSearchByAnimalName = false;
+		$scope.numOfCasesVisible = false;
+		$scope.numOfCases = 50;
+		
+		
+		$scope.updateSearchInputDisplay =  function(){
+			
+			if($scope.searchBy.indexOf("Date") !=-1){
+				$scope.searchByInput1 = '';
+				$scope.searchByInput2 = '';
+				$scope.searchByInput1Visible = true;
+				$scope.searchByInput2Visible = true;
+				$scope.isSearchAllowed = true;
+				$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yy';
+				$scope.searchByPlaceHolder2 = 'End Date mm/dd/yy';
+				$scope.numOfCasesVisible = false;
+			}
+			else if($scope.searchBy.indexOf("Last N Cases") !=-1){
+				$scope.searchByInput1 = '';
+				$scope.searchByInput2 = '';
+				$scope.isSearchAllowed = true;
+				$scope.searchByInput1Visible = false;
+				$scope.searchByInput2Visible = false;
+				$scope.searchByPlaceHolder1 = 'Select a Search';
+				$scope.searchByPlaceHolder2 = '';
+				$scope.numOfCasesVisible = true;
+			}
+			else if($scope.searchBy.indexOf("Search By") !=-1){
+				$scope.searchByInput1 = '';
+				$scope.searchByInput2 = '';
+				$scope.isSearchAllowed = false;
+				$scope.searchByInput1Visible = true;
+				$scope.searchByInput2Visible = false;
+				$scope.searchByPlaceHolder1 = 'Select a Search';
+				$scope.searchByPlaceHolder2 = '';
+				$scope.numOfCasesVisible = false;
+			}
+			else{
+				$scope.searchByInput1 = '';
+				$scope.searchByInput2 = '';
+				$scope.isSearchAllowed = true;
+				$scope.searchByInput1Visible = true;
+				$scope.searchByInput2Visible = false;
+				$scope.searchByPlaceHolder1 = 'Enter Criteria';
+				$scope.searchByPlaceHolder2 = '';
+				$scope.numOfCasesVisible = false;
+				$scope.isSearchByLastNCases = false;
+			}
+		}
+		
+		
+		$scope.doSearch =  function(){
+			$scope.searchResults = [];
+			var requestNumber = $scope.searchByInput1;
+			var date2 = $scope.searchByInput2;
+			
+			$scope.whichSearch();
+			
+			if( $scope.isSearchByRequestNumber ){
+				amiadminFactory.getAmiRequestForAdmin(requestNumber).then(
+             			function(result){
+             				var myResult = result.data;
+             				$scope.searchResults.push(myResult);
+             			}	
+             	);
+			}
+			else if( $scope.isSearchByAnimalName ){
+				
+				amiadminFactory.getAmiRequestByAnimalName(requestNumber).then(
+						function(result){
+							$scope.searchResults= result.data;
+						}	
+				);
+			}
+			else if($scope.isSearchByClientLastName){
+				
+				amiadminFactory.getAmiRequestByClientLastName(requestNumber).then(
+						function(result){
+							$scope.searchResults= result.data;
+						}	
+				);
+			}
+			else if($scope.isSearchByRequestSubmittedDate){
+				
+				amiadminFactory.getAmiRequestBySubmittedDateRange(requestNumber,date2).then(
+						function(result){
+							$scope.searchResults= result.data;
+						}	
+				);
+			}
+			else if($scope.isSearchByLastNCases){
+				
+				amiadminFactory.getAmiRequestByLastNRecords($scope.numOfCases ).then(
+						function(result){
+							$scope.searchResults= result.data;
+						}	
+				);
+			}
+		}
+		
+		$scope.whichSearch = function(){
+			
+			$scope.isSearchBySearchBy = false;
+			$scope.isSearchByRequestNumber = false;
+			$scope.isSearchByAnimalName = false;
+			$scope.isSearchByRequestSubmittedDate = false;
+			$scope.isSearchByClientLastName = false;
+			$scope.isSearchByLastNCases = false;
+			
+			if($scope.searchBy.indexOf("Search By") !=-1){
+				$scope.isSearchBySearchBy = true;
+			}
+			else if($scope.searchBy.indexOf("Request Number") !=-1){
+				$scope.isSearchByRequestNumber = true;
+			}
+			else if($scope.searchBy.indexOf("Animal Name") !=-1){
+				$scope.isSearchByAnimalName = true;
+			}
+			else if($scope.searchBy.indexOf("Request Submitted Date") !=-1){
+				$scope.isSearchByRequestSubmittedDate = true;
+			}
+			
+			else if($scope.searchBy.indexOf("Client Last Name") !=-1){
+				$scope.isSearchByClientLastName = true;
+			}
+			else if($scope.searchBy.indexOf("Last N Cases") !=-1){
+				$scope.isSearchByLastNCases = true;
+			}
+		}
+		
+		
+		
+	});
+	// ============ Controller ===============
 	amiAdminModule.controller('CaseProcessingCtrl', function ($scope, $http, $window,$location, myCase) {
-		$scope.page = 'readCases';
-		$scope.amiCase = myCase;
+			$scope.page = 'readCases';
+			$scope.amiCase = myCase;
 		$scope.amiRequest = myCase.amiRequest;
 		
 		$scope.saveRadiographicInterpretation = function(){
