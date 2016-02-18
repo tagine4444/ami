@@ -2,7 +2,6 @@ package ami.infrastructure.database.mongodb.amicase;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,6 @@ import ami.domain.model.amicase.amirequest.repo.AmiRequestRepository;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.infrastructure.database.model.AmiRequestView;
 import ami.infrastructure.database.model.AmiUserView;
-import ami.web.converters.DateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +39,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
 	public final static String AMENDMENT_NOTIFICATION_VIEW = "viewAmendmentNotification";
 	public final static String AMIREQUEST_VIEW = "viewAmirequest";
-	public final static String DATE_FORMAT     = "yyyy-MM-dd HH:mm:ss";
+//	public final static String DATE_FORMAT     = "yyyy-MM-dd HH:mm:ss";
 	//public final DateTimeFormatter AMI_DATE_FOMRATTER = DateTimeFormat.forPattern(DATE_FORMAT); 
 
 	@Autowired
@@ -161,14 +159,14 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		
 		  
 //	    String updateDateString = AMI_DATE_FOMRATTER.print(updateDate);
-	    String updateDateString = new DateTimeToStringConverter().convert(updateDate);
+//	    String updateDateString = new DateTimeToStringConverter().convert(updateDate);
 		
 	    boolean editable = hasBeenSavedAndSubmittedToRadiologist ==null;
 	    
 		Query query = new Query(Criteria.where("caseNumber").is(caseNumber));
 		Update update = new Update() ;
 		update.set("amiRequest", amiRequest);
-		update.set("updateDateString", updateDateString);
+//		update.set("updateDateString", updateDateString);
 		update.set("updateDate", updateDate);
 		update.set("updateUser", userName);
 		update.set("editable", editable);
@@ -176,7 +174,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			// need this if statement cause mongo throws a null pointer exception if you try to set
 			// hasBeenSavedAndSubmittedToRadiologist with a null value
 			update.set("hasBeenSavedAndSubmittedToRadiologist", hasBeenSavedAndSubmittedToRadiologist);
-			update.set("hasBeenSavedAndSubmittedToRadiologistString", hasBeenSavedAndSubmittedToRadiologist);
+//			update.set("hasBeenSavedAndSubmittedToRadiologistString", hasBeenSavedAndSubmittedToRadiologist);
 		}
 		
 		AmiRequestView updatedView = mongo.findAndModify(query, update, AmiRequestView.class, AMIREQUEST_VIEW); 
@@ -353,7 +351,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			    		  ) 
 			   );
 	   
-	   query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
+	   query.with(new Sort(Sort.Direction.DESC, "hasBeenSavedAndSubmittedToRadiologist"));
 	
 	   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		return amiRequestView;
@@ -369,7 +367,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 						   Criteria.where("interpretationReadyForReview").is(null))
 						   
 				   );
-		   query.with(new Sort(Sort.Direction.ASC, "time"));
+		   query.with(new Sort(Sort.Direction.ASC, "hasBeenSavedAndSubmittedToRadiologist"));
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		   return amiRequestView;
 	}
@@ -384,7 +382,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 				      .andOperator(Criteria.where("editable").is(Boolean.TRUE)) 
 				   );
 		   
-		   query.with(new Sort(Sort.Direction.DESC, "time"));
+		   query.with(new Sort(Sort.Direction.DESC, "creationDate"));
 		
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 			return amiRequestView;
@@ -426,7 +424,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 
 		Update update = new Update();
 		update.set("caseClosed", dateTime);
-		update.set("caseClosedString", dateTime.toString());
+//		update.set("caseClosedString", dateTime.toString());
 		update.set("editable", Boolean.FALSE);
 
 		mongo.updateFirst(
@@ -500,7 +498,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			String userName) {
 		Update update = new Update();
 		update.set("accountingDone", dateTime);
-		update.set("accountingDoneString", dateTime.toString());
+//		update.set("accountingDoneString", dateTime.toString());
 		
 		mongo.updateFirst(
 	            new Query(Criteria.where("caseNumber").is(caseNumber)),

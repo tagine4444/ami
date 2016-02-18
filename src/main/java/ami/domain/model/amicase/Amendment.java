@@ -7,7 +7,7 @@ public class Amendment {
 	private int id;
 	private String newAmendment;
 	private DateTime creationDate ;
-	private String creationDateString ;
+//	private String creationDateString ;
 	
 	private String   userName;
 	private String   firstName ;
@@ -31,18 +31,18 @@ public class Amendment {
 		this.hospitalId		  = hospitalId;  
 		this.customerAmendment = customerAmendment;
 		
-		 if(creationDate!=null){
-			 this.creationDateString = creationDate.toString();
-		 }
+//		 if(creationDate!=null){
+//			 this.creationDateString = creationDate.toString();
+//		 }
 	}
 
 	public DateTime getCreationDate() {
 		return creationDate;
 	}
 
-	public String getCreationDateString() {
-		return creationDateString;
-	}
+//	public String getCreationDateString() {
+//		return creationDateString;
+//	}
 
 	public String getUserName() {
 		return userName;

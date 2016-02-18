@@ -2,6 +2,7 @@ package ami.web;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,11 @@ public class UploadController {
 		
 		try 
 		{
+			
+			if(StringUtils.isEmpty(requestNumber)){
+				
+				throw new RuntimeException("The case has not yet been saved, thus no images can be uploaded");
+			}
 			uploadFileService.upload(requestNumber,userName, flowChunkNumber, flowChunkSize, flowFilename, 
 					flowRelativePath, flowTotalChunks,flowIdentifier,
 					flowTotalSize,

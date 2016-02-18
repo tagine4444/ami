@@ -36,13 +36,13 @@ public class AmiRequestView {
 	private DateTime caseClosed;
 	private DateTime accountingDone;
 	
-	private String creationDateString ;
-	private String updateDateString ;
-	private String hasBeenSavedAndSubmittedToRadiologistString;
-	private String interpretationInProgressString;
-	private String interpretationReadyForReviewString;
-	private String caseClosedString;
-	private String accountingDoneString;
+//	private String creationDateString ;
+//	private String updateDateString ;
+//	private String hasBeenSavedAndSubmittedToRadiologistString;
+//	private String interpretationInProgressString;
+//	private String interpretationReadyForReviewString;
+//	private String caseClosedString;
+//	private String accountingDoneString;
 	
 	
 	private boolean editable;
@@ -86,30 +86,30 @@ public class AmiRequestView {
 		this.caseClosed =  caseClosed;
 		this.amendments = new ArrayList<Amendment>();
 		
-		 if(creationDate!=null){
-			 this.creationDateString = creationDate.toString();
-		 }
-		 
-		 if(updateDate!=null){
-			 this.updateDateString = updateDate.toString();
-		 }
-		 
-		 if(hasBeenSavedAndSubmittedToRadiologist!=null){
-			 this.hasBeenSavedAndSubmittedToRadiologistString = hasBeenSavedAndSubmittedToRadiologist.toString();
-		 }
-        
-		 if(interpretationInProgress!=null){
-			 this.interpretationInProgressString = interpretationInProgress.toString();
-		 }
-		 if(interpretationReadyForReview!=null){
-			 this.interpretationReadyForReviewString = interpretationReadyForReview.toString();
-		 }
-		 if(caseClosed!=null){
-			 this.caseClosedString = caseClosed.toString();
-		 }
-		 if(accountingDone!=null){
-			 this.accountingDoneString = accountingDone.toString();
-		 }
+//		 if(creationDate!=null){
+//			 this.creationDateString = creationDate.toString();
+//		 }
+//		 
+//		 if(updateDate!=null){
+//			 this.updateDateString = updateDate.toString();
+//		 }
+//		 
+//		 if(hasBeenSavedAndSubmittedToRadiologist!=null){
+//			 this.hasBeenSavedAndSubmittedToRadiologistString = hasBeenSavedAndSubmittedToRadiologist.toString();
+//		 }
+//        
+//		 if(interpretationInProgress!=null){
+//			 this.interpretationInProgressString = interpretationInProgress.toString();
+//		 }
+//		 if(interpretationReadyForReview!=null){
+//			 this.interpretationReadyForReviewString = interpretationReadyForReview.toString();
+//		 }
+//		 if(caseClosed!=null){
+//			 this.caseClosedString = caseClosed.toString();
+//		 }
+//		 if(accountingDone!=null){
+//			 this.accountingDoneString = accountingDone.toString();
+//		 }
 		 
 	}
 	
@@ -125,10 +125,7 @@ public class AmiRequestView {
 		return hospitalName;
 	}
 
-	public String getCreationDateString() {
-		return creationDateString;
-	}
-
+	
 	public boolean isEditable() {
 		return editable;
 	}
@@ -158,10 +155,8 @@ public class AmiRequestView {
 	public List<FileUploadInfo> getFileUploads() {
 		return fileUploads;
 	}
-
-	public String getUpdateDateString() {
-		return updateDateString;
-	}
+	
+	
 
 	public String getUpdateUser() {
 		return updateUser;
@@ -206,35 +201,41 @@ public class AmiRequestView {
 	}
 
 
-	public String getHasBeenSavedAndSubmittedToRadiologistString() {
-		return hasBeenSavedAndSubmittedToRadiologistString;
-	}
 
-
-	public String getInterpretationInProgressString() {
-		return interpretationInProgressString;
-	}
-
-
-	public String getInterpretationReadyForReviewString() {
-		return interpretationReadyForReviewString;
-	}
-
-
-	public String getCaseClosedString() {
-		return caseClosedString;
-	}
-
+//	public String getCreationDateString() {
+//		return creationDateString;
+//	}
+//
+//
+//	public String getUpdateDateString() {
+//		return updateDateString;
+//	}
+//	public String getHasBeenSavedAndSubmittedToRadiologistString() {
+//		return hasBeenSavedAndSubmittedToRadiologistString;
+//	}
+//
+//
+//	public String getInterpretationInProgressString() {
+//		return interpretationInProgressString;
+//	}
+//
+//
+//	public String getInterpretationReadyForReviewString() {
+//		return interpretationReadyForReviewString;
+//	}
+//
+//	public String getCaseClosedString() {
+//		return caseClosedString;
+//	}
+//
+//
+//	public String getAccountingDoneString() {
+//		return accountingDoneString;
+//	}
 
 	public DateTime getAccountingDone() {
 		return accountingDone;
 	}
-
-
-	public String getAccountingDoneString() {
-		return accountingDoneString;
-	}
-
 
 	public List<Amendment> getAmendments() {
 		return amendments;

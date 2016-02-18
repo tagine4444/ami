@@ -284,7 +284,7 @@
 		});
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService, amiServices,animalService, myAmiRequest, myHospital) {
+		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService, amiServices,animalService, myAmiRequest, myHospital,animals ,speciesList) {
 			
 			$scope.page = 'newRequest';
 			
@@ -312,63 +312,37 @@
 			var ZeroYears = '0 year';
 			var ZeroMonths = '0 months';
 			
-			// ----- End of Set the species -----
-//			for (var i in animals) {
-//			
-//			  var anAnimal = animals[i];
-//			  var aSpecies = anAnimal.name;
-//			  
-//			  var anAnimalBreed = anAnimal.breeds;
-//				
-//			  if(aSpecies== 'Canine'){
-//				  $scope.breedsCanine =  anAnimalBreed;
-//			  }else if(aSpecies== 'Feline' ){
-//					$scope.breedsFeline =  anAnimalBreed;
-//			  }else if(aSpecies == 'Bovine'){
-//					$scope.breedsBovine =  anAnimalBreed;
-//			  }
-//			  else if(aSpecies == 'Birds'){
-//				$scope.breedsBirds  =  anAnimalBreed;
-//				
-//			  } else if( aSpecies == 'Others'){
-//					$scope.breedsOthers =  anAnimalBreed;
-//			  }
-//			  
-//			}
-//			$scope.speciesList = species;
-//			$scope.speciesList.splice (0,0, 'Select Species');
-			// ----- End of Set the species -----
 			
 			
-			// ----- Set the breeds -----
-//			var speciesValue        = $scope.newRequest.patientInfo.species;
-//			
-//			$scope.disableBreedList = false;
-//			var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
-//			var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
-//			var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
-//			var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
-//			var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
-//			
-//			if(isCanine){
-//				$scope.breedsList  = $scope.breedsCanine;
-//			}else if( isFeline){
-//				$scope.breedsList  = $scope.breedsFeline;
-//			}else if(isBovine){
-//				$scope.breedsList  = $scope.breedsBovine;
-//			}else if(isBirds){
-//				$scope.breedsList  = $scope.breedsBirds;
-//			}
-//			else if(isOthers){
-//				$scope.breedsList  = $scope.breedsOthers;
-//			}
-//			else{
-//				$scope.breedsList  = ['Select Breed'];
-//				$scope.disableBreedList = true;
-//			}
-			// ----- End of Set the breeds -----
+			$scope.breedsList = [];
 			
+			$scope.speciesBreedMap = {};
+			for (var i in animals) {
+				  var species = animals[i].name;
+				  var myBreeds = animals[i].breeds;
+				  $scope.speciesBreedMap[species.toLowerCase()] =  myBreeds;
+				  
+			}
 			
+			$scope.updateBreedList = function(){
+				
+				$scope.breedsList = [];
+				var speciesValue = $scope.newRequest.patientInfo.species.trim();
+			
+				var foundMatch = false;
+				for (var i in animals) {
+					  var species = animals[i].name;
+					  foundMatch = new String(speciesValue).toLowerCase().indexOf(species.toLowerCase()) > -1;
+					  
+					  if(foundMatch){
+						  $scope.breedsList =  $scope.speciesBreedMap[speciesValue.toLowerCase()];
+						  break;
+					  }
+				}
+				
+				
+				
+			}
 			
 			$scope.hospitalEmails = myHospital.hospital.emails;
 			$scope.contract= myHospital.hospital.contract;
@@ -409,9 +383,10 @@
 				alert( response.data.message);
 			});
 			
+			$scope.speciesList = speciesList;
 			$scope.animalWeightUomList  = ['LB', 'KG'];
 			$scope.labsList 			= ['Select Lab','PCL', 'IDEXX', 'Antech'];
-			$scope.animalSexList		= ['Sex','Female spade', 'Male Castrated', 'Female','Male'];
+			$scope.animalSexList		= ['Sex','Female spayed', 'Male castrated', 'Female','Male'];
 			$scope.animalAgeYearsList 	= [Years ];
 			$scope.animalAgeMonthsList =  [Months];
 			$scope.serviceCategory = 'Imaging Modalities';
@@ -652,6 +627,20 @@
 				
 			}
 			
+			$scope.saveForUpload= function(){
+				
+				var data = {caseNumber: $scope.caseNumber, amiRequest: $scope.newRequest, userName: $scope.userName, hospitalName: $scope.hospitalName, hospitalId:$scope.hospitalId, contract: $scope.contract, accountSize:$scope.accountSize };
+				
+				var res = $http.post('amicusthome/amidraftrequest',data);
+				res.success(function(data, status, headers, config) {
+					$scope.caseNumber = data.requestNumber;
+				});
+				res.error(function(data, status, headers, config) {
+					alert( "failure message: " + JSON.stringify({data: data}));
+				});	
+				
+			}
+			
 			$scope.saveNewRequest = function(){
 				
 				
@@ -663,15 +652,15 @@
 					
 					var res = $http.post('amicusthome/amidraftrequest',data);
 					res.success(function(data, status, headers, config) {
-//					$scope.newRequest.id = data.id;
-//						$scope.newRequest.requestNumber = data.requestNumber;
 						$scope.caseNumber = data.requestNumber;
-						//$location.path('/searchRequest');
+						$location.path('/searchRequest/draftRequests/'+data.requestNumber);
 					});
 					res.error(function(data, status, headers, config) {
 						alert( "failure message: " + JSON.stringify({data: data}));
 					});	
+					
 					return;
+					
 				}
 				
 				if ($scope.isSubmit()){
@@ -685,7 +674,7 @@
 						res.success(function(data, status, headers, config) {
 //							$scope.newRequest.requestNumber = data.requestNumber;
 							$scope.caseNumber = data.requestNumber;
-							$location.path('/searchRequest');
+							$location.path('/searchRequest/pendingRequests'+data.requestNumber);
 						});
 						res.error(function(data, status, headers, config) {
 							alert( "failure message: " + JSON.stringify({data: data}));
@@ -701,6 +690,23 @@
 			}
 			
 			
+			$scope.validateUploadCheckBox = function(){
+				$scope.cantUncheckUploadCheckBoxMsg ='';
+				var checkedOffBox =  $scope.newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload;
+				
+				if(!checkedOffBox){
+					
+					if($scope.fileUploads.length > 0){
+						$scope.newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload = true;
+						$scope.cantUncheckUploadCheckBoxMsg ='You must first remove all uploaded files before you can uncheck this checkbox.';
+					}
+				}
+				
+				
+			}
+			
+			//$scope.states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+					
 			//var myModal = $modal({controller: this, templateUrl: './processmodal.html', show: false});
 			var myModal = $modal({title: '', content: 'Please wait...', show: false});
 			
@@ -760,10 +766,16 @@
 				var res = $http.post('/ami/upload/delete',data).then(function(response) {
 					
 					$scope.fileUploads = response.data;
+					
+					// if there are no more files uploaded, blank out the tool tip message
+					if($scope.fileUploads!= null && $scope.fileUploads.length <1){
+						$scope.cantUncheckUploadCheckBoxMsg ='';
+					}
+					
 				},
 				function(response) {
 					var uploadedFileRes =  response.data.uploadedFiles;
-					alert('finaly done ' + uploadedFileRes);
+//					alert('finaly done ' + uploadedFileRes);
 				});
 				
 		    }
@@ -796,10 +808,25 @@
 		
 		
 		// ============ SearchRequest ===============
-		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests, draftRequests, amiRequestFactory) {
-			$scope.searchFilter ='';
+		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests, draftRequests, amiRequestFactory, searchTypeAndFilter) {
+			
+			$scope.searchFilter = '';
+			$scope.draftSarchFilter ='';
+			$scope.pendgingSarchFilter ='';
+			$scope.searchType = searchTypeAndFilter.searchType;
+			
+			var caseNumberToFilter = searchTypeAndFilter.caseNumber;
+			if(caseNumberToFilter!= 'all'){
+				if($scope.searchType=='draftRequests'){
+					$scope.draftSarchFilter = caseNumberToFilter;
+				}else if($scope.searchType=='pendingRequests'){
+					$scope.pendgingSarchFilter = caseNumberToFilter;
+				}
+			}
+			
+			
 			$scope.page = 'searchRequests';
-			$scope.searchType = 'all';
+			
 			$scope.pendingRequests = pendingRequests;
 			$scope.draftRequests = draftRequests;
 			
@@ -824,8 +851,8 @@
 					$scope.searchByInput1Visible = true;
 					$scope.searchByInput2Visible = true;
 					$scope.isSearchAllowed = true;
-					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yy';
-					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yy';
+					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yyyy';
+					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yyyy';
 				}
 				else if($scope.searchBy.indexOf("Last 50") !=-1){
 					$scope.searchByInput1 = '';

@@ -154,7 +154,11 @@
 <!-- 				    <select class="form-control" ng-model="newRequest.patientInfo.species" ng-change="updateBreedListBox()"> -->
 <!-- 						 <option  ng-repeat="aSpecies in speciesList">{{aSpecies}}</option> -->
 <!-- 					</select> -->
-					<input type="text" class="form-control" id="speciesId" ng-model="newRequest.patientInfo.species" placeholder="Species">
+					<input type="text" class="form-control" id="speciesId" ng-change="updateBreedList()" 
+							ng-model="newRequest.patientInfo.species" bs-options="aSpecie for aSpecie in speciesList" 
+							placeholder="Species" bs-typeahead >
+					
+					
 			    </div>
 			    
 			    <div class="col-sm-4">
@@ -162,7 +166,9 @@
 <!-- 						   <option ng-repeat="aBreed in breedsList">{{aBreed}}</option> -->
 <!-- 						</select> -->
 
-						<input type="text" class="form-control" id="breedsId" ng-model="newRequest.patientInfo.breeds" placeholder="Breeds">
+						<input type="text" class="form-control" id="breedsId" ng-model="newRequest.patientInfo.breeds" 
+						bs-options="aBreed for aBreed in breedsList"
+						placeholder="Breeds" bs-typeahead>
 			    </div>
 			</div>
 		
@@ -318,7 +324,12 @@
 		   		   <label class="checkbox-inline" >
 					
 					  <input type="checkbox" id="uploadCheckCheckbox" 
-					  ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
+					  	ng-model="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
+					  	ng-click = "validateUploadCheckBox()"
+					  	bs-tooltip
+					  	data-trigger="hover" 
+	          			data-placement="right"
+	          			data-title="{{cantUncheckUploadCheckBoxMsg}}"
 					  />By Upload
 					</label>
 				</span>	
@@ -340,11 +351,12 @@
 						  
 						  <button 
 				        	ng-show="isEditable==true && newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
-				        	ng-click="setAction('transfer')" 
+				        	ng-click="saveForUpload()" 
 				        	data-toggle="modal" 
 					        data-target="#uploadModal" class="btn btn-default" 
 					        ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload"
-					        ng-disabled="!hasBeenSaved()">
+					       
+					        >
 					        Upload Images</button>
 					       
 						  <div class="form-group" ng-show="newRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier" >
@@ -358,8 +370,8 @@
 								 </div> 
 						  </div>
 						  
-						   <br/>
-					        <p style="color:red;" ng-show="showTransferFileMsg()">The Upload Images button is disabled. To enable it, you must <strong>first push the blue button labeled &quot;Save As Draft&quot; </strong> </p>
+<!-- 						   <br/> -->
+<!-- 					        <p style="color:red;" ng-show="showTransferFileMsg()">The Upload Images button is disabled. To enable it, you must <strong>first push the blue button labeled &quot;Save As Draft&quot; </strong> </p> -->
 						  
 						  
 						</div>

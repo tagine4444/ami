@@ -2,9 +2,9 @@
 	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
 	<br/>
 		<ul class="nav nav-tabs">
-		  <li role="presentation" ng-class="{'active' : searchType=='draftRequests'}"><a href="#/searchRequest" ng-click="searchType = 'draftRequests'">Draft Requests <span class="badge">{{draftRequests.length}}</span></a></li>
-		  <li role="presentation" ng-class="{'active' : searchType=='pendingRequests'}"><a ng-href="#/searchRequest" ng-click="searchType = 'pendingRequests'" >Pending Requests <span class="badge">{{pendingRequests.length}}</span></a></li>
-		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest" ng-click="searchType = 'all'">Search</a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='draftRequests'}"><a href="#/searchRequest/draftRequests/all" ng-click="searchType = 'draftRequests'">Draft Requests <span class="badge">{{draftRequests.length}}</span></a></li>
+		  <li role="presentation" ng-class="{'active' : searchType=='pendingRequests'}"><a ng-href="#/searchRequest/pendingRequests/all" ng-click="searchType = 'pendingRequests'" >Pending Requests <span class="badge">{{pendingRequests.length}}</span></a></li>
+		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest/all/all" ng-click="searchType = 'all'">Search</a></li>
 		</ul>  
 		
 		<br/>         	  
@@ -16,6 +16,10 @@
 		    
 		     <table class="table">
 			     <thead>
+			       <tr>
+			       	<td> <input type="text" class="form-control" ng-model="pendgingSarchFilter"  placeholder="Filter Pending Cases" ></td>
+			       </tr>
+			       
 				   <tr>
 				   	<th>Request Number</th>
 				   	<th>Veterinarian</th>
@@ -26,7 +30,7 @@
 				   </tr>
 				  </thead>
 				  <tbody>
-				   <tr ng-repeat="aPendingRequest in pendingRequests">
+				   <tr ng-repeat="aPendingRequest in pendingRequests | filter: pendgingSarchFilter ">
 				   	<td><a href="#/editRequest1/{{aPendingRequest.caseNumber}}"  ng-click="tab = 4">View Request {{aPendingRequest.caseNumber}}</a></td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
@@ -52,17 +56,20 @@
 		  <!-- Table -->
 		  <table class="table">
 		     <thead>
+		      <tr>
+			       <td> <input type="text" class="form-control" ng-model="draftSarchFilter"  placeholder="Filter draft cases" ></td>
+			   </tr>
 			   <tr>
 			   	<th>Request Number</th>
 			   	<th>Veterinarian</th>
 			   	<th>Animal</th>
 			   	<th>Species</th>
 			   	<th>Client</th>
-			   	<th>Date</th>
+			   	<th>Last Update Date</th>
 			   </tr>
 			  </thead>
 			  <tbody>
-			   <tr ng-repeat="aDraftRequest in draftRequests">
+			   <tr ng-repeat="aDraftRequest in draftRequests | filter: draftSarchFilter ">
 			   	<td><a href="#/editRequest/{{aDraftRequest.caseNumber}}"  ng-click="tab = 4">Edit Request {{aDraftRequest.caseNumber}}</a></td>
 			   	<td>{{aDraftRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 			   	<td>{{aDraftRequest.amiRequest.patientInfo.animalName}}</td>
@@ -105,7 +112,7 @@
 		  <table class="table">
 			     <thead>
 			       <tr>
-			       <td> <input type="text" class="form-control" ng-model="searchFilter"  placeholder="Filter table" ></td>
+			       	<td> <input type="text" class="form-control" ng-model="searchFilter"  placeholder="Filter table" ></td>
 			       </tr>
 				   <tr>
 				   	<th>Request Number</th>
@@ -119,7 +126,9 @@
 				  </thead>
 				  <tbody>
 				   <tr ng-repeat="aSearchResult in searchResults | filter: searchFilter">
-				   	<td><a href="#/editRequest1/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">{{aSearchResult.caseNumber}}</a></td>
+				   	<td><a ng-show="aSearchResult.editable" href="#/editRequest/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">Edit Case {{aSearchResult.caseNumber}}</a>
+				   		<a ng-show="!aSearchResult.editable" href="#/editRequest1/{{aSearchResult.caseNumber}}"  ng-click="tab = 4">View Case {{aSearchResult.caseNumber}}</a>
+				   	</td>
 				   	<td>{{aSearchResult.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aSearchResult.amiRequest.patientInfo.species}} - {{aSearchResult.amiRequest.patientInfo.breeds}}</td>

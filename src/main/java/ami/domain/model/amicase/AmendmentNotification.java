@@ -10,7 +10,7 @@ public class AmendmentNotification {
 	private Amendment amendment;
 	private boolean adminAware;
 	private DateTime creationDate ;
-	private String creationDateString ;
+//	private String creationDateString ;
 	
 	public AmendmentNotification(String caseNumber, Amendment amendment) {
 		
@@ -22,7 +22,7 @@ public class AmendmentNotification {
 		// if amendment is from customer, then customer IS aware
 		// customer is always aware as an email is sent.
 		this.creationDate  = new DateTime();
-		this.creationDateString = creationDate.toString();
+//		this.creationDateString = creationDate.toString();
 		
 	}
 	
@@ -39,9 +39,9 @@ public class AmendmentNotification {
 		return creationDate;
 	}
 
-	public String getCreationDateString() {
-		return creationDateString;
-	}
+//	public String getCreationDateString() {
+//		return creationDateString;
+//	}
 
 	public int getAmendmentId() {
 		return amendmentId;
