@@ -10,6 +10,8 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.annotation.Timestamp;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -60,14 +62,12 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	
 	
 	@Override
-	public void submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequestJson, String userName,   
+	public String submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequestJson, String userName,   
 			String hospitalName, String hospitalId, String contract, String accountSize) {
 		
 		DateTime hasBeenSavedAndSubmittedToRadiologist = new DateTime();
 		
-		
 		final boolean isCreate = StringUtils.isEmpty(caseNumber);
-		
 		
 		if( isCreate ){
 			caseNumber = String.valueOf(mongoSequenceService.getNextAmiCase());
@@ -85,6 +85,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 					new DateTime(),contract,  accountSize));
 			
 		}
+		
+		return caseNumber;
 		                              
 		
 	}
@@ -241,32 +243,48 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findAmiRequestBySubmittedDateRange(String hospitalId, String date1, String date2) {
 		
 	
-		//DateTime aDate1 = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour);
 		
-		int firstSlah  = date1.indexOf("/");
-		int secondSlah = date1.lastIndexOf("/");
+//		int firstSlah  = date1.indexOf("/");
+//		int secondSlah = date1.lastIndexOf("/");
+//		
+//		int monthOfYear1 = Integer.valueOf(date1.substring(0, firstSlah)); 
+//		int dayOfMonth1  = Integer.valueOf(date1.substring(firstSlah +1, secondSlah)); 
+//		int year1 = Integer.valueOf(date1.substring(secondSlah+1, date1.length())); 
+//		
+//		firstSlah  = date2.indexOf("/");
+//		 secondSlah = date2.lastIndexOf("/");
+//		
+//		int monthOfYear2 = Integer.valueOf(date2.substring(0, firstSlah)); 
+//		int dayOfMonth2  = Integer.valueOf(date2.substring(firstSlah +1, secondSlah)); 
+//		int year2 = Integer.valueOf(date2.substring(secondSlah+1, date2.length())); 
+//		
+//		DateTime aDate1 = new DateTime(year1, monthOfYear1, dayOfMonth1, 0, 0, DateTimeZone.forID("America/Los_Angeles"));
+//		DateTime aDate2 = new DateTime(year2, monthOfYear2, dayOfMonth2, 23, 59, DateTimeZone.forID("America/Los_Angeles"));
+//		
 		
-		int monthOfYear1 = Integer.valueOf(date1.substring(0, firstSlah)); 
-		int dayOfMonth1  = Integer.valueOf(date1.substring(firstSlah +1, secondSlah)); 
-		int year1 = Integer.valueOf(date1.substring(secondSlah+1, date1.length())); 
 		
-		firstSlah  = date2.indexOf("/");
-		 secondSlah = date2.lastIndexOf("/");
+		DateTimeFormatter dateFormatter =  DateTimeFormat.forPattern("EEE MMM dd yyyy HH:mm:ss");
 		
-		int monthOfYear2 = Integer.valueOf(date2.substring(0, firstSlah)); 
-		int dayOfMonth2  = Integer.valueOf(date2.substring(firstSlah +1, secondSlah)); 
-		int year2 = Integer.valueOf(date2.substring(secondSlah+1, date2.length())); 
 		
-		DateTime aDate1 = new DateTime(year1, monthOfYear1, dayOfMonth1, 0, 0, DateTimeZone.forID("America/Los_Angeles"));
-		DateTime aDate2 = new DateTime(year2, monthOfYear2, dayOfMonth2, 23, 59, DateTimeZone.forID("America/Los_Angeles"));
+//		Wed Feb 03 2016 00:00:00 GMT-0800 (PST)
+		
+		DateTime aDate11 = dateFormatter.parseDateTime( date1.substring(0, date1.indexOf("GMT") ).trim());
+		DateTime aDate22 = dateFormatter.parseDateTime( date2.substring(0, date2.indexOf("GMT") ).trim());
+		
+		
+		DateTime aDate1 = new DateTime(aDate11.getYear(), aDate11.getMonthOfYear(), aDate11.getDayOfMonth(), 0, 0, DateTimeZone.forID("America/Los_Angeles"));
+		DateTime aDate2 = new DateTime(aDate22.getYear(), aDate22.getMonthOfYear(), aDate22.getDayOfMonth(), 23, 59, DateTimeZone.forID("America/Los_Angeles"));
+//		
+		
+		
 		
 		Query query = new Query();
 		
 		query.addCriteria(
 				Criteria.where("hasBeenSavedAndSubmittedToRadiologist").exists(true)
 				.andOperator(
-					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gt(aDate1),
-			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lt(aDate2)
+					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gte(aDate1),
+			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lte(aDate2)
 //			                Criteria.where("hospitalId").is(hospitalId)
 				)
 			);

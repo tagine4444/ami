@@ -25,7 +25,7 @@ public class HospitalAndClientInfo {
 			String	clientFirstName,
 			String	clientLastName, 
 			String	clientId,       
-			boolean	isEmployee ) {
+			boolean	isEmployee) {
 		
 //		this.labs = labs;           
 //		this.labAccount = labAccount;     
@@ -57,8 +57,6 @@ public class HospitalAndClientInfo {
 	public boolean getIsEmployee() {
 		return isEmployee;
 	}
-	
-	
-	
+
 	
 }

@@ -36,7 +36,7 @@ public interface AmiRequestRepository {
     		DateTime time,String contract, String accountSize,
     		DateTime accountingDone) throws JsonProcessingException;
 
-	void submitAmiRequestToRadiologist(String caseNumber,AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId, String contract, String accountSize);
+	String submitAmiRequestToRadiologist(String caseNumber,AmiRequest amiRequestJson, String userName, String hospitalName, String hospitalId, String contract, String accountSize);
 	
 	String saveAmiRequestAsDraft(String caseNumber, AmiRequest amiRequestJson, String userName, String hospitalName,String hospitalId,DateTime dateTime, String contract, String accountSize);
 

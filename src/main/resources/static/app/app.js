@@ -343,6 +343,10 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                             
                             }
                         }).
+                        when('/newRequest', {
+                                redirectTo: '/'
+                        	
+                        }).
                         when('/editRequest/:requestNumber', {
                         	templateUrl: "/app/components/amicust/newrequest.html",
                             controller: "NewRequestCtrl",

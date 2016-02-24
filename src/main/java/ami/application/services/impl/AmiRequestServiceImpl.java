@@ -137,15 +137,15 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	@Override
 	public String submitAmiRequestToRadiologist(String caseNumber, AmiRequest amiRequest1 ,
 			String userName ,  String hospitalName, String hospitalId, String contract, String accountSize) {
-		amiRequestRepo.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId, contract,  accountSize);
-		return "{}";
+		caseNumber = amiRequestRepo.submitAmiRequestToRadiologist(caseNumber, amiRequest1 ,userName , hospitalName,hospitalId, contract,  accountSize);
+		return "{\"caseNumber\": \""+caseNumber+"\"}";
 	}
 
 	@Override
 	public String createCaseAsDraft(String caseNumber, AmiRequest req ,String userName ,  String hospitalName, String hospitalId,String contract, String accountSize) {
-		String requestNumber = amiRequestRepo.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime(),contract, accountSize);
+		String myCaseNumber = amiRequestRepo.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime(),contract, accountSize);
 		
-		return "{\"requestNumber\": \""+requestNumber+"\"}";
+		return "{\"caseNumber\": \""+myCaseNumber+"\"}";
 	}
 
 	@Override

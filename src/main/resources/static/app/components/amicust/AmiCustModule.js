@@ -307,8 +307,8 @@
 		
 			$scope.saveAction = '';
 			
-			var Years  = 'Years';
-			var Months = 'Months';
+			var Years  = '';
+			var Months = '';
 			var ZeroYears = '0 year';
 			var ZeroMonths = '0 months';
 			
@@ -569,9 +569,18 @@
 				}
 				
 			}
+			$scope.isOrganization =function(isOrganization){
+				if(isOrganization){
+					$scope.newRequest.hospitalAndClientInfo.isOrganization	  = true;
+				}else{
+					$scope.newRequest.hospitalAndClientInfo.isOrganization	  = false;
+				}
+				
+			}
 			
 			
 			$scope.isInterpretationOnly =function(isInterpretationOnly){
+				
 				if(isInterpretationOnly){
 					$scope.newRequest.requestedServices.isInterpretationOnly	  = true;
 					$scope.newRequest.requestedServices.selectedServices = [];
@@ -607,6 +616,7 @@
 			}
 		
 			$scope.setAction= function(action){
+				$scope.submitted=true;
 				$scope.saveAction = action;
 			}
 			
@@ -633,7 +643,7 @@
 				
 				var res = $http.post('amicusthome/amidraftrequest',data);
 				res.success(function(data, status, headers, config) {
-					$scope.caseNumber = data.requestNumber;
+					$scope.caseNumber = data.caseNumber;
 				});
 				res.error(function(data, status, headers, config) {
 					alert( "failure message: " + JSON.stringify({data: data}));
@@ -652,8 +662,8 @@
 					
 					var res = $http.post('amicusthome/amidraftrequest',data);
 					res.success(function(data, status, headers, config) {
-						$scope.caseNumber = data.requestNumber;
-						$location.path('/searchRequest/draftRequests/'+data.requestNumber);
+						$scope.caseNumber = data.caseNumber;
+						$location.path('/searchRequest/draftRequests/'+data.caseNumber);
 					});
 					res.error(function(data, status, headers, config) {
 						alert( "failure message: " + JSON.stringify({data: data}));
@@ -673,11 +683,12 @@
 						var res = $http.post('amicusthome/amirequest',data);
 						res.success(function(data, status, headers, config) {
 //							$scope.newRequest.requestNumber = data.requestNumber;
-							$scope.caseNumber = data.requestNumber;
-							$location.path('/searchRequest/pendingRequests'+data.requestNumber);
+							$scope.caseNumber = data.caseNumber;
+							$location.path('/searchRequest/pendingRequests/'+data.caseNumber);
 						});
 						res.error(function(data, status, headers, config) {
 							alert( "failure message: " + JSON.stringify({data: data}));
+							
 						});	
 						
 					}else{
@@ -689,6 +700,26 @@
 			   
 			}
 			
+			$scope.requiredFieldEntered = function(){
+				
+				$scope.requiredFiedlForUploadMsg = "";
+				
+				if(!$scope.newRequest.hospitalAndClientInfo.vet || $scope.newRequest.hospitalAndClientInfo.vet.length<1){
+					$scope.requiredFiedlForUploadMsg += "[Veterinarian]";
+				}
+				
+				if(!$scope.newRequest.hospitalAndClientInfo.clientLastName || $scope.newRequest.hospitalAndClientInfo.clientLastName.length<1){
+					$scope.requiredFiedlForUploadMsg += "[Client Last Name or Organization]";
+				}
+				
+				if($scope.requiredFiedlForUploadMsg.length==0){
+					
+					return true;
+				}
+				
+				$scope.requiredFiedlForUploadMsg ="You must fill out the following "+$scope.requiredFiedlForUploadMsg+" before you can upload images." ;
+				return false;
+			}
 			
 			$scope.validateUploadCheckBox = function(){
 				$scope.cantUncheckUploadCheckBoxMsg ='';

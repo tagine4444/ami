@@ -70,7 +70,7 @@ public class AmiRequestController {
 			throw new RuntimeException("Master Uer not updated because the action is unknown: " +action );
 		}
 		
-		HospitalView hospitalView = hospitalService.findHospital(hospitalId);
+		//HospitalView hospitalView = hospitalService.findHospital(hospitalId);
 		//final String userName     = hospitalView.getMasterUser().getUser();
 		
 		if( action.equals(VALID_USER_ACTIONS.updatePwd.name())){

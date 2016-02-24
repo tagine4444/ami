@@ -1,8 +1,11 @@
 package ami.web;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,7 +192,7 @@ public class AmiCustController {
 		final BasicDBObject amiRequest = (BasicDBObject) dbObject.get("amiRequest");
 	
 		final String jsonString = amiRequest.toString();
-		System.out.println(jsonString);
+//		System.out.println(jsonString);
 		AmiRequest req = objectMapper.readValue(jsonString, AmiRequest.class);
 		
 		final String caseNumber = (String) dbObject.get("caseNumber");
