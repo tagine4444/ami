@@ -205,4 +205,25 @@ public class AmiCustController {
 		return amiRequestService.createCaseAsDraft(caseNumber,req ,userName , hospitalName, hospitalId,contract,accountSize);
 		
 	}
+	
+	
+	
+	
+	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
+	@RequestMapping(value = "/ami/amicusthome/deleteamidraftrequest", method = RequestMethod.POST)
+	@ResponseBody
+	public void deleteDraftCase(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
+		
+		DBObject dbObject = (DBObject)JSON.parse(data);
+		final String caseNumber = (String) dbObject.get("caseNumber");
+		
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		AmiUserView anAmiUserView = userService.findAmiUser(userName);
+		
+		
+		amiRequestService.deleteDraftCase(caseNumber, anAmiUserView.getHospitalId(), userName);
+		
+		
+		
+	}
 }
