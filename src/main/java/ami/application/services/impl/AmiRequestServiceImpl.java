@@ -27,8 +27,6 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	private static final Logger log = LoggerFactory.getLogger(AmiRequestServiceImpl.class);
 	
 	
-	
-	
 	@Autowired
 	private AmiRequestRepository amiRequestRepo;
 	
@@ -39,6 +37,9 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 	@Override
 	public String findAmiRequest(String requestNumber, boolean isAdmin) throws JsonProcessingException {
 		AmiRequestView amiRequestView = amiRequestRepo.findAmiRequest(requestNumber, isAdmin);
+		if(amiRequestView==null){
+			return null;
+		}
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
@@ -85,12 +86,7 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
 		return amiRequestViewString;
 	}
-//	@Override
-//	public String findAmiRequestByLast50Records(int nRecords) throws JsonProcessingException{
-//		List<AmiRequestView> amiRequestView = amiRequestRepo.findAmiRequestByLastNRecords( String.valueOf(nRecords));
-//		String amiRequestViewString = objectMapper.writeValueAsString(amiRequestView);
-//		return amiRequestViewString;
-//	}
+
 	@Override
 	public String findAmiRequestByLast50RecordsAdmin(int nRecords) throws JsonProcessingException{
 		//final String nRecords = "50";
@@ -146,6 +142,15 @@ public class AmiRequestServiceImpl implements AmiRequestService {
 		String myCaseNumber = amiRequestRepo.saveAmiRequestAsDraft(caseNumber,req ,userName , hospitalName, hospitalId ,new DateTime(),contract, accountSize);
 		
 		return "{\"caseNumber\": \""+myCaseNumber+"\"}";
+	}
+	
+	
+	@Override
+	public void deleteDraftCase(String caseNumber, String hospitalId,
+			String userName) {
+		
+		amiRequestRepo.deleteDraftCase(caseNumber, userName , hospitalId ,new DateTime());
+		
 	}
 
 	@Override

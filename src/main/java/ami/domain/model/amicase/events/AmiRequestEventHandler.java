@@ -150,4 +150,9 @@ public class AmiRequestEventHandler {
     	amiServiceRequestRepo.updateAccountingDone(event.getId(), event.getDateTime(), event.getUserName());
     }
     
+    @EventHandler
+    public void handle(DraftCaseDeletedEvent event) throws JsonProcessingException {
+    	amiServiceRequestRepo.updateDraftCaseToDeleted(event.getId(), event.getUserName(),event.getHospitalId(), event.getDateTime());
+    }
+    
 }

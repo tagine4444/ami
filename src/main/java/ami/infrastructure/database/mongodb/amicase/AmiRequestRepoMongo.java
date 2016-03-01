@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import ami.application.commands.amirequest.DeleteDraftCaseCmd;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
 import ami.application.commands.amirequest.SubmitDraftAmiRequestCmd;
 import ami.application.commands.amirequest.SubmitNewAmiRequestCmd;
@@ -113,6 +114,12 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		
 		return myCaseNumber;
 	}
+	
+	@Override
+	public void deleteDraftCase(String caseNumber, String userName,
+			String hospitalId, DateTime dateTime) {
+		commandGateway.sendAndWait(new DeleteDraftCaseCmd( caseNumber,  userName, hospitalId,  dateTime));
+	}
 
 
 	@Override
@@ -195,7 +202,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			Query query = new Query();
 			
 			query.addCriteria(Criteria.where("caseNumber").is(requestNumber)
-					.andOperator(Criteria.where("hospitalId").is(hospitalId)) );
+					.andOperator(Criteria.where("hospitalId").is(hospitalId),Criteria.where("draftCaseDeletedTime").is(null)));
 			
 			 amiRequestView = mongo.findOne(query, AmiRequestView.class,AMIREQUEST_VIEW);
 		}else{
@@ -218,14 +225,16 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 			Query query = new Query();
 			
 			query.addCriteria(Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))
-					.andOperator(Criteria.where("hospitalId").is(hospitalId)) );
+					.andOperator(Criteria.where("hospitalId").is(hospitalId), Criteria.where("draftCaseDeletedTime").is(null)));
 			
 			amiRequestViews = mongo.find(query, AmiRequestView.class,AMIREQUEST_VIEW);
 			 
 			 
 		}
 		else{
-			 amiRequestViews = mongo.find(Query.query(Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))), AmiRequestView.class,AMIREQUEST_VIEW);
+			 amiRequestViews = mongo.find(Query.query(
+					 Criteria.where("amiRequest.patientInfo.animalName").regex(Pattern.compile(animalName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))
+					 .andOperator(Criteria.where("draftCaseDeletedTime").is(null))), AmiRequestView.class,AMIREQUEST_VIEW);
 		}
 		
 		
@@ -235,7 +244,9 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	@Override
 	public List<AmiRequestView> findAmiRequestByClientLastName(String clientLastName) {
 		
-		List<AmiRequestView>  amiRequestViews = mongo.find(Query.query(Criteria.where("amiRequest.hospitalAndClientInfo.clientLastName").regex(Pattern.compile(clientLastName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))), AmiRequestView.class,AMIREQUEST_VIEW);
+		List<AmiRequestView>  amiRequestViews = mongo.find(Query.query(
+				Criteria.where("amiRequest.hospitalAndClientInfo.clientLastName").regex(Pattern.compile(clientLastName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE))
+				.andOperator(Criteria.where("draftCaseDeletedTime").is(null))), AmiRequestView.class,AMIREQUEST_VIEW);
 		return amiRequestViews;
 	}
 	
@@ -282,10 +293,11 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		
 		query.addCriteria(
 				Criteria.where("hasBeenSavedAndSubmittedToRadiologist").exists(true)
-				.andOperator(
-					Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gte(aDate1),
-			                Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lte(aDate2)
-//			                Criteria.where("hospitalId").is(hospitalId)
+						.andOperator(
+									 Criteria.where("hasBeenSavedAndSubmittedToRadiologist").gte(aDate1),
+					                 Criteria.where("hasBeenSavedAndSubmittedToRadiologist").lte(aDate2),
+					                 Criteria.where("draftCaseDeletedTime").is(null)
+					    
 				)
 			);
 		
@@ -297,6 +309,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	@Override
 	public List<AmiRequestView> findAmiRequestByLastNRecordsAdmin(String nRecords) {
 		Query query = new Query();
+		query.addCriteria(Criteria.where("draftCaseDeletedTime").is(null));
 		query.limit(Integer.parseInt(nRecords));
 		query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 		
@@ -307,6 +320,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	@Override
 	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords, String hospitalId) {
 		Query query = new Query();
+		query.addCriteria(Criteria.where("draftCaseDeletedTime").is(null));
 		query.limit(Integer.parseInt(nRecords));
 		query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 		
@@ -321,6 +335,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	@Override
 	public List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords) {
 		Query query = new Query();
+		query.addCriteria(Criteria.where("draftCaseDeletedTime").is(null));
 		query.limit(Integer.parseInt(nRecords));
 		query.with(new Sort(Sort.Direction.ASC, "caseNumber"));
 		
@@ -364,8 +379,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	   String hospitalId = userView.getHospitalId();
 		
 	   Query query =Query.query( Criteria.where("hospitalId").is(hospitalId)
-			      .andOperator(Criteria.where("editable").is(Boolean.FALSE)
-			    		  ,Criteria.where("caseClosed").is(null)
+			      						.andOperator(Criteria.where("editable").is(Boolean.FALSE) ,Criteria.where("caseClosed").is(null),
+			      									Criteria.where("draftCaseDeletedTime").is(null)
 			    		  ) 
 			   );
 	   
@@ -382,7 +397,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		   Query query =Query.query( Criteria.where("editable").is(Boolean.FALSE)
 				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats),
 						   Criteria.where("caseClosed").is(null),
-						   Criteria.where("interpretationReadyForReview").is(null))
+						   Criteria.where("interpretationReadyForReview").is(null),
+						   Criteria.where("draftCaseDeletedTime").is(null))
 						   
 				   );
 		   query.with(new Sort(Sort.Direction.ASC, "hasBeenSavedAndSubmittedToRadiologist"));
@@ -397,7 +413,7 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 		   String hospitalId = userView.getHospitalId();
 			
 		   Query query =Query.query( Criteria.where("hospitalId").is(hospitalId)
-				      .andOperator(Criteria.where("editable").is(Boolean.TRUE)) 
+				      .andOperator(Criteria.where("editable").is(Boolean.TRUE), Criteria.where("draftCaseDeletedTime").is(null)) 
 				   );
 		   
 		   query.with(new Sort(Sort.Direction.DESC, "creationDate"));
@@ -456,7 +472,8 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findCasesPendingReviewForAllHospitals(boolean stats) {
 		Query query =Query.query( Criteria.where("caseClosed").is(null)
 				   .andOperator(Criteria.where("amiRequest.requestedServices.isStat").is(stats),
-						   Criteria.where("interpretationReadyForReview").ne(null))
+						   Criteria.where("interpretationReadyForReview").ne(null),
+						   Criteria.where("draftCaseDeletedTime").is(null))
 				   );
 		   query.with(new Sort(Sort.Direction.ASC, "time"));
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
@@ -528,10 +545,23 @@ public class AmiRequestRepoMongo implements AmiRequestRepository {
 	public List<AmiRequestView> findCasesPendingAccounting() {
 		
 		  Query query = Query.query( Criteria.where("accountingDone").is(null)
-				   .andOperator(Criteria.where("caseClosed").ne(null)) );
+				   .andOperator( Criteria.where("caseClosed").ne(null)) );
 		   query.with(new Sort(Sort.Direction.ASC, "time"));
 		   List<AmiRequestView> amiRequestView = mongo.find(query,AmiRequestView.class, AMIREQUEST_VIEW);
 		   return amiRequestView;
+	}
+
+	
+	@Override
+	public void updateDraftCaseToDeleted(String caseNumber, String userName, String hospitalId, DateTime dateTime) {
+		Update update = new Update();
+		update.set("draftCaseDeletedTime", dateTime);
+		update.set("draftCaseDeletedBy", userName);
+		
+		mongo.updateFirst(
+	            new Query(Criteria.where("caseNumber").is(caseNumber).andOperator( Criteria.where("hospitalId").is(hospitalId))),
+	            update,
+	            AMIREQUEST_VIEW);
 	}
 
 

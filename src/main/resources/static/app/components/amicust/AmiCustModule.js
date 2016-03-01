@@ -492,33 +492,7 @@
 				}
 				
 			}
-//			$scope.updateBreedListBox = function(){
-//				var speciesValue        = $scope.newRequest.patientInfo.species;
-//				
-//				$scope.disableBreedList = false;
-//				var isCanine = new String(speciesValue).toLowerCase().indexOf("canine") > -1;
-//				var isFeline = new String(speciesValue).toLowerCase().indexOf("feline") > -1;
-//				var isBovine = new String(speciesValue).toLowerCase().indexOf("bovine") > -1;
-//				var isBirds = new String(speciesValue).toLowerCase().indexOf("birds") > -1;
-//				var isOthers = new String(speciesValue).toLowerCase().indexOf("others") > -1;
-//				
-//				if(isCanine){
-//					$scope.breedsList  = $scope.breedsCanine;
-//				}else if( isFeline){
-//					$scope.breedsList  = $scope.breedsFeline;
-//				}else if(isBovine){
-//					$scope.breedsList  = $scope.breedsBovine;
-//				}else if(isBirds){
-//					$scope.breedsList  = $scope.breedsBirds;
-//				}
-//				else if(isOthers){
-//					$scope.breedsList  = $scope.breedsOthers;
-//				}
-//				else{
-//					$scope.breedsList  = ['Select Breed'];
-//					$scope.disableBreedList = true;
-//				}
-//			}
+
 			
 			$scope.updateAnimalYearsLabel =function(){
 
@@ -584,6 +558,7 @@
 				if(isInterpretationOnly){
 					$scope.newRequest.requestedServices.isInterpretationOnly	  = true;
 					$scope.newRequest.requestedServices.selectedServices = [];
+					$scope.serviceCategory = 'Imaging Modalities';
 				}else{
 					$scope.newRequest.requestedServices.isInterpretationOnly	  = false;
 				}
@@ -616,14 +591,21 @@
 			}
 		
 			$scope.setAction= function(action){
-				$scope.submitted=true;
 				$scope.saveAction = action;
+				if($scope.isSubmit()){
+					$scope.submitted=true;
+				}else{
+					$scope.submitted=false;
+				}
+				
+				
 			}
 			
 			$scope.isSubmit= function(){
 				if($scope.saveAction == 'submit'){
 					return true;
 				}else{
+					$scope.submitted=false;
 					return false;
 				}
 					
@@ -649,6 +631,23 @@
 					alert( "failure message: " + JSON.stringify({data: data}));
 				});	
 				
+			}
+			
+			
+			$scope.deleteDraftCase = function(){
+				
+				var data = {caseNumber: $scope.caseNumber };
+				
+				var res = $http.post('amicusthome/deleteamidraftrequest',data);
+				res.success(function(data, status, headers, config) {
+					$scope.caseNumber = data.caseNumber;
+					$location.path('/searchRequest/draftRequests/all');
+				});
+				res.error(function(data, status, headers, config) {
+					alert( "failure message: " + JSON.stringify({data: data}));
+				});	
+				
+				return;
 			}
 			
 			$scope.saveNewRequest = function(){
@@ -692,14 +691,18 @@
 						});	
 						
 					}else{
-						
+						// here the form had errors don't do anything
 						$scope.saveAction == '';
-						alert('some errors found');
+//						alert('some errors found');
 					}
 				}	
 			   
 			}
 			
+			$scope.hasAnimalSexChanged = false;
+			$scope.animalSexChanged = function(){
+				$scope.hasAnimalSexChanged = true;
+			}
 			$scope.requiredFieldEntered = function(){
 				
 				$scope.requiredFiedlForUploadMsg = "";
@@ -713,7 +716,6 @@
 				}
 				
 				if($scope.requiredFiedlForUploadMsg.length==0){
-					
 					return true;
 				}
 				
@@ -732,13 +734,8 @@
 						$scope.cantUncheckUploadCheckBoxMsg ='You must first remove all uploaded files before you can uncheck this checkbox.';
 					}
 				}
-				
-				
 			}
 			
-			//$scope.states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-					
-			//var myModal = $modal({controller: this, templateUrl: './processmodal.html', show: false});
 			var myModal = $modal({title: '', content: 'Please wait...', show: false});
 			
 			$scope.uploader = {
@@ -824,16 +821,6 @@
 				return !hasBeenSaved && uploadSelected;
 			}
 		    
-		    
-		    
-		    $scope.showIncompleteFormMsg = function(){
-		    	this.isShowIncompleteFormMsg = true;
-		    };
-		    
-		    $scope.dontShowIncompleteFormMsg = function(){
-		    	this.isShowIncompleteFormMsg = false;
-		    }
-
 		});
 		
 		
@@ -872,97 +859,11 @@
 			$scope.isSearchBySearchBy = false;
 			$scope.isSearchByRequestNumber = false;
 			$scope.isSearchByAnimalName = false;
+			$scope.isDateSearch = false;
+			$scope.searchClicked = false;
 			
 			
-			$scope.updateSearchInputDisplay =  function(){
-				
-				if($scope.searchBy.indexOf("Date") !=-1){
-					$scope.searchByInput1 = '';
-					$scope.searchByInput2 = '';
-					$scope.searchByInput1Visible = true;
-					$scope.searchByInput2Visible = true;
-					$scope.isSearchAllowed = true;
-					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yyyy';
-					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yyyy';
-				}
-				else if($scope.searchBy.indexOf("Last 50") !=-1){
-					$scope.searchByInput1 = '';
-					$scope.searchByInput2 = '';
-					$scope.isSearchAllowed = true;
-					$scope.searchByInput1Visible = false;
-					$scope.searchByInput2Visible = false;
-					$scope.searchByPlaceHolder1 = 'Select a Search';
-					$scope.searchByPlaceHolder2 = '';
-				}
-				else if($scope.searchBy.indexOf("Search By") !=-1){
-					$scope.searchByInput1 = '';
-					$scope.searchByInput2 = '';
-					$scope.isSearchAllowed = false;
-					$scope.searchByInput1Visible = true;
-					$scope.searchByInput2Visible = false;
-					$scope.searchByPlaceHolder1 = 'Select a Search';
-					$scope.searchByPlaceHolder2 = '';
-				}
-				else{
-					$scope.searchByInput1 = '';
-					$scope.searchByInput2 = '';
-					$scope.isSearchAllowed = true;
-					$scope.searchByInput1Visible = true;
-					$scope.searchByInput2Visible = false;
-					$scope.searchByPlaceHolder1 = 'Enter Criteria';
-					$scope.searchByPlaceHolder2 = '';
-				}
-			}
 			
-			
-			$scope.doSearch =  function(){
-				$scope.searchResults = [];
-				var requestNumber = $scope.searchByInput1;
-				var date2 = $scope.searchByInput2;
-				
-				$scope.whichSearch();
-				
-				if( $scope.isSearchByRequestNumber ){
-					amiRequestFactory.getAmiRequest(requestNumber).then(
-	             			function(result){
-	             				var myResult = result.data;
-	             				$scope.searchResults.push(myResult);
-	             			}	
-	             	);
-				}
-				else if( $scope.isSearchByAnimalName ){
-					
-					amiRequestFactory.getAmiRequestByAnimalName(requestNumber).then(
-							function(result){
-								$scope.searchResults= result.data;
-							}	
-					);
-				}
-				else if($scope.isSearchByClientLastName){
-					
-					amiRequestFactory.getAmiRequestByClientLastName(requestNumber).then(
-							function(result){
-								$scope.searchResults= result.data;
-							}	
-					);
-				}
-				else if($scope.isSearchByRequestSubmittedDate){
-					
-					amiRequestFactory.getAmiRequestBySubmittedDateRange(requestNumber,date2).then(
-							function(result){
-								$scope.searchResults= result.data;
-							}	
-					);
-				}
-				else if($scope.isSearchByLast50Requests){
-					
-					amiRequestFactory.getAmiRequestByLast50Records().then(
-							function(result){
-								$scope.searchResults= result.data;
-							}	
-					);
-				}
-			}
 			
 			$scope.whichSearch = function(){
 				
@@ -993,8 +894,117 @@
 					$scope.isSearchByLast50Requests = true;
 				}
 			}
-			
+
+			$scope.updateSearchInputDisplay =  function(){
+				$scope.searchHintMsg="";
+				$scope.searchClicked = false;
+				$scope.whichSearch();
 				
+				if($scope.searchBy.indexOf("Date") !=-1){
+					$scope.isDateSearch = true;
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.searchByInput1Visible = true;
+					$scope.searchByInput2Visible = true;
+					$scope.isSearchAllowed = true;
+					$scope.searchByPlaceHolder1 = 'Beg Date mm/dd/yyyy';
+					$scope.searchByPlaceHolder2 = 'End Date mm/dd/yyyy';
+				}
+				else if($scope.searchBy.indexOf("Last 50") !=-1){
+					$scope.isDateSearch = false;
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.isSearchAllowed = true;
+					$scope.searchByInput1Visible = false;
+					$scope.searchByInput2Visible = false;
+					$scope.searchByPlaceHolder1 = 'Select a Search';
+					$scope.searchByPlaceHolder2 = '';
+				}
+				else if($scope.searchBy.indexOf("Search By") !=-1){
+					$scope.isDateSearch = false;
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.isSearchAllowed = false;
+					$scope.searchByInput1Visible = true;
+					$scope.searchByInput2Visible = false;
+					$scope.searchByPlaceHolder1 = 'Select a Search';
+					$scope.searchByPlaceHolder2 = '';
+				}
+				else{
+					$scope.isDateSearch = false;
+					$scope.searchByInput1 = '';
+					$scope.searchByInput2 = '';
+					$scope.isSearchAllowed = true;
+					$scope.searchByInput1Visible = true;
+					$scope.searchByInput2Visible = false;
+					$scope.searchByPlaceHolder1 = 'Enter Criteria';
+					$scope.searchByPlaceHolder2 = '';
+				}
+			}
+			
+			
+			$scope.searchHintMsg = "";
+			$scope.doSearch =  function(){
+				$scope.searchClicked = true;
+				$scope.searchHintMsg = "";
+				
+				$scope.searchResults = [];
+				var requestNumber = $scope.searchByInput1;
+				var date2 = $scope.searchByInput2;
+				
+				$scope.whichSearch();
+				
+				if( $scope.isSearchByRequestNumber ){
+					amiRequestFactory.getAmiRequest(requestNumber).then(
+	             			function(result){
+	             				var myResult = result.data;
+	             				if(myResult){
+	             					$scope.searchResults.push(myResult);
+	             				}else{
+	             					$scope.searchHintMsg = "No results found";
+	             				}
+	             			}	
+	             	);
+				}
+				else if( $scope.isSearchByAnimalName ){
+					
+					amiRequestFactory.getAmiRequestByAnimalName(requestNumber).then(
+							function(result){
+								var myResult = result.data;
+	             				if(myResult && myResult.length>0){
+	             					$scope.searchResults= myResult;
+	             				}else{
+	             					$scope.searchHintMsg = "No results found.";
+	             				}
+							}	
+					);
+				}
+				else if($scope.isSearchByClientLastName){
+					
+					amiRequestFactory.getAmiRequestByClientLastName(requestNumber).then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
+				else if($scope.isSearchByRequestSubmittedDate){
+					
+					amiRequestFactory.getAmiRequestBySubmittedDateRange(requestNumber,date2).then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
+				else if($scope.isSearchByLast50Requests){
+					
+					amiRequestFactory.getAmiRequestByLast50Records().then(
+							function(result){
+								$scope.searchResults= result.data;
+							}	
+					);
+				}
+			}
+			
 			
 		});
 		// ============ SearchRequest ===============

@@ -79,6 +79,10 @@ public interface AmiRequestRepository {
 	void updateAccountingDone(String id, DateTime dateTime, String userName);
 	List<AmiRequestView> findCasesPendingAccounting();
 	List<AmiRequestView> findAmiRequestByLastNRecords(String nRecords);
+	void deleteDraftCase(String caseNumber, String userName, String hospitalId,
+			DateTime dateTime);
+	void updateDraftCaseToDeleted(String caseNumber, String userName,
+			String hospitalId, DateTime dateTime);
 	
 
 }

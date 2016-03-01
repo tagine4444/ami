@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class AmiRequest {
 	
-//	private String requestNumber;
 	private HospitalAndClientInfo hospitalAndClientInfo;
 	private PatientInfo patientInfo;
 	private RequestedServices requestedServices;

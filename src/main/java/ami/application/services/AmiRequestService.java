@@ -32,6 +32,7 @@ public interface AmiRequestService {
 	String findCasesPendingAccounting() throws JsonProcessingException;
 	String findAmiAmendments(String caseNumber,boolean isAdmin) throws JsonProcessingException;
 	//String findAmiRequestByLast50Records(int nRecords) throws JsonProcessingException;
+	void deleteDraftCase(String caseNumber, String hospitalId, String userName);
 		
 
 }

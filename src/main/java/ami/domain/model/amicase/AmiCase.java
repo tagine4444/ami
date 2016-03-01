@@ -1,3 +1,4 @@
+
 package ami.domain.model.amicase;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.joda.time.DateTime;
 
 import ami.application.commands.amirequest.AmendCaseCmd;
 import ami.application.commands.amirequest.CloseCaseCmd;
+import ami.application.commands.amirequest.DeleteDraftCaseCmd;
 import ami.application.commands.amirequest.DeleteUploadedFileCommand;
 import ami.application.commands.amirequest.DoAccountingCmd;
 import ami.application.commands.amirequest.SaveAmiRequestAsDraftCmd;
@@ -37,6 +39,7 @@ import ami.domain.model.amicase.events.CaseIsAlreadyInProgressEvent;
 import ami.domain.model.amicase.events.CaseSwitchedToInProgressEvent;
 import ami.domain.model.amicase.events.CaseSwitchedToReadyForReviewEvent;
 import ami.domain.model.amicase.events.DraftAmiRequestSubmittedEvent;
+import ami.domain.model.amicase.events.DraftCaseDeletedEvent;
 import ami.domain.model.amicase.events.NewAmiRequestSubmittedEvent;
 import ami.domain.model.amicase.events.RadiographicImpressionUpdatedEvent;
 import ami.domain.model.amicase.events.RadiographicInterpretationUpdatedEvent;
@@ -64,6 +67,7 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	private DateTime interpretationReadyForReview;
 	private DateTime caseClosed;
 	private DateTime accountingDone;
+	private DateTime draftCaseDeletedTime;
 	
 	private String radiographicInterpretation;
     private String radiographicImpression;
@@ -152,7 +156,8 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	public void deleteUploadedFile(DeleteUploadedFileCommand command) {
 		if(hasBeenSavedAndSubmittedToRadiologist()){
 			// should never be here, the UI should disable the save as draft button once the request is saved.
-			throw new RuntimeException("This request has already been submitted. It can no longer del files");
+			throw new RuntimeException("This request has already been submitted to the radiologist. "
+					+ "It can no longer deleted");
 		}
 		apply(new UploadedFileDeletedEvent(command.getId(),
 				command.getUserName(), command.getFileName(), command.getDateTime()));
@@ -188,7 +193,6 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		}else{
 			apply(new CaseClosedEvent(command.getId(),
 					command.getUserName(),  command.getDateTime()
-//					,command.getRadiographicInterpretation(), command.getRadiographicImpression(), command.getRecommendation()
 					));
 		}
 		
@@ -240,6 +244,17 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 		apply(new AmendmentNotificationSentEvent(command.getAmendmentNotification()));
 	}
 	
+	
+	@CommandHandler
+    public void uploadFile(DeleteDraftCaseCmd command) {
+
+		if(this.hasBeenSavedAndSubmittedToRadiologist()){
+			// should never be here, the UI should take care of allowing users to delete draft cases only.
+			throw new RuntimeException("This request has already been submitted. It can no longer upload files");
+		}
+        apply(new DraftCaseDeletedEvent(command.getId(),
+        		command.getUserName(), command.getHospitalId(),command.getDateTime() ) );
+    }
 
 	// -==-=-=-=-=-=-=-=--=-=-=- EventSourceHandlers -==-=-=-=-=-=-=-=--=-=-=- 
 	
@@ -372,6 +387,11 @@ public class AmiCase extends AbstractAnnotatedAggregateRoot {
 	@EventSourcingHandler
 	public void on(AmendmentNotificationSentEvent event) {
 		this.amendmentNotifications.add(event.getAmendmentNotification());
+	}
+	
+	@EventSourcingHandler
+	public void on(DraftCaseDeletedEvent event) {
+		this.draftCaseDeletedTime = event.getDateTime(); 
 	}
 	
 	
