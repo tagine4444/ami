@@ -18,6 +18,7 @@ import ami.domain.model.security.amiusers.AmiUser;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.infrastructure.database.model.AmiUserView;
 import ami.infrastructure.database.model.HospitalView;
+import ami.web.NoDataFoundException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 @Service
@@ -38,7 +39,7 @@ public class AmiUserRepoMongo implements AmiUserRepository{
 		AmiUserView  view = mongo.findOne(Query.query(Criteria.where("amiUser.user").is(userName)), AmiUserView.class,AMI_USER_VIEW);
 		
 		if(view==null){
-			throw new RuntimeException("User not found");
+			throw new NoDataFoundException("User not found");
 		}
 		
 		view.getAmiUser().blurPassword();

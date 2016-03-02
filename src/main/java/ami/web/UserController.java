@@ -7,8 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +28,7 @@ import ami.domain.model.security.amiusers.AmiUserAuthority;
 import ami.domain.model.security.amiusers.AmiUserRepository;
 import ami.domain.model.security.amiusers.NewUser;
 import ami.domain.model.security.hospitals.HospitalRepository;
+import ami.infrastructure.database.model.AmiUserView;
 import ami.infrastructure.database.model.HospitalView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -123,7 +127,20 @@ public class UserController {
 		
 		NewUser newUser = objectMapper.readValue(newUserBasicDBObject.toString(), NewUser.class);
 		
+		boolean userAlreadyExists = true;
+		try {
+			amiUserService.findAmiUser(newUser.getUserName());
+		} catch (NoDataFoundException e) {
+			userAlreadyExists = false;
+		}
+		
+		if(userAlreadyExists){
+			throw new DataIntegrityViolationException("User Already exists");
+		}
+		
+		
 		AmiUser newAmiUser = new AmiUser(newUser, hospitalName, hospitalId,userList);
+		
 		
 		amiUserService.createAmiUser(hospitalId, hospitalName, newAmiUser);
 

@@ -1056,6 +1056,7 @@
 			$scope.newUser = newUserFactory.getNewUser();
 			$scope.occupationOtherVisible =false;
 			$scope.confirmPwd = '';
+			$scope.isDupeUser = false;
 			
 			$scope.cancel = function(){
 				$location.path('/profile');
@@ -1064,6 +1065,7 @@
 			
 			$scope.saveNewUser = function(){
 				
+				$scope.isDupeUser = false;
 				
 				if ($scope.newUserForm.$valid) {
 					
@@ -1074,7 +1076,10 @@
 						$location.path('/profile');
 					});
 					res.error(function(data, status, headers, config) {
-						alert( "failure message: " + JSON.stringify({data: data}));
+						if(status=="409"){
+							$scope.isDupeUser =true;
+						}
+						
 					});	
 					
 				}else{
