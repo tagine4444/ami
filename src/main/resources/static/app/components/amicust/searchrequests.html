@@ -10,8 +10,9 @@
 		<br/>    
 		<div class="page-header" ng-show="searchType=='pendingRequests'">
 		  <h4>Pending Requests <small>are requests that have been <strong>submitted to the radiologist but have not yet been processed</strong>. Pending Requests can still be modified.</small></h4>
+		   <h6 ng-show=pendingRequests.length==0">You currently have no pending requests.</h6>	
 		</div>
-		<div class="panel panel-default" ng-show="searchType=='pendingRequests'">
+		<div class="panel panel-primary" ng-show="searchType=='pendingRequests' && pendingRequests.length>0">
 		    
 		     <table class="table">
 			     <thead>
@@ -49,9 +50,11 @@
 		
 		<div class="page-header" ng-show="searchType=='draftRequests'">
 		  <h4>Draft Requests <small>are requests that have been saved as draft. They won't be processed until they are submitted to the radiologist.</small></h4>
+		   <h6 ng-show=draftRequests.length==0">You currently have no draft requests.</h6>	
 		</div>
 		
-		<div class="panel panel-default" ng-show="searchType=='draftRequests'">
+		  	
+		<div class="panel panel-primary" ng-show="searchType=='draftRequests' && draftRequests.length>0">
 		  <!-- Table -->
 		  <table class="table">
 		     <thead>
