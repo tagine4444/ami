@@ -16,6 +16,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 import ami.domain.model.amicase.Amendment;
+import ami.domain.model.amicase.amirequest.VetObservation;
 import ami.infrastructure.database.model.AmiRequestView;
 
 @Service
@@ -76,6 +77,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService{
 		String weightUom	= amiRequestView.getAmiRequest().getPatientInfo().getAnimalWeightUom();
 		String weightValue = weight +" "+ weightUom;
 		
+		List<String> examProperties = getExamProperties(amiRequestView.getAmiRequest().getVetObservation());
 		String exam							= amiRequestView.getAmiRequest().getVetObservation().getExam();
 		String diagnosis 					= amiRequestView.getAmiRequest().getVetObservation().getTentativeDiagnosis();
 		String radiographicImpression 		= amiRequestView.getRadiographicImpression();
@@ -232,22 +234,22 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService{
 		// now the row is relative..
 		int currentRowPosition = examRow;
 		
-		currentRowPosition = doExam(contentStream,  "Exam" ,exam,  currentRowPosition);
+		currentRowPosition = doExam(contentStream,  "Exam" ,exam,  currentRowPosition, examProperties);
 		
 		currentRowPosition = currentRowPosition -20;
-		currentRowPosition = doExam(contentStream,  "Tentative Diagnosis" ,diagnosis, currentRowPosition);
+		currentRowPosition = doExam(contentStream,  "Tentative Diagnosis" ,diagnosis, currentRowPosition,null);
 		
 		if( amiRequestView.getContract().toUpperCase().startsWith("NOT")){
 			
 			currentRowPosition = currentRowPosition -20;
-			currentRowPosition = doExam(contentStream,  "Radiographic Interpretation" ,radiographicInterpretation, currentRowPosition);
+			currentRowPosition = doExam(contentStream,  "Radiographic Interpretation" ,radiographicInterpretation, currentRowPosition,null);
 		}
 		
 		currentRowPosition = currentRowPosition -20;
-		currentRowPosition = doExam(contentStream,  "Radiographic Impression" ,radiographicImpression, currentRowPosition);
+		currentRowPosition = doExam(contentStream,  "Radiographic Impression" ,radiographicImpression, currentRowPosition,null);
 		
 		currentRowPosition = currentRowPosition -20;
-		currentRowPosition = doExam(contentStream,  "Recommendation" ,recommendation, currentRowPosition);
+		currentRowPosition = doExam(contentStream,  "Recommendation" ,recommendation, currentRowPosition,null);
 		
 		currentRowPosition = currentRowPosition -20;
 		currentRowPosition = doAmendments(contentStream,  "Amendments" ,amendments, currentRowPosition);
@@ -339,8 +341,66 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService{
 	}
 
 
+	private List<String> getExamProperties(VetObservation vetObservation) {
+		List<String> prop = new ArrayList<String>();
+		
+		if(vetObservation.isAnesthetized()){
+			prop.add("Anesthetized");
+		}
+		
+		if(vetObservation.isDied()){
+			prop.add("Died");
+		}
+		
+		if(vetObservation.isDyspneic()){
+			prop.add("Dyspneic");
+		}
+		
+		if(vetObservation.isEnema()){
+			prop.add("Enema");
+		}
+		
+		if(vetObservation.isEuthanized()){
+			prop.add("Euthanized");
+		}
+		
+		if(vetObservation.isFasted()){
+			prop.add("Fasted");
+		}
+		
+		if(vetObservation.isFractious()){
+			prop.add("Fractious");
+		}
+		
+		if(vetObservation.isPainful()){
+			prop.add("Painful");
+		}
+		
+		if(vetObservation.isSedated()){
+			prop.add("Sedated");
+		}
+		if(vetObservation.isShocky()){
+			prop.add("Shocky");
+		}
+		
+		return prop;
+	}
+
+
 	private int doExam( 
-			PDPageContentStream contentStream, String title, String text,  int rowPosition) throws IOException {
+			PDPageContentStream contentStream, String title, String text,  int rowPosition,
+			List<String> examProperties) throws IOException {
+		
+		
+		StringBuilder examPropertiesString = new StringBuilder();
+		
+		if(examProperties!=null && examProperties.size()>0){
+			examProperties.forEach(s ->examPropertiesString.append(s+", "));
+			examPropertiesString.replace(examPropertiesString.lastIndexOf(", "), examPropertiesString.length(), "");
+		}
+		
+		
+		
 		
 		contentStream.beginText();
 			contentStream.setFont( BOLD_FONT, NORMAL_SIZE );
@@ -368,6 +428,17 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService{
 				contentStream.endText();
 			}
 		}
+		
+		if(examPropertiesString.length()>0){
+			
+			int line =  10;
+			contentStream.beginText();
+				contentStream.setFont( NORMAL_FONT, NORMAL_SIZE );
+				rowPosition =  rowPosition - line;
+				contentStream.newLineAtOffset( FIRST_COL, rowPosition);
+				contentStream.showText(  examPropertiesString.toString() );
+			contentStream.endText();
+		}	
 		return rowPosition;
 	}
 	

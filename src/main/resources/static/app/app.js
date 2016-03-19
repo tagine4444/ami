@@ -186,6 +186,25 @@ amicust.factory('amiRequestFactory', function($http,$q, $routeParams) {return {
 	 
 }});
 
+amicust.service('userNameService', function( $http, $q) {
+	
+	var deferred = $q.defer();
+	
+	this.getUser = function() {
+		
+		var res = $http.get('/ami/getuserid.json');
+		
+		res.success(function(data, status, headers, config) {
+			deferred.resolve();
+		});
+		res.error(function(data, status, headers, config) {
+			deferred.reject('failure to get user name');
+		});	
+
+		return res;
+    }
+});
+
 amicust.factory('animalService', function($http,$q, $routeParams){return {
 	
 	
@@ -339,7 +358,14 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                              				return result.data;
                              			}	
                              		);
-                                 }]  
+                                 }] ,
+		                        myAmiUser: ['userNameService', function (userNameService) {
+		                        	return userNameService.getUser().then(
+		                        			function(result){
+		                        				return result.data;
+		                        			}	
+		                        	);
+		                        }]  
                             
                             }
                         }).
@@ -389,7 +415,15 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                               				return result.data;
                               			}	
                               		);
-                                  }]  
+                                  }] ,
+			                      
+                                  myAmiUser: ['userNameService', function (userNameService) {
+  		                        	return userNameService.getUser().then(
+  		                        			function(result){
+  		                        				return result.data;
+  		                        			}	
+  		                        	);
+  		                        }]  
                         	 
                         	 }// resolve
                         }). 
@@ -408,7 +442,14 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                              				return myResult;
                              			}	
                              		);
-                                 }]    
+                                 }] ,
+                                 myAmiUser: ['userNameService', function (userNameService) {
+   		                        	return userNameService.getUser().then(
+   		                        			function(result){
+   		                        				return result.data;
+   		                        			}	
+   		                        	);
+   		                        }]  
                             }
                         }).
                         when('/searchRequest/:searchType/:caseNumber', {
@@ -441,7 +482,14 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                             				return result.data;
                             			}	
                             		);
-                                }]
+                                }],
+                                myAmiUser: ['userNameService', function (userNameService) {
+  		                        	return userNameService.getUser().then(
+  		                        			function(result){
+  		                        				return result.data;
+  		                        			}	
+  		                        	);
+  		                        }] 
                         
                             }
                         }).
@@ -456,8 +504,7 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                             			}	
                             		);
                                 }]
-                        	 
-                        	 
+                        
                         	 }// resolve
                         }).
                         when('/newUser', {

@@ -10,9 +10,9 @@
 		
 	<br/>   
 		
-	<div class="panel panel-default" ng-show="searchType=='newCasesStat'">
+	<div class="panel panel-warning" ng-show="searchType=='newCasesStat'">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><b><span style="color:orange">Step 2 Review Case</span></b></div>
+	  <div class="panel-heading"><b><span style="color:orange">Review Case</span></b></div>
 	  <div class="panel-body">
 	     <table class="table">
 		     <thead>
@@ -31,7 +31,7 @@
 			  </thead>
 			  <tbody>
 			   <tr ng-repeat="aNewCase in statsAmiRequests">
-			   	<td>Review Case<a href="#/hospitalAdminProcessCase/{{aNewCase.caseNumber}}"  >{{aNewCase.caseNumber}}</a></td>
+			   	<td><a href="#/hospitalAdminProcessCase/{{aNewCase.caseNumber}}"  >Review Case {{aNewCase.caseNumber}}</a></td>
 			   	<td>{{aNewCase.accountSize}}</td>
 			   	<td>{{aNewCase.contract}}</td>
 			   	<td>{{aNewCase.hospitalName}}</td>
@@ -48,9 +48,9 @@
 	</div>
 		
 		      	  
-	<div class="panel panel-default" ng-show="searchType=='newCases'">
+	<div class="panel panel-warning" ng-show="searchType=='newCases'">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><b><span style="color:orange">Step 2 Review Case</span></b></div>
+	  <div class="panel-heading"><b><span style="color:orange">Review Case</span></b></div>
 	  <div class="panel-body">
 	     <table class="table">
 		     <thead>
@@ -69,7 +69,7 @@
 			  </thead>
 			  <tbody>
 			   <tr ng-repeat="aNewCase in newCases">
-			   	<td>Review <a href="#/hospitalAdminProcessCase/{{aNewCase.caseNumber}}"  >Case {{aNewCase.caseNumber}}</a></td>
+			   	<td><a href="#/hospitalAdminProcessCase/{{aNewCase.caseNumber}}"  >Review Case {{aNewCase.caseNumber}}</a></td>
 			   	<td>{{aNewCase.accountSize}}</td>
 			   	<td>{{aNewCase.contract}}</td>
 			   	<td>{{aNewCase.hospitalName}}</td>

@@ -1,30 +1,55 @@
 <div class="row">
-	<div class="col-sm-7">
-		<h4><span class="label label-warning">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span></h4>
+	<div class="col-sm-9"></div>
+	<div class="col-sm-3">
+		<span style="font-weight: bolder; font-size: x-small; color: #990000">Welcome {{userName}}</span>
 	</div>
 	
-	<div class="col-sm-2">
+</div>
+
+<div class="row">
+	<div class="col-sm-9">
+		<h3><span class="label label-warning">Case# {{amiCase.caseNumber}}</span> <span ng-show="amiRequest.requestedServices.isStat" class="label label-danger">STAT </span></h3>
+	</div>
+	
+	
+	<div class="col-sm-1">
+		<div style="height: 18px;"></div>
 		<button class="btn btn-info" data-toggle="modal" data-target="#addAmendmentModal" >Add Amendments</button>
 	</div>
 	
-	
+<!-- 	<div class="col-sm-2"> -->
+<!-- 		<button class="btn btn-info" data-toggle="modal" data-target="#addAmendmentModal" >Add Amendments</button> -->
+<!-- 	</div> -->
 </div>
-<hr/>
+
 <div class="row">
-	<div class="col-sm-9">
-	   		<span style="font-weight: bold;" ng-show="amiRequest.requestedServices.isInterpretationOnly" >Interpretation Only </span>
-	   		<ul ng-show="!amiRequest.requestedServices.isInterpretationOnly"  ng-repeat="aSevice in amiRequest.requestedServices.selectedServices"  >
-	   			<li>{{aSevice}} &nbsp;</li>
-			</ul>
-	</div>
-	<div class="col-sm-3">
+	<div class="col-sm-12">
+<!-- 	   		<span style="font-weight: bold;" ng-show="amiRequest.requestedServices.isInterpretationOnly" > -->
+<!-- 	   		Interpretation Only </span> -->
+	   		
+	   		<div class="page-header" ng-show="amiRequest.requestedServices.isInterpretationOnly">
+				<h4>Requested Services:<br/>
+					  <ul>
+			   			<li><strong><small>Interpretation Only</small></strong></li>
+					  </ul>
+				</h4>
+			
+			</div>
+			
+	   		<div class="page-header" ng-show="!amiRequest.requestedServices.isInterpretationOnly">
+			  	<h4>Requested Services:<br/>
+					  <ul ng-repeat="aSevice in amiRequest.requestedServices.selectedServices"  >
+			   			<li><strong><small>{{aSevice}}</small></strong></li>
+					  </ul>
+				</h4>
+			</div>
 	</div>
 </div>
 
 <div class="row">
 	
 	<div class="col-sm-12">
-	<hr/>
+<!-- 	<hr/> -->
 	</div>
 	<div class="col-sm-4">
 		<ul>
@@ -52,20 +77,23 @@
 			<div class="col-sm-12" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">
 				<span style="color:red;"> {{amiCase.fileUploads.length}} images uploaded</span>
 			</div>
-			<div class="col-sm-12" ng-show="!amiRequest.imagesAndDocuments.hasDocumentDeliveredByUpload">
-				<span>No images uploaded</span>
-			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-12">
 			<div class="col-sm-6" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">
 				<span style="color:red;">Documents delivered by carrier</span>
+				
+				<span ng-show="amiRequest.imagesAndDocuments.labs != 'Select Lab'">Lab: <b>{{amiRequest.imagesAndDocuments.labs}}</b> </span>&nbsp;
+				<span ng-show="amiRequest.imagesAndDocuments.labs == 'Select Lab'"><b>No Lab used</b> </span>&nbsp;
+				
+				<span ng-show="amiRequest.imagesAndDocuments.labAccount != ''"> Lab Account: <b>{{amiRequest.imagesAndDocuments.labAccount}}</b> </span> 
+			
 			</div>
-			<div class="col-sm-6" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">
-				<span>Lab:</span> <span>  <b>{{amiRequest.imagesAndDocuments.labs}}</b> </span>&nbsp;
-				<span> Lab Account:</span> <span>  <b>{{amiRequest.imagesAndDocuments.labAccount}}</b></span>
-			</div>
+<!-- 			<div class="col-sm-6" ng-show="amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier"> -->
+<!-- 				<span>Lab:</span> <span ng-show="amiRequest.imagesAndDocuments.labs != 'Select Lab'">  <b>{{amiRequest.imagesAndDocuments.labs}}</b> </span>&nbsp; -->
+<!-- 				<span> Lab Account:</span> <span>  <b>{{amiRequest.imagesAndDocuments.labAccount}}</b></span> -->
+<!-- 			</div> -->
 			
 			<div class="col-sm-6" ng-show="!amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier">
 				<span>No documents delivered by carrier</span>

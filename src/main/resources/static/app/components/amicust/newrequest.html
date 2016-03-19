@@ -1,22 +1,26 @@
 <div class="row">
+	<div class="col-sm-12">
+		<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	</div>
+</div>	
+<div class="row">
+	<div class="col-sm-9"></div>
+	<div class="col-sm-3">
+		<span style="font-weight: bolder; font-size: x-small; color: #990000">Welcome {{userName}}</span>
+	</div>
+</div>	
 
-	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+<div class="row">
 
 	<div class="row" ng-show="hasBeenSaved()">
 		<div class="col-sm-9" >
-			<h4><span class="label label-primary">Case# {{caseNumber}}</span>
-		    </h4>
+			<h3><span class="label label-warning">Case Number {{caseNumber}}</span></h3>
 		</div>
 		<div class="col-sm-3">
 		</div>
 	</div>	
 	
-	
-   
-<form name="newRequestForm" ng-submit="saveNewRequest()" novalidate  >
-	
-	
-	
+	<form name="newRequestForm" ng-submit="saveNewRequest()" novalidate  >
 	
    	<div class="row" ng-show="newRequestForm.$invalid && isSubmit()">
    		<div class="col-sm-12 alert alert-danger" role="alert">
@@ -117,13 +121,14 @@
 					  
 					  
 					  <div class="form-group" ng-class="{ 'has-error' : (newRequestForm.weightId.$touched || submitted) && newRequestForm.weightId.$invalid }">
-						  	<input type="number" min="0" max="10000" class="form-control" id="weightId" name="weightId" ng-model="newRequest.patientInfo.animalWeight"  placeholder="weight" required="required">
+						  	<input type="text"  maxlength="5" ng-pattern="/^[0-9]+$/" class="form-control" id="weightId" name="weightId" ng-model="newRequest.patientInfo.animalWeight"  placeholder="weight" required="required">
 						    
 					  		<select class="form-control" ng-model="newRequest.patientInfo.animalWeightUom">
 								<option ng-selected="$index==0" ng-repeat="anAnimalWeightUom in animalWeightUomList">{{anAnimalWeightUom}}</option>
 						    </select>
 						    
 						    <p ng-show="(newRequestForm.weightId.$touched || submitted ) && newRequestForm.weightId.$error.required" class="help-block">Weight is required</p>
+						    <p ng-show="(newRequestForm.weightId.$touched || submitted ) && newRequestForm.weightId.$invalid && !newRequestForm.weightId.$error.required"" class="help-block">Weight must be a number</p>
 					  </div>
 					</div>
 				</div>
@@ -245,7 +250,7 @@
 			        		<tr> 
 					  			<td>{{aSvc}}</td>
 					  			<td>
-					  			 	<a href ng-click="deleteFilteredItem(aSvc )">Remove </a>
+					  			 	<a href ng-click="deleteFilteredItem(aSvc )"><span class="btn-primary glyphicon glyphicon-remove" aria-hidden="true"></span> Remove</a>
 					  			</td>
 				  			</tr>
 				  	</tbody>		
@@ -303,16 +308,18 @@
 			   
 			    <div class="col-sm-12">
 					  	<div class="form-group" ng-class="{ 'has-error' : (newRequestForm.exam.$touched|| submitted) && newRequestForm.exam.$invalid }">	
-							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" required="required"
+							    <textarea name="exam" id="exam" class="form-control" rows="3" ng-model="newRequest.vetObservation.exam" required="required" maxlength="1000"
 							    placeholder="HISTORY, CHIEF COMPLAIN, PHYSICAL FINDINGS (S.O.A.P). Please provide a summary, not the entire record." ></textarea>
 							    <p class="help-block" ng-show="(newRequestForm.exam.$touched || submitted) && newRequestForm.exam.$error.required" >History is 	required field</p>
+					   			<p>{{newRequest.vetObservation.exam.length}} Characters. Limited to 1000 characters.</p>
 					    </div>
+					    
 					  	<div class="form-group" ng-class="{ 'has-error' : (newRequestForm.tentativeDiagnosis.$touched || submitted) && newRequestForm.tentativeDiagnosis.$error.required }">
 						    
-						    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" required="required"
-						     placeholder="Tentative Diagnosis" ></textarea>
+						    <textarea name="tentativeDiagnosis" id="tentativeDiagnosis" class="form-control" rows="3" ng-model="newRequest.vetObservation.tentativeDiagnosis" required="required" maxlength="1000"
+						     placeholder="Tentative Diagnosis." ></textarea>
 						    <p ng-show="(newRequestForm.tentativeDiagnosis.$touched || submitted) && newRequestForm.tentativeDiagnosis.$error.required" class="help-block">Tentative Diagnosis is required field</p>
-					    
+					    	<p>{{newRequest.vetObservation.tentativeDiagnosis.length}} Characters. Limited to 1000 characters.</p>
 					    </div>
 		    	</div>
 		    </div>
@@ -381,7 +388,7 @@
 						  </div>
 						  
 						   <div class="form-group" ng-class="{ 'has-error' : 'true'}" >
-								<p class="help-block" ng-show="isEditable==true && newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload && !requiredFieldEntered()">{{requiredFiedlForUploadMsg}}</p>
+								<p class="help-block" ng-show="isEditable==true && newRequest.imagesAndDocuments.hasDocumentDeliveredByUpload && !requiredFieldEntered()">You must enter <strong>{{requiredFiedlForUploadMsg}}</strong> before you can upload images</p>
 							</div>
 						  
 						</div>
@@ -426,7 +433,7 @@
 		        		<tr> 
 		        			<td>{{$index +1 }}</td>
 				  			<td>{{aFileUpload.originalFileName}}</td>
-				  			<td> <a ng-show="isEditable==true" ng-click="deleteUploadedFile(aFileUpload.fileName)">Remove</a></td>
+				  			<td> <a ng-show="isEditable==true" ng-click="deleteUploadedFile(aFileUpload.fileName)"><span class="btn-primary glyphicon glyphicon-remove" aria-hidden="true"></span> Remove</a></td>
 			  			</tr>
 			  	</tbody>		
 			  </table>
@@ -459,7 +466,7 @@
 		        </div>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
 	  </div>
@@ -499,7 +506,7 @@
 	        
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
 	  </div>
@@ -568,7 +575,7 @@
 								  	<tbody>
 								  		<tr ng-repeat="file in uploader.flow.files" >
 								         	<td>{{file.name}}</td>
-								         	<td> <a ng-click="file.cancel()">Remove</a></td>
+								         	<td> <a ng-click="file.cancel()"><span class="btn-primary glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
 							        	</tr>
 								  	</tbody>
 								    
@@ -589,7 +596,7 @@
 	          					bs-tooltip>Upload
 					        	<span class="btn-danger glyphicon glyphicon-upload" aria-hidden="true"></span>
 					        </button> &nbsp;
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
 	      </div>
 	    </div>
 	  </div>

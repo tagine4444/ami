@@ -262,11 +262,12 @@
 					
 		});
 		// ============ Controller ===============
-		app.controller('CasePendingCtrl', function ($scope, $http, $window,$location, myCase) {
+		app.controller('CasePendingCtrl', function ($scope, $http, $window,$location, myCase, myAmiUser) {
 			
 			$scope.page = 'searchRequests';
 			$scope.amiCase = myCase;
 			$scope.amiRequest = myCase.amiRequest;
+			$scope.userName     = myAmiUser.user;
 			 
 			
 			$scope.addAmendment = function(newAmendment){ 
@@ -284,7 +285,7 @@
 		});
 		
 		// ============ NewRequest ===============
-		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService, amiServices,animalService, myAmiRequest, myHospital,animals ,speciesList) {
+		app.controller('NewRequestCtrl', function ($route, $scope, $http, $window,$location, $modal, amiService, amiServices,animalService, myAmiRequest, myHospital,animals ,speciesList,myAmiUser) {
 			
 			$scope.page = 'newRequest';
 			
@@ -359,13 +360,19 @@
 			
 			$scope.userEmailIsHospitalEmail = false;
 			
-			var promise = amiService.getAmiUser();
 			
-			promise.then(function(amiUser) {
-				$scope.userName     = amiUser.getUserName();
-				$scope.hospitalName = amiUser.getHospitalName();
-				$scope.hospitalId = amiUser.getHospitalId();
-				$scope.userEmail =  amiUser.getUserEmail();
+			$scope.userName     = myAmiUser.user;
+			$scope.hospitalName = myHospital.hospital.name;
+			$scope.hospitalId = myHospital.hospital.id;
+			$scope.userEmail =  myAmiUser.email;
+			
+//			var promise = amiService.getAmiUser();
+			
+//			promise.then(function(amiUser) {
+//				$scope.userName     = amiUser.getUserName();
+//				$scope.hospitalName = amiUser.getHospitalName();
+//				$scope.hospitalId = amiUser.getHospitalId();
+//				$scope.userEmail =  amiUser.getUserEmail();
 				
 				
 				for(var i = 0; i < $scope.hospitalEmails.length; i++) {
@@ -375,13 +382,13 @@
 				    }
 				}
 				
-			}, 
-			function(response) {
-			  alert( response.data.message);
-			}, 
-			function(update) {
-				alert( response.data.message);
-			});
+//			}, 
+//			function(response) {
+//			  alert( response.data.message);
+//			}, 
+//			function(update) {
+//				alert( response.data.message);
+//			});
 			
 			$scope.speciesList = speciesList;
 			$scope.animalWeightUomList  = ['LB', 'KG'];
@@ -708,18 +715,22 @@
 				$scope.requiredFiedlForUploadMsg = "";
 				
 				if(!$scope.newRequest.hospitalAndClientInfo.vet || $scope.newRequest.hospitalAndClientInfo.vet.length<1){
-					$scope.requiredFiedlForUploadMsg += "[Veterinarian]";
+					$scope.requiredFiedlForUploadMsg += "'Veterinarian'";
 				}
 				
 				if(!$scope.newRequest.hospitalAndClientInfo.clientLastName || $scope.newRequest.hospitalAndClientInfo.clientLastName.length<1){
-					$scope.requiredFiedlForUploadMsg += "[Client Last Name or Organization]";
+					if($scope.requiredFiedlForUploadMsg.length>0){
+						$scope.requiredFiedlForUploadMsg+=" and ";
+					}
+					
+					$scope.requiredFiedlForUploadMsg += "'Client Last Name or Organization'";
 				}
 				
 				if($scope.requiredFiedlForUploadMsg.length==0){
 					return true;
 				}
 				
-				$scope.requiredFiedlForUploadMsg ="You must fill out the following "+$scope.requiredFiedlForUploadMsg+" before you can upload images." ;
+				$scope.requiredFiedlForUploadMsg = $scope.requiredFiedlForUploadMsg ;
 				return false;
 			}
 			
@@ -826,7 +837,13 @@
 		
 		
 		// ============ SearchRequest ===============
-		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests, draftRequests, amiRequestFactory, searchTypeAndFilter) {
+		app.controller('SearchRequestCtrl', function ($scope, $http, $window,$location, pendingRequests, draftRequests, amiRequestFactory, searchTypeAndFilter, myAmiUser) {
+			
+			$scope.myAmiUser = myAmiUser;
+			
+			$scope.userName     = myAmiUser.user;
+			//$scope.hospitalName = myAmiUser.hospital.name;
+			
 			
 			$scope.searchFilter = '';
 			$scope.draftSarchFilter ='';
@@ -846,6 +863,19 @@
 			$scope.page = 'searchRequests';
 			
 			$scope.pendingRequests = pendingRequests;
+			
+			
+			
+			$scope.hasAtLeast1PendingReqRequiresPrinting = false;
+			pendingRequests.forEach(
+					function(aPendingReq) {
+						if(aPendingReq.amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier){
+							$scope.hasAtLeast1PendingReqRequiresPrinting = true;
+						}
+					}
+			)
+				
+			
 			$scope.draftRequests = draftRequests;
 			
 			$scope.searchBy = 'Search By';
@@ -863,6 +893,15 @@
 			$scope.searchClicked = false;
 			
 			
+			$scope.isPrinting = false;
+			$scope.print = function (anAmiRequest){
+				$scope.isPrinting = true;
+				$scope.anAmiRequestToTprint = anAmiRequest;
+			}
+			$scope.closePrintModal = function (anAmiRequest){
+				$scope.isPrinting = false;
+				$scope.anAmiRequestToTprint = null;
+			}
 			
 			
 			$scope.whichSearch = function(){

@@ -66,7 +66,6 @@
 		amiAdminModule.controller('CaseReviewQueueCtrl', function ($scope, $http, $window,$location, casesPendingReview) {
 			$scope.page = 'caseReview';
 			
-		console.log(casesPendingReview);
 		$scope.searchType = 'newCasesStat';
 		if(casesPendingReview.statsAmiRequests.length ==0){
 			$scope.searchType = 'newCases';

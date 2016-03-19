@@ -1,7 +1,20 @@
 <div class="row">
-	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	<div class="col-sm-12">
+		<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	</div>
+</div>	
+
+<div class="row">
+	<div class="col-sm-9"></div>
+	<div class="col-sm-3">
+		<span style="font-weight: bolder; font-size: x-small; color: #990000">Welcome {{userName}}</span>
+	</div>
 	
-	<div class="panel panel-default">
+</div>
+
+<div class="row">
+	<br/>
+	<div class="panel panel-primary">
 	  <div class="panel-heading"><strong>{{hospital.hospital.name}}</strong> Information</div>
 	  <div class="panel-body">
 		<!--  Clients  Row -->
@@ -58,7 +71,7 @@
 		      <div class="col-sm-12">
 		       <br/>
 			    <div class="form-group">
-					<div class="panel panel-default">
+					<div class="panel panel-primary">
 					  <!-- Default panel contents -->
 					  <div class="panel-heading"><strong>{{hospital.hospital.name}}</strong> Users</div>
 					

@@ -1,20 +1,40 @@
 <div class="row">
-	<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
-	<br/>
+	<div class="col-sm-12">
+		<div ng-include="'/app/components/toolbar/toolbar.html'"></div>
+	</div>
+</div>	
+<div class="row">
+	<div class="col-sm-9"></div>
+	<div class="col-sm-3">
+		<span style="font-weight: bolder; font-size: x-small; color: #990000">Welcome {{userName}}</span>
+	</div>
+</div>	
+
+<div class="row" ng-show="!isPrinting">
+	
 		<ul class="nav nav-tabs">
 		  <li role="presentation" ng-class="{'active' : searchType=='draftRequests'}"><a href="#/searchRequest/draftRequests/all" ng-click="searchType = 'draftRequests'">Draft Requests <span class="badge">{{draftRequests.length}}</span></a></li>
 		  <li role="presentation" ng-class="{'active' : searchType=='pendingRequests'}"><a ng-href="#/searchRequest/pendingRequests/all" ng-click="searchType = 'pendingRequests'" >Pending Requests <span class="badge">{{pendingRequests.length}}</span></a></li>
 		  <li role="presentation"ng-class="{'active' : searchType=='all'}"><a href="#/searchRequest/all/all" ng-click="searchType = 'all'">Search</a></li>
 		</ul>  
 		
-		<br/>    
 		<div class="page-header" ng-show="searchType=='pendingRequests'">
 		  <h4>Pending Requests <small>are requests that have been <strong>submitted to the radiologist but have not yet been processed</strong>. Pending Requests can still be modified.</small></h4>
-		   <h6 ng-show=pendingRequests.length==0">You currently have no pending requests.</h6>	
+		   <h6 ng-show="pendingRequests.length==0">You currently have no pending requests.</h6>	
+		
+			<div class="alert alert-info" role="alert" ng-show="searchType=='pendingRequests' && hasAtLeast1PendingReqRequiresPrinting">
+				<strong>You have one or more pending requests that are delivered by carrier, for these:</strong>
+				<ul>
+					<li><span style="color:red">Print the Request</span> <strong>AND</strong>
+					<span style="color:red">include it in the envelope </span> <strong>along with the images.</strong></li>
+				</ul>
+			</div>
 		</div>
+		
+		
 		<div class="panel panel-primary" ng-show="searchType=='pendingRequests' && pendingRequests.length>0">
 		    
-		     <table class="table">
+		     <table class="table" >
 			     <thead>
 			       <tr>
 			       	<td> <input type="text" class="form-control" ng-model="pendgingSarchFilter"  placeholder="Filter Pending Cases" ></td>
@@ -22,6 +42,7 @@
 			       
 				   <tr>
 				   	<th>Request Number</th>
+				   	<th></th>
 				   	<th>Veterinarian</th>
 				   	<th>Animal</th>
 				   	<th>Species</th>
@@ -30,8 +51,15 @@
 				   </tr>
 				  </thead>
 				  <tbody>
-				   <tr ng-repeat="aPendingRequest in pendingRequests | filter: pendgingSarchFilter ">
+				   <tr ng-repeat="aPendingRequest in pendingRequests | filter: pendgingSarchFilter" >
 				   	<td><a href="#/editRequest1/{{aPendingRequest.caseNumber}}"  ng-click="tab = 4">View Request {{aPendingRequest.caseNumber}}</a></td>
+				    <td ng-show="aPendingRequest.amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier"> 
+				    	<div data-placement="bottom" data-title="Print and include in the enveloppe along with images"  bs-tooltip>
+				    	<button  type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#printFriendlyModal" ng-click="print(aPendingRequest)"  data-trigger="hover">Print Request</button>
+	          			</div>		
+	          		</td>
+				   
+				   	<td ng-show="!aPendingRequest.amiRequest.imagesAndDocuments.hasDocumentDeliveredByCarrier"></td>
 				   	<td>{{aPendingRequest.amiRequest.hospitalAndClientInfo.vet}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.animalName}}</td>
 				   	<td>{{aPendingRequest.amiRequest.patientInfo.species}} - {{aPendingRequest.amiRequest.patientInfo.breeds}}</td>
@@ -42,6 +70,7 @@
 				   </tbody>
 			</table>
 		
+		
 		  <!-- Table -->
 		  <table class="table">
 		    
@@ -50,7 +79,7 @@
 		
 		<div class="page-header" ng-show="searchType=='draftRequests'">
 		  <h4>Draft Requests <small>are requests that have been saved as draft. They won't be processed until they are submitted to the radiologist.</small></h4>
-		   <h6 ng-show=draftRequests.length==0">You currently have no draft requests.</h6>	
+		   <h6 ng-show="draftRequests.length==0">You currently have no draft requests.</h6>	
 		</div>
 		
 		  	
@@ -151,4 +180,48 @@
 		</table>
 <!-- 		</div> -->
 
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="printFriendlyModal" tabindex="-1" role="dialog" 
+	aria-labelledby="printFriendlyModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      
+	      <div class="modal-header">
+	        <button type="button" ng-click="closePrintModal()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h5 class="modal-title" id="printFriendlyModalLabel">Print and include in enveloppe along with images</h5>
+	      </div>
+	      
+	      
+	      <div class="modal-body">
+      		<div class="row">
+		          <div class="col-md-3">
+					   Case Number: <strong>{{anAmiRequestToTprint.caseNumber}}</strong>
+		          </div>
+		          <div class="col-md-4">
+					   Hospital: <strong>{{anAmiRequestToTprint.hospitalName}}</strong>
+		          </div>
+		          <div class="col-md-4">
+					   Veterinarian: <strong>{{anAmiRequestToTprint.amiRequest.hospitalAndClientInfo.vet}}</strong>
+		          </div>
+		     </div> 
+      		<div class="row">
+		          <div class="col-md-3">
+					   Animal: <strong>{{anAmiRequestToTprint.amiRequest.patientInfo.animalName}}</strong>
+		          </div>
+		          <div class="col-md-4">
+					   Client: <strong>{{anAmiRequestToTprint.amiRequest.hospitalAndClientInfo.clientFirstName}} {{anAmiRequestToTprint.amiRequest.hospitalAndClientInfo.clientLastName}}</strong>
+		          </div>
+		          <div class="col-md-4">
+					   Breed : <strong>{{anAmiRequestToTprint.amiRequest.patientInfo.species}} {{anAmiRequestToTprint.amiRequest.patientInfo.breeds}}</strong>
+		          </div>
+		     </div> 
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" ng-click="closePrintModal()" class="btn btn-primary" data-dismiss="modal"  >Close</button>
+	        <button type="button" class="btn btn-danger" onClick="window.print()" >Print</button>
+	      </div>
+	    </div>
+	  </div>
 </div>
