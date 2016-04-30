@@ -321,7 +321,7 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
 	
                       $routeProvider.
                         when('/', {
-                        	templateUrl: "/app/components/amicust/newrequest.html",
+                        	templateUrl: "/ami/app/components/amicust/newrequest.html",
                             controller: "NewRequestCtrl",
                             
                             resolve: {
@@ -374,7 +374,7 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                         	
                         }).
                         when('/editRequest/:requestNumber', {
-                        	templateUrl: "/app/components/amicust/newrequest.html",
+                        	templateUrl: "/ami/app/components/amicust/newrequest.html",
                             controller: "NewRequestCtrl",
                         	 resolve: {
                              	
@@ -428,7 +428,7 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                         	 }// resolve
                         }). 
                         when('/editRequest1/:requestNumber', {
-                        	templateUrl: '/app/components/amicust/pendingCase.html',
+                        	templateUrl: '/ami/app/components/amicust/pendingCase.html',
                         	controller: 'CasePendingCtrl',
                         	 
                             resolve: {
@@ -453,7 +453,7 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                             }
                         }).
                         when('/searchRequest/:searchType/:caseNumber', {
-                        	templateUrl: '/app/components/amicust/searchrequests.html',
+                        	templateUrl: '/ami/app/components/amicust/searchrequests.html',
                         	controller: 'SearchRequestCtrl',
                         	 
                         	
@@ -494,7 +494,7 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                             }
                         }).
                         when('/profile', {
-                        	templateUrl: '/app/components/amicust/profile.html',
+                        	templateUrl: '/ami/app/components/amicust/profile.html',
                         	controller: 'ProfileCtrl',
                         	resolve: {
                         		myHospital: ['animalService', function (animalService) {
@@ -508,11 +508,11 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                         	 }// resolve
                         }).
                         when('/newUser', {
-                        	templateUrl: '/app/components/amicust/newuser.html',
+                        	templateUrl: '/ami/app/components/amicust/newuser.html',
                         	controller: 'NewUserCtrl'
                         }).
                         when('/editUser/:userId', {
-                        	templateUrl: '/app/components/amicust/edituser.html',
+                        	templateUrl: '/ami/app/components/amicust/edituser.html',
                         	controller: 'EditUserCtrl',
                         	resolve: {
                         		
@@ -523,11 +523,11 @@ amicust.config(['$routeProvider','flowFactoryProvider','$httpProvider', '$modalP
                         	}
                         }).
                         when('/help', {
-                        	templateUrl: '/app/components/amicust/help.html',
+                        	templateUrl: '/ami/app/components/amicust/help.html',
                         	controller: 'HelpCtrl'
                         }).
                         when('/error', {
-                          templateUrl: '/app/components/error/error.html',
+                          templateUrl: '/ami/app/components/error/error.html',
                         }).
                         otherwise({
                           redirectTo: '/error'

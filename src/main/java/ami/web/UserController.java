@@ -57,7 +57,7 @@ public class UserController {
 	private ObjectMapper objectMapper;
 	
 	
-	@RequestMapping(value = "/ami/amiuser", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/amiuser", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String findUserByUserName(@RequestParam String userName) throws JsonProcessingException {
 		
@@ -72,7 +72,7 @@ public class UserController {
 			
 	}
 	
-	@RequestMapping(value = "/ami/getuserid", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/getuserid", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String getUserId() throws JsonProcessingException {
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -93,7 +93,7 @@ public class UserController {
 			
 	}
 	
-	@RequestMapping(value = "/ami/hospital", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/hospital", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String getHospital() throws JsonProcessingException {
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -108,7 +108,7 @@ public class UserController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/newuser", method = RequestMethod.POST)
+	@RequestMapping(value = "/amicusthome/newuser", method = RequestMethod.POST)
 	@ResponseBody
 	public String addNewUser(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		

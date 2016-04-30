@@ -71,7 +71,7 @@ public class HospitalController {
 
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospital/setup", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadminhome/hospital/setup", method = RequestMethod.POST)
 	@ResponseBody
 	public void setupNewHospital(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		
@@ -100,7 +100,7 @@ public class HospitalController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospitalview", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadminhome/hospitalview", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAllHospitals(Model model) throws JsonProcessingException {
 		
@@ -111,7 +111,7 @@ public class HospitalController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospitalviewbyhospitalid", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadminhome/hospitalviewbyhospitalid", method = RequestMethod.GET)
 	@ResponseBody
 	public String getHospitalById(Model model, @RequestParam(value="hospitalId") String hospitalId) throws JsonProcessingException {
 		HospitalView hopitalView = hospitalService.findHospital(hospitalId);
@@ -123,7 +123,7 @@ public class HospitalController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospital/updatehospitalcontractoraccount", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadminhome/hospital/updatehospitalcontractoraccount", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateHospitalContractOrAccountSize(@RequestBody String data) throws IOException {
 		
@@ -156,7 +156,7 @@ public class HospitalController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospital/updatehospital", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadminhome/hospital/updatehospital", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateHospital(@RequestBody String data) throws IOException {
 		
@@ -209,7 +209,7 @@ public class HospitalController {
 	
 
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospital/updatemasteruser", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadminhome/hospital/updatemasteruser", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateMasterUser(@RequestBody String data) throws IOException {
 		
@@ -251,7 +251,7 @@ public class HospitalController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadminhome/hospital/switchmasteruser", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadminhome/hospital/switchmasteruser", method = RequestMethod.POST)
 	@ResponseBody
 	public String switchMasterUser(@RequestBody String data) throws IOException {
 		

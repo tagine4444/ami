@@ -33,7 +33,7 @@ public class LoginController {
 //	private AmiRequestService amiRequestService;
 	
 	
-	@RequestMapping(value = "/ami/amilogin", method = RequestMethod.GET)
+	@RequestMapping(value = "/amilogin", method = RequestMethod.GET)
 	public String amiLoginGET(Model model) {
 		
 		boolean isAdmiUser = false;
@@ -57,7 +57,7 @@ public class LoginController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin", method = RequestMethod.GET)
 	public String adminLogin(Model model) {
 		
 		return "amiadminhome";
@@ -65,7 +65,7 @@ public class LoginController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')")
-	@RequestMapping(value = "/ami/amicust", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicust", method = RequestMethod.GET)
 	public String customerLogin(Model model) {
 		
 		return "amicusthome";
@@ -73,7 +73,7 @@ public class LoginController {
 	}
 	
 	
-//	@RequestMapping(value = "/ami/save", method = RequestMethod.GET)
+//	@RequestMapping(value = "/save", method = RequestMethod.GET)
 //	public String amiSave(Model model) {
 //		
 //		Person p = new Person("Joe", 34);

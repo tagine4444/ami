@@ -1,19 +1,20 @@
 package ami;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
 import ami.domain.model.security.AmiAuthenticationProvider;
 
 @Configuration
-@EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableWebSecurity
+@AutoConfigureOrder(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	
@@ -25,17 +26,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	http
         .csrf().disable()
         .authorizeRequests()
-        .antMatchers("/","/ami/index",  "/ami/login","/ami/getuserid", "/ami/newuser", "/ami/init/users").permitAll()
+        .antMatchers("/","/index", "/login","/getuserid", "/newuser", "/init/users").permitAll()
         .anyRequest().authenticated()
         .and()
     .formLogin()
-        .loginPage("/ami/login")
+        .loginPage("/login")
         .permitAll()
-        .defaultSuccessUrl("/ami/amilogin")
+//        .usernameParameter("username")
+//        .passwordParameter("password")
+//        .loginProcessingUrl(loginProcessingUrl)
+        .defaultSuccessUrl("/amilogin")
         .and()
     .logout()
         .logoutUrl("/j_spring_security_logout")
-        .logoutSuccessUrl("/ami/login")
+        .logoutSuccessUrl("/login")
         .invalidateHttpSession( true )
         .deleteCookies("JSESSIONID");   
 //        .permitAll();
@@ -62,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
       web
         .ignoring()
-           .antMatchers("/ami/resources/**"); // #3
+           .antMatchers("/resources/**","/static/**"); // #3
     }
 
 }

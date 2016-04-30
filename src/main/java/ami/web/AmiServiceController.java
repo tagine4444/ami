@@ -25,7 +25,7 @@ public class AmiServiceController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	@RequestMapping(value = "/ami/services", method = RequestMethod.GET)
+	@RequestMapping(value = "/services", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAnimals(Model model) throws JsonProcessingException {
 		

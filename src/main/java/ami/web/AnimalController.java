@@ -24,7 +24,7 @@ public class AnimalController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	@RequestMapping(value = "/ami/animals", method = RequestMethod.GET)
+	@RequestMapping(value = "/animals", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAnimals(Model model) throws JsonProcessingException {
 		
@@ -35,7 +35,7 @@ public class AnimalController {
 		return animalsString;
 		
 	}
-	@RequestMapping(value = "/ami/animals/species", method = RequestMethod.GET)
+	@RequestMapping(value = "/animals/species", method = RequestMethod.GET)
 	@ResponseBody
 	public String getSpecies(Model model) throws JsonProcessingException {
 		

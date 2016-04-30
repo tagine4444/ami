@@ -37,7 +37,7 @@ public class UploadController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	@RequestMapping(value = "/ami/doupload", method = RequestMethod.POST)
+	@RequestMapping(value = "/doupload", method = RequestMethod.POST)
 	@ResponseBody
 	public String upload(@RequestParam(value="flowChunkNumber") String flowChunkNumber, 
 			@RequestParam(value="flowChunkSize") String flowChunkSize, 
@@ -82,7 +82,7 @@ public class UploadController {
 	}
 	
 	
-	@RequestMapping(value = "/ami/upload/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteUploadedFile(@RequestBody String data,
 			Model model ) 

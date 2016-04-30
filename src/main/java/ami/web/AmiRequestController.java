@@ -53,7 +53,7 @@ public class AmiRequestController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')")
-	@RequestMapping(value = "/ami/amicusthome/hospital/edituser", method = RequestMethod.POST)
+	@RequestMapping(value = "/amicusthome/hospital/edituser", method = RequestMethod.POST)
 	@ResponseBody
 	public void editUser(@RequestBody String data) throws IOException {
 		

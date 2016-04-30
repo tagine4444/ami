@@ -1,29 +1,29 @@
 <!doctype html>
-<html ng-app ="amiadmin">
+<html ng-app ="amiadmin" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 	<head>
 	
 		<meta name="csrf-token" content="{{ csrf_token() }}"/>
 		<title>Animal Medical Imaging</title>
-		<link rel="stylesheet" type="text/css" href="/app/assets/libs/bootstrap/css/bootstrap.min.css"></link>
-		<link rel="stylesheet" type="text/css" href="/app/assets/libs/bootstrap/css/bootstrap-theme.min.css"></link>
+		<link rel="stylesheet" type="text/css" th:href="@{/app/assets/libs/bootstrap/css/bootstrap.min.css}"></link>
+		<link rel="stylesheet" type="text/css" th:href="@{/app/assets/libs/bootstrap/css/bootstrap-theme.min.css}"></link>
     	
     	
-    	<script src="/app/assets/libs/angular/angular.min.js"></script>
-    	<script src="/app/assets/libs/angularthirdparty/ng-flow-standalone.min.js"></script>
+    	<script th:src="@{/app/assets/libs/angular/angular.min.js}"></script>
+    	<script th:src="@{/app/assets/libs/angularthirdparty/ng-flow-standalone.min.js}"></script>
 
 		<!-- load momentJS (required for angular-moment) -->
-		<script src="/app/assets/libs/moment/moment-with-locales.min.js"></script>
+		<script th:src="@{/app/assets/libs/moment/moment-with-locales.min.js}"></script>
 		
 		<!-- load angular-moment -->
-		<script src="/app/assets/libs//angular-moment/angular-moment.min.js"></script>
+		<script th:src="@{/app/assets/libs//angular-moment/angular-moment.min.js}"></script>
 
-    	<script src="/app/assets/libs/angular/angular-route.min.js"></script>
-    	<script src="/app/assets/libs/angular-strap/angular-strap.min.js"></script>
-    	<script src="/app/assets/libs/angular-strap/angular-strap.tpl.min.js"></script>
-		<script src="/app/assets/libs/jquery/jquery-1.11.2.min.js"></script>
-		<script src="/app/assets/libs/bootstrap/js/bootstrap.min.js"></script>
-    	<script src="/app/appAdmin.js"></script>
-    	<script src="/app/components/amiadmin/AmiAdminModule.js"></script>
+    	<script th:src="@{/app/assets/libs/angular/angular-route.min.js}"></script>
+    	<script th:src="@{/app/assets/libs/angular-strap/angular-strap.min.js}"></script>
+    	<script th:src="@{/app/assets/libs/angular-strap/angular-strap.tpl.min.js}"></script>
+		<script th:src="@{/app/assets/libs/jquery/jquery-1.11.2.min.js}"></script>
+		<script th:src="@{/app/assets/libs/bootstrap/js/bootstrap.min.js}"></script>
+    	<script th:src="@{/app/appAdmin.js}"></script>
+    	<script th:src="@{/app/components/amiadmin/AmiAdminModule.js}"></script>
 		
 	</head>
 

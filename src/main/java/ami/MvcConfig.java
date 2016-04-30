@@ -27,16 +27,17 @@ import com.mongodb.MongoClient;
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter { 
 
+	
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
     	
-       registry.addViewController("/ami/index").setViewName("index");
+       registry.addViewController("/index").setViewName("index");
        
        
-       registry.addViewController("/ami/home").setViewName("home");
-       registry.addViewController("/ami").setViewName("index");
-       registry.addViewController("/ami/login").setViewName("login");
-       registry.addViewController("/ami/adminlogin").setViewName("adminlogin");
+       registry.addViewController("/home").setViewName("home");
+       //registry.addViewController("/").setViewName("index");
+       registry.addViewController("/login").setViewName("login");
+       registry.addViewController("/adminlogin").setViewName("adminlogin");
     }
     
     

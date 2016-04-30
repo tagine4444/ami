@@ -61,7 +61,7 @@ public class AmiAdminController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/amirequest/bylastnrecords", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/amirequest/bylastnrecords", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByLast50Records(@RequestParam String limit) throws JsonProcessingException {
 		int numOfCases = Integer.valueOf(limit);
@@ -72,28 +72,28 @@ public class AmiAdminController {
 	//=======================================
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/amirequest", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/amirequest", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequest(@RequestParam String requestNumber) throws JsonProcessingException {
 		return amiRequestService.findAmiRequest(requestNumber, true);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/amirequest/byanimals", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/amirequest/byanimals", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByAnimalName(@RequestParam String animalName) throws JsonProcessingException {
 		return amiRequestService.findAmiRequestByAnimalName(animalName, true) ;
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/amirequest/byclientlastname", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/amirequest/byclientlastname", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByClientLastName(@RequestParam String clientlastname) throws JsonProcessingException {
 		return amiRequestService.findAmiRequestByClientLastName(clientlastname);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/amirequest/byreqdaterange", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/amirequest/byreqdaterange", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
 		
@@ -105,7 +105,7 @@ public class AmiAdminController {
 	
 	//===================================
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/switchcasetoinprogress", method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/switchcasetoinprogress", method = RequestMethod.GET)
 	@ResponseBody
 	public String switchCaseToInProgressAndReturnCase(@RequestParam String caseNumber) throws JsonProcessingException {
 		
@@ -116,7 +116,7 @@ public class AmiAdminController {
 	
 
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/switchcasetoreadyforreview", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/switchcasetoreadyforreview", method = RequestMethod.POST)
 	@ResponseBody
 	public void switchCaseToReadyForReview(@RequestBody String data) throws JsonProcessingException {
 			
@@ -132,7 +132,7 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/updateRadiographicInterpretation", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/updateRadiographicInterpretation", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateRadiographicInterpretation(@RequestBody String data) throws JsonProcessingException {
 		
@@ -145,7 +145,7 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/updateRadiographicImpression", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/updateRadiographicImpression", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateRadiographicImpression(@RequestBody String data) throws JsonProcessingException {
 		
@@ -158,7 +158,7 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/updateRecommendation", method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/updateRecommendation", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateRecommendation(@RequestBody String data) throws JsonProcessingException {
 		
@@ -171,7 +171,7 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/closecase",method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/closecase",method = RequestMethod.POST)
 	@ResponseBody
 	public void closeCase(@RequestBody String data) throws JsonProcessingException {
 		
@@ -183,7 +183,7 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/doaccounting",method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/doaccounting",method = RequestMethod.POST)
 	@ResponseBody
 	public String doAccounting(@RequestBody String data) throws JsonProcessingException {
 		
@@ -196,7 +196,7 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/casespendingaccounting",method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/casespendingaccounting",method = RequestMethod.GET)
 	@ResponseBody
 	public String findCasesPendingAccounting() throws JsonProcessingException {
 		return amiRequestService.findCasesPendingAccounting();
@@ -204,14 +204,14 @@ public class AmiAdminController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/amendedcases",method = RequestMethod.GET)
+	@RequestMapping(value = "/amiadmin/amendedcases",method = RequestMethod.GET)
 	@ResponseBody
 	public String getAmendmentNotificationsForAdmin() throws JsonProcessingException {
 		return amendmentNotificationService.getAmendmentNotificationsForAdmin();
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amiadmin/addAmendmentAdmin",method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/addAmendmentAdmin",method = RequestMethod.POST)
 	@ResponseBody
 	public String addAmendmentAdmin(@RequestBody String data) throws JsonProcessingException {
 		DBObject dbObject = (DBObject)JSON.parse(data);
@@ -236,13 +236,13 @@ public class AmiAdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/pending/allhospitals", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/pending/allhospitals", method = RequestMethod.GET)
 	@ResponseBody
 	public String findPendigAmiRequestsForAllHospitals() throws JsonProcessingException {
 		return amiRequestService.findPendigAmiRequestsForAllHospitals();
 	}
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/pendingreview/allhospitals", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/pendingreview/allhospitals", method = RequestMethod.GET)
 	@ResponseBody
 	public String findCasesPendigReviewForAllHospitals() throws JsonProcessingException {
 		//TODO change this method to findCasesPendigReviewForAllHospitals() in mongo

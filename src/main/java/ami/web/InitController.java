@@ -71,7 +71,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	
 	
-	@RequestMapping(value = "/ami/init/users", method = RequestMethod.GET)
+	@RequestMapping(value = "/init/users", method = RequestMethod.GET)
 	public String addUsers(Model model) {
 		
 		try {
@@ -134,7 +134,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	
 
-	@RequestMapping(value = "/ami/init/animals", method = RequestMethod.GET)
+	@RequestMapping(value = "/init/animals", method = RequestMethod.GET)
 	@ResponseBody
 	public String addAnimals(Model model) {
 		
@@ -187,7 +187,7 @@ private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	}
 	
 	
-	@RequestMapping(value = "/ami/init/services", method = RequestMethod.GET)
+	@RequestMapping(value = "/init/services", method = RequestMethod.GET)
 	@ResponseBody
 	public String addServices(Model model) {
 		

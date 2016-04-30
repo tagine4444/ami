@@ -69,7 +69,7 @@ public class AmiCustController {
 
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')")
-	@RequestMapping(value = "/ami/amiadmin/addAmendmentCust",method = RequestMethod.POST)
+	@RequestMapping(value = "/amiadmin/addAmendmentCust",method = RequestMethod.POST)
 	@ResponseBody
 	public String addAmendmentCustomer(@RequestBody String data) throws JsonProcessingException {
 		DBObject dbObject = (DBObject)JSON.parse(data);
@@ -94,28 +94,28 @@ public class AmiCustController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequest(@RequestParam String requestNumber) throws JsonProcessingException {
 		return amiRequestService.findAmiRequest(requestNumber, false );
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/byanimals", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/byanimals", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByAnimalName(@RequestParam String animalName) throws JsonProcessingException {
 		return amiRequestService.findAmiRequestByAnimalName(animalName, false) ;
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/byclientlastname", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/byclientlastname", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByClientLastName(@RequestParam String clientlastname) throws JsonProcessingException {
 		return amiRequestService.findAmiRequestByClientLastName(clientlastname);
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/byreqdaterange", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/byreqdaterange", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestBySubmittedDateRange(@RequestParam String date1, @RequestParam String date2) throws JsonProcessingException {
 		
@@ -126,7 +126,7 @@ public class AmiCustController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/bylastnrecords", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/bylastnrecords", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAmiRequestByLast50Records() throws JsonProcessingException {
 		SecurityContextHolder.getContext().getAuthentication().getName();
@@ -137,7 +137,7 @@ public class AmiCustController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/pending", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/pending", method = RequestMethod.GET)
 	@ResponseBody
 	public String findPendigAmiRequests() throws JsonProcessingException {
 		return amiRequestService.findPendigAmiRequests();
@@ -146,7 +146,7 @@ public class AmiCustController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/draft", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/draft", method = RequestMethod.GET)
 	@ResponseBody
 	public String findDraftAmiRequests() throws JsonProcessingException {
 		
@@ -154,7 +154,7 @@ public class AmiCustController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"')  or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest/uploadedfiles", method = RequestMethod.GET)
+	@RequestMapping(value = "/amicusthome/amirequest/uploadedfiles", method = RequestMethod.GET)
 	@ResponseBody
 	public String getUploadedFiles(@RequestParam String requestNumber) throws JsonProcessingException {
 		
@@ -162,7 +162,7 @@ public class AmiCustController {
 	}
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amirequest", method = RequestMethod.POST)
+	@RequestMapping(value = "/amicusthome/amirequest", method = RequestMethod.POST)
 	@ResponseBody
 	public String submitAmiRequestToRadiologist(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		
@@ -184,7 +184,7 @@ public class AmiCustController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/amidraftrequest", method = RequestMethod.POST)
+	@RequestMapping(value = "/amicusthome/amidraftrequest", method = RequestMethod.POST)
 	@ResponseBody
 	public String createCaseAsDraft(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		
@@ -210,7 +210,7 @@ public class AmiCustController {
 	
 	
 	@PreAuthorize("hasAuthority('"+AmiAuthtorities.AMI_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_MASTER_USER+"') or hasAuthority('"+AmiAuthtorities.AMI_ADMIN+"')")
-	@RequestMapping(value = "/ami/amicusthome/deleteamidraftrequest", method = RequestMethod.POST)
+	@RequestMapping(value = "/amicusthome/deleteamidraftrequest", method = RequestMethod.POST)
 	@ResponseBody
 	public void deleteDraftCase(@RequestBody String data) throws JsonParseException, JsonMappingException, IOException {
 		

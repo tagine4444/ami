@@ -233,7 +233,7 @@ amiadmin.config(['$routeProvider','$httpProvider',
                 function($routeProvider) {	
                   $routeProvider.
                     when('/hospitalAdminSubmittedRequests', {
-                    	templateUrl: '/app/components/amiadmin/casequeue.html',
+                    	templateUrl: '/ami/app/components/amiadmin/casequeue.html',
                     	controller: 'CaseQueueCtrl',
                     	   resolve: {
                              	
@@ -255,7 +255,7 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     	
                     }).
                     when('/hospitalAdminReviewCases', {
-                    	templateUrl: '/app/components/amiadmin/casereviewqueue.html',
+                    	templateUrl: '/ami/app/components/amiadmin/casereviewqueue.html',
                     	controller: 'CaseReviewQueueCtrl',
                     	resolve: {
                     		
@@ -270,7 +270,7 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     
                     }).
                     when('/hospitalAdminAccounting', {
-                    	templateUrl: '/app/components/amiadmin/accounting.html',
+                    	templateUrl: '/ami/app/components/amiadmin/accounting.html',
                     	controller: 'AccountingCtrl',
                     	resolve: {
                     		
@@ -285,12 +285,12 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     
                     }).
                     when('/hospitalAdminSearchCases', {
-                    	templateUrl: '/app/components/amiadmin/searchCase.html',
+                    	templateUrl: '/ami/app/components/amiadmin/searchCase.html',
                     	controller: 'CaseSearchCtrl',
                     
                     }).
                     when('/hospitalAdminProcessCase/:caseNumber', {
-                    	templateUrl: '/app/components/amiadmin/processCase.html',
+                    	templateUrl: '/ami/app/components/amiadmin/processCase.html',
                     	controller: 'CaseProcessingCtrl',
                     	resolve: {
                     		
@@ -307,7 +307,7 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     
                     }).
                     when('/hospitalAdminSearch', {
-                    	templateUrl: '/app/components/amiadmin/hospitaladminsearch.html',
+                    	templateUrl: '/ami/app/components/amiadmin/hospitaladminsearch.html',
                     	controller: 'HospitalAdminSearchCtrl',
                     	   resolve: {
                           	
@@ -321,11 +321,11 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     	   }
                     }).
                     when('/hospitalAdminCreate', {
-                    	templateUrl: '/app/components/amiadmin/hospitaladmincreate.html',
+                    	templateUrl: "/ami/app/components/amiadmin/hospitaladmincreate.html",
                     	controller: 'HospitalAdminCreateCtrl',
                     }).
                     when('/hospitalAdminUpdate/:hospitalId', {
-                    	templateUrl: "/app/components/amiadmin/hospitaladminupdate.html",
+                    	templateUrl: "/ami/app/components/amiadmin/hospitaladminupdate.html",
                         controller: "HospitalAdminUpdateCtrl",
                     	 resolve: {
                          	
@@ -342,11 +342,11 @@ amiadmin.config(['$routeProvider','$httpProvider',
                     	 }// resolve
                     }).
                     when('/fileUploadView/:file', {
-                    	templateUrl: '/app/components/common/fileuploadview.html',
+                    	templateUrl: '/ami/app/components/common/fileuploadview.html',
                     	controller: 'FileUploadViewCtrl', 
                     }).
                     when('/error', {
-                      templateUrl: '/app/components/error/error.html',
+                      templateUrl: '/ami/app/components/error/error.html',
                     }).
                     otherwise({
                       redirectTo: '/error'
